@@ -305,7 +305,6 @@
             "pages": [
               "langgraph-platform/reference-overview",
               "langgraph-platform/server-api-ref",
-              "langgraph-platform/langgraph-server-changelog",
               "langgraph-platform/api-ref-control-plane",
               "langgraph-platform/cli",
               "langgraph-platform/env-var",
@@ -313,6 +312,18 @@
               "langgraph-platform/js-ts-sdk",
               "langgraph-platform/remote-graph",
               "langgraph-platform/faq"
+            ]
+          },
+          {
+            "tab": "Releases",
+            "pages": [
+              "langgraph-platform/langgraph-server-changelog",
+              {
+                "group": "Policies",
+                "pages": [
+                  "langgraph-platform/release-support-policy"
+                ]
+              }
             ]
           }
         ]
