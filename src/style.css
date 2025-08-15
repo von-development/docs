@@ -186,3 +186,12 @@ h5, #mdx-content h5 {
 .nav-dropdown-item-icon > img {
   background-color: transparent !important;
 }
+
+.topbar-right-container {
+  flex: 0;
+}
+
+/* Targets the container that has the search input */
+:has(> .topbar-right-container) > :nth-child(2) {
+  justify-content: end;
+}
