@@ -573,12 +573,12 @@ class DocumentationBuilder:
             dropdown_mapping = [
                 {
                     "title": "Python",
-                    "icon": "/images/logo-python.svg",
+                    "icon": "python",
                     "version_path": "python",
                 },
                 {
-                    "title": "TypeScript",
-                    "icon": "/images/logo-typescript.svg",
+                    "title": "JavaScript",
+                    "icon": "square-js",
                     "version_path": "javascript",
                 },
             ]
