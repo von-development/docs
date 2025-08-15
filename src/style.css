@@ -183,17 +183,6 @@ h5, #mdx-content h5 {
   text-transform: uppercase;
 }
 
-/* Hide nav dropdown descriptions by default */
-.nav-dropdown-item-description {
-  display: none !important;
+.nav-dropdown-item-icon > img {
+  background-color: transparent !important;
 }
-
-/* Show nav dropdown descriptions when dropdown is open */
-[data-state="open"] .nav-dropdown-item-description {
-  display: block !important;
-}
-
-
-
-
-
