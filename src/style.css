@@ -264,3 +264,129 @@ button.version-picker-button svg {
   font-size: inherit !important; /* Match callout text size */
   color: inherit !important; /* Match callout text color */
 }
+
+/* Code annotations */
+.code-annotation {
+  position: relative;
+  display: inline;
+  cursor: pointer;
+}
+
+.code-annotation-marker {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 0.25rem;
+  background-color: var(--brand-600);
+  color: white;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  vertical-align: middle;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.code-annotation-marker:hover {
+  background-color: var(--brand-600);
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(47, 104, 104, 0.3);
+}
+
+.code-annotation-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  padding: 12px;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-secondary-700);
+  white-space: nowrap;
+  max-width: 300px;
+  white-space: normal;
+  width: max-content;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  pointer-events: none;
+}
+
+.code-annotation-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: var(--bg-primary);
+}
+
+.code-annotation-tooltip::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--border-primary);
+  z-index: -1;
+}
+
+.code-annotation:hover .code-annotation-tooltip,
+.code-annotation.active .code-annotation-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Adjust tooltip position for annotations near edges */
+.code-annotation.tooltip-left .code-annotation-tooltip {
+  left: 0;
+  transform: none;
+}
+
+.code-annotation.tooltip-left .code-annotation-tooltip::after,
+.code-annotation.tooltip-left .code-annotation-tooltip::before {
+  left: 20px;
+  transform: none;
+}
+
+.code-annotation.tooltip-right .code-annotation-tooltip {
+  right: 0;
+  left: auto;
+  transform: none;
+}
+
+.code-annotation.tooltip-right .code-annotation-tooltip::after,
+.code-annotation.tooltip-right .code-annotation-tooltip::before {
+  right: 20px;
+  left: auto;
+  transform: none;
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  .code-annotation-tooltip {
+    background-color: var(--bg-tertiary);
+    border-color: var(--border-primary);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+  
+  .code-annotation-tooltip::after {
+    border-top-color: var(--bg-tertiary);
+  }
+  
+  .code-annotation-tooltip::before {
+    border-top-color: var(--border-primary);
+  }
+}

@@ -96,7 +96,8 @@
     }
   },
     "scripts": [
-    "/hide-version-picker.js"
+    "/hide-version-picker.js",
+    "/code-annotations.js"
   ],
   "styles": [
     "/hide-version-picker.css"

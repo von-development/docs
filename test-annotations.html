@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Annotations Test</title>
+    <style>
+        :root {
+            --brand-600: #2F6868;
+            --bg-primary: #ffffff;
+            --border-primary: #e5e5e5;
+            --text-secondary-700: #4a4a4a;
+            --bg-tertiary: #f5f5f5;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+        
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        .test-explanations {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .test-explanations ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .test-explanations li {
+            margin: 10px 0;
+        }
+    </style>
+    <link rel="stylesheet" href="/build/style.css">
+</head>
+<body>
+    <h1>Code Annotations Test</h1>
+    
+    <p>This page tests the code annotation functionality. Look for numbered circles next to the comments in the code below:</p>
+    
+    <pre><code>from langgraph.prebuilt import create_react_agent
+
+def get_weather(city: str) -> str:  # (1)!
+    """Get weather for a given city."""
+    return f"It's always sunny in {city}!"
+
+agent = create_react_agent( 
+    model="anthropic:claude-3-7-sonnet-latest",  # (2)!
+    tools=[get_weather],  # (3)!
+    prompt="You are a helpful assistant"  # (4)!
+)</code></pre>
+
+    <div class="test-explanations">
+        <h3>Explanations:</h3>
+        <ol>
+            <li>Define a tool for the agent to use. Tools can be defined as vanilla Python functions.</li>
+            <li>Provide a language model for the agent to use. To learn more about configuring language models, check the models page.</li>
+            <li>Provide a list of tools for the model to use.</li>
+            <li>Provide a system prompt (instructions) to the language model used by the agent.</li>
+        </ol>
+    </div>
+    
+    <div id="debug-info">
+        <h3>Debug Info:</h3>
+        <p>JavaScript status: <span id="js-status">Not loaded</span></p>
+        <p>Annotations processed: <span id="annotations-count">0</span></p>
+    </div>
+
+    <script src="/build/code-annotations.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('js-status').textContent = 'Loaded';
+            
+            // Add debug logging
+            setTimeout(function() {
+                const annotations = document.querySelectorAll('.code-annotation');
+                document.getElementById('annotations-count').textContent = annotations.length;
+                console.log('Found', annotations.length, 'annotations');
+                
+                if (annotations.length > 0) {
+                    console.log('Annotation example:', annotations[0].outerHTML);
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
