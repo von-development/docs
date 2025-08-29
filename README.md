@@ -121,6 +121,45 @@ This project uses [Mintlify](https://mintlify.com/docs) for documentation genera
 
 Refer to the [Mintlify documentation](https://mintlify.com/docs) for detailed syntax and component usage.
 
+### Custom Components
+
+This documentation includes custom components that extend Mintlify's functionality:
+
+#### Code Annotations
+
+Add inline annotations to code blocks that display tooltips on hover, similar to MkDocs Material.
+
+**Usage:**
+Add `# (+)` (for Python), `// (+)` (for JavaScript/TypeScript), `/* (+) */` (for CSS), `-- (+)` (for SQL), or `<!-- (+) -->` (for HTML) followed by the explanation text directly in your code:
+
+```python
+def get_weather(city: str) -> str:  # (+) Define a tool for the agent to use.
+    """Get weather for a given city."""
+    return f"It's always sunny in {city}!"
+
+agent = create_react_agent( 
+    model="anthropic:claude-3-7-sonnet-latest",  # (+) Provide a language model.
+    tools=[get_weather],  # (+) Provide a list of tools.
+    prompt="You are a helpful assistant"  # (+) Provide a system prompt.
+)
+```
+
+**Features:**
+- Simple `(+)` syntax instead of numbered annotations
+- Tooltips appear at the end of the line to prevent cutoff
+- Gray circular markers with plus signs that scale on hover
+- Works with Python, JavaScript, TypeScript, HTML, CSS, and SQL comments
+- Automatically processes all code blocks on the page
+- Responsive positioning that adjusts near viewport edges
+
+**Implementation:**
+The code annotations system consists of:
+- `/src/code-annotations.js` - JavaScript that processes annotations and adds interactivity
+- `/src/style.css` - CSS styles for annotation markers and tooltips
+- Configured in `/src/docs.json` to load on all documentation pages
+
+**Note:** Annotations are processed client-side, so the raw `(+)` syntax remains in the source files for maintainability.
+
 ### Testing
 
 Run the test suite to ensure your changes don't break existing functionality:

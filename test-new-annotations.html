@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test New (+) Annotations</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f9f9f9;
+        }
+        
+        pre {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            position: relative;
+            overflow: visible !important;
+        }
+        
+        .results {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #2F6868;
+        }
+    </style>
+    <link rel="stylesheet" href="/build/style.css">
+</head>
+<body>
+    <h1>Test New (+) Annotations</h1>
+    
+    <p>Testing the simplified (+) annotation system with inline explanations:</p>
+    
+    <pre><code>from langgraph.prebuilt import create_react_agent
+
+def get_weather(city: str) -> str:  # (+) Define a tool for the agent to use.
+    """Get weather for a given city."""
+    return f"It's always sunny in {city}!"
+
+agent = create_react_agent( 
+    model="anthropic:claude-3-7-sonnet-latest",  # (+) Provide a language model for the agent to use.
+    tools=[get_weather],  # (+) Provide a list of tools for the model to use.
+    prompt="You are a helpful assistant"  # (+) Provide a system prompt to the language model.
+)</code></pre>
+
+    <h2>JavaScript Example:</h2>
+    <pre><code>const getWeather = tool(
+  // (+) Define a tool for the agent to use.
+  async ({ city }) => {
+    return `It's always sunny in ${city}!`;
+  },
+  {
+    name: "get_weather",
+    description: "Get weather for a given city.",
+  }
+);
+
+const agent = createReactAgent({
+  llm: new ChatAnthropic({ model: "claude-3-5-sonnet" }), // (+) Provide a language model.
+  tools: [getWeather], // (+) Provide a list of tools.
+  stateModifier: "You are a helpful assistant", // (+) Provide a system prompt.
+});</code></pre>
+
+    <div class="results">
+        <h3>Test Results:</h3>
+        <p>Status: <span id="js-status">Not loaded</span></p>
+        <p>Annotations found: <span id="annotations-count">0</span></p>
+        <p>Script loaded: <span id="script-loaded">No</span></p>
+    </div>
+
+    <script src="/build/code-annotations.js"></script>
+    <script>
+        // Test if the script loaded and annotations are working
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('js-status').textContent = 'DOM Ready';
+            document.getElementById('script-loaded').textContent = 'Yes';
+            
+            // Wait a moment for annotations to process
+            setTimeout(function() {
+                const annotations = document.querySelectorAll('.code-annotation');
+                const tooltips = document.querySelectorAll('.code-annotation-tooltip');
+                
+                document.getElementById('annotations-count').textContent = annotations.length;
+                
+                if (annotations.length > 0) {
+                    document.getElementById('js-status').innerHTML = '✅ <strong>Working!</strong> Found ' + annotations.length + ' annotations';
+                    document.getElementById('js-status').style.color = 'green';
+                    
+                    // Test tooltip content
+                    if (tooltips.length > 0) {
+                        const firstTooltip = tooltips[0];
+                        console.log('First tooltip content:', firstTooltip.textContent);
+                        
+                        // Add tooltip content to results
+                        const results = document.querySelector('.results');
+                        results.innerHTML += '<p><strong>First annotation tooltip:</strong> "' + firstTooltip.textContent + '"</p>';
+                    }
+                } else {
+                    document.getElementById('js-status').innerHTML = '❌ <strong>Not working</strong> - No annotations found';
+                    document.getElementById('js-status').style.color = 'red';
+                }
+                
+                // Log debug info
+                console.log('Code blocks found:', document.querySelectorAll('pre code').length);
+                console.log('Annotations created:', annotations.length);
+                console.log('Tooltips created:', tooltips.length);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

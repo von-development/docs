@@ -46,14 +46,14 @@ To create an agent, use @[`create_react_agent`][create_react_agent]:
 ```python
 from langgraph.prebuilt import create_react_agent
 
-def get_weather(city: str) -> str:  # (1)! Define a tool for the agent to use. Tools can be defined as vanilla Python functions.
+def get_weather(city: str) -> str:  # (+) Define a tool for the agent to use. Tools can be defined as vanilla Python functions.
     """Get weather for a given city."""
     return f"It's always sunny in {city}!"
 
 agent = create_react_agent( 
-    model="anthropic:claude-3-7-sonnet-latest",  # (2)! Provide a language model for the agent to use. To learn more about configuring language models, check the models page.
-    tools=[get_weather],  # (3)! Provide a list of tools for the model to use.
-    prompt="You are a helpful assistant"  # (4)! Provide a system prompt (instructions) to the language model used by the agent.
+    model="anthropic:claude-3-7-sonnet-latest",  # (+) Provide a language model for the agent to use.
+    tools=[get_weather],  # (+) Provide a list of tools for the model to use.
+    prompt="You are a helpful assistant"  # (+) Provide a system prompt (instructions) to the language model used by the agent.
 )
 
 # Run the agent
@@ -62,10 +62,6 @@ agent.invoke(
 )
 ```
 
-1. Define a tool for the agent to use. Tools can be defined as vanilla Python functions. For more advanced tool usage and customization, check the [tools](/oss/call-tools) page.
-2. Provide a language model for the agent to use. To learn more about configuring language models for the agents, check the [models](/oss/models) page.
-3. Provide a list of tools for the model to use.
-4. Provide a system prompt (instructions) to the language model used by the agent.
 :::
 
 :::js
@@ -78,7 +74,7 @@ import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 
 const getWeather = tool(
-  // (1)! Define a tool for the agent to use. Tools can be defined using the tool function.
+  // (+) Define a tool for the agent to use. Tools can be defined using the tool function.
   async ({ city }) => {
     return `It's always sunny in ${city}!`;
   },
@@ -92,9 +88,9 @@ const getWeather = tool(
 );
 
 const agent = createReactAgent({
-  llm: new ChatAnthropic({ model: "anthropic:claude-3-5-sonnet-latest" }), // (2)! Provide a language model for the agent to use. To learn more about configuring language models, check the models page.
-  tools: [getWeather], // (3)! Provide a list of tools for the model to use.
-  stateModifier: "You are a helpful assistant", // (4)! Provide a system prompt (instructions) to the language model used by the agent.
+  llm: new ChatAnthropic({ model: "anthropic:claude-3-5-sonnet-latest" }), // (+) Provide a language model for the agent to use.
+  tools: [getWeather], // (+) Provide a list of tools for the model to use.
+  stateModifier: "You are a helpful assistant", // (+) Provide a system prompt (instructions) to the language model used by the agent.
 });
 
 // Run the agent
@@ -103,10 +99,6 @@ await agent.invoke({
 });
 ```
 
-1. Define a tool for the agent to use. Tools can be defined using the `tool` function. For more advanced tool usage and customization, check the [tools](/oss/tools) page.
-2. Provide a language model for the agent to use. To learn more about configuring language models for the agents, check the [models](/oss/models) page.
-3. Provide a list of tools for the model to use.
-4. Provide a system prompt (instructions) to the language model used by the agent.
 :::
 
 ## 3. Configure an LLM
@@ -207,7 +199,7 @@ Prompts instruct the LLM how to behave. Add one of the following types of prompt
     from langgraph.prebuilt.chat_agent_executor import AgentState
     from langgraph.prebuilt import create_react_agent
     
-    def prompt(state: AgentState, config: RunnableConfig) -> list[AnyMessage]:  # (1)!
+    def prompt(state: AgentState, config: RunnableConfig) -> list[AnyMessage]:  # (+) Dynamic prompts allow including non-message context when constructing an input to the LLM.
         user_name = config["configurable"].get("user_name")
         system_msg = f"You are a helpful assistant. Address the user as {user_name}."
         return [{"role": "system", "content": system_msg}] + state["messages"]
@@ -223,11 +215,6 @@ Prompts instruct the LLM how to behave. Add one of the following types of prompt
         config={"configurable": {"user_name": "John Smith"}}
     )
 ```
-    
-    1. Dynamic prompts allow including non-message [context](/oss/context) when constructing an input to the LLM, such as:
-      * Information passed at runtime, like a `user_id` or API credentials (using `config`).
-      * Internal agent state updated during a multi-step reasoning process (using `state`).
-      Dynamic prompts can be defined as functions that take `state` and `config` and return a list of messages to send to the LLM.
     :::
     
     :::js
@@ -238,7 +225,7 @@ Prompts instruct the LLM how to behave. Add one of the following types of prompt
     import { type RunnableConfig } from "@langchain/core/runnables";
     import { createReactAgent } from "@langchain/langgraph/prebuilt";
     
-    const dynamicPrompt = (state: { messages: BaseMessageLike[] }, config: RunnableConfig): BaseMessageLike[] => {  // (1)!
+    const dynamicPrompt = (state: { messages: BaseMessageLike[] }, config: RunnableConfig): BaseMessageLike[] => {  // (+) Dynamic prompts allow including non-message context when constructing an input to the LLM.
       const userName = config.configurable?.user_name;
       const systemMsg = `You are a helpful assistant. Address the user as ${userName}.`;
       return [{ role: "system", content: systemMsg }, ...state.messages];
@@ -255,11 +242,6 @@ Prompts instruct the LLM how to behave. Add one of the following types of prompt
       { configurable: { user_name: "John Smith" } }
     );
 ```
-    
-    1. Dynamic prompts allow including non-message [context](/oss/context) when constructing an input to the LLM, such as:
-      * Information passed at runtime, like a `user_id` or API credentials (using `config`).
-      * Internal agent state updated during a multi-step reasoning process (using `state`).
-      Dynamic prompts can be defined as functions that take `state` and `config` and return a list of messages to send to the LLM.
     :::
   </Tab>
 </Tabs>
@@ -280,14 +262,14 @@ checkpointer = InMemorySaver()
 agent = create_react_agent(
     model="anthropic:claude-3-7-sonnet-latest",
     tools=[get_weather],
-    checkpointer=checkpointer  # (1)!
+    checkpointer=checkpointer  # (+) Checkpointer allows the agent to store its state at every step in the tool calling loop.
 )
 
 # Run the agent
 config = {"configurable": {"thread_id": "1"}}
 sf_response = agent.invoke(
     {"messages": [{"role": "user", "content": "what is the weather in sf"}]},
-    config  # (2)!
+    config  # (+) Pass configuration with thread_id to resume the same conversation on future agent invocations.
 )
 ny_response = agent.invoke(
     {"messages": [{"role": "user", "content": "what about new york?"}]},
@@ -295,8 +277,6 @@ ny_response = agent.invoke(
 )
 ```
 
-1. `checkpointer` allows the agent to store its state at every step in the tool calling loop. This enables [short-term memory](/oss/add-memory#add-short-term-memory) and [human-in-the-loop](/oss/human-in-the-loop) capabilities.
-2. Pass configuration with `thread_id` to be able to resume the same conversation on future agent invocations.
 :::
 
 :::js
@@ -309,14 +289,14 @@ const checkpointer = new MemorySaver();
 const agent = createReactAgent({
   llm: "anthropic:claude-3-5-sonnet-latest",
   tools: [getWeather],
-  checkpointSaver: checkpointer, // (1)!
+  checkpointSaver: checkpointer, // (+) CheckpointSaver allows the agent to store its state at every step in the tool calling loop.
 });
 
 // Run the agent
 const config = { configurable: { thread_id: "1" } };
 const sfResponse = await agent.invoke(
   { messages: [{ role: "user", content: "what is the weather in sf" }] },
-  config // (2)!
+  config // (+) Pass configuration with thread_id to resume the same conversation on future agent invocations.
 );
 const nyResponse = await agent.invoke(
   { messages: [{ role: "user", content: "what about new york?" }] },
@@ -324,8 +304,6 @@ const nyResponse = await agent.invoke(
 );
 ```
 
-1. `checkpointSaver` allows the agent to store its state at every step in the tool calling loop. This enables [short-term memory](/oss/add-memory#add-short-term-memory) and [human-in-the-loop](/oss/human-in-the-loop) capabilities.
-2. Pass configuration with `thread_id` to be able to resume the same conversation on future agent invocations.
 :::
 
 :::python
@@ -355,7 +333,7 @@ class WeatherResponse(BaseModel):
 agent = create_react_agent(
     model="anthropic:claude-3-7-sonnet-latest",
     tools=[get_weather],
-    response_format=WeatherResponse  # (1)!
+    response_format=WeatherResponse  # (+) When response_format is provided, a separate step is added at the end of the agent loop.
 )
 
 response = agent.invoke(
@@ -365,8 +343,6 @@ response = agent.invoke(
 response["structured_response"]
 ```
 
-1. When `response_format` is provided, a separate step is added at the end of the agent loop: agent message history is passed to an LLM with structured output to generate a structured response.
-  To provide a system prompt to this LLM, use a tuple `(prompt, schema)`, e.g., `response_format=(prompt, WeatherResponse)`.
 :::
 
 :::js
@@ -383,7 +359,7 @@ const WeatherResponse = z.object({
 const agent = createReactAgent({
   llm: "anthropic:claude-3-5-sonnet-latest",
   tools: [getWeather],
-  responseFormat: WeatherResponse, // (1)!
+  responseFormat: WeatherResponse, // (+) When responseFormat is provided, a separate step is added at the end of the agent loop.
 });
 
 const response = await agent.invoke({
@@ -393,8 +369,6 @@ const response = await agent.invoke({
 response.structuredResponse;
 ```
 
-1. When `responseFormat` is provided, a separate step is added at the end of the agent loop: agent message history is passed to an LLM with structured output to generate a structured response.
-  To provide a system prompt to this LLM, use an object `{ prompt, schema }`, e.g., `responseFormat: { prompt, schema: WeatherResponse }`.
 :::
 
 <Note>

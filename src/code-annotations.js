@@ -10,16 +10,16 @@ console.log('🎯 Code Annotations script loaded!');
     
     console.log('🚀 Code Annotations initializing...');
 
-    // Configuration - Updated patterns to capture explanation text
+    // Configuration - Simplified patterns with (+) syntax
     const ANNOTATION_PATTERNS = [
-        // Python, JavaScript, TypeScript comments: # (1)! explanation text
-        /(?:\/\/|#)\s*\((\d+)\)!\s*([^\n\r]*)/g,
-        // HTML comments: <!-- (1)! explanation text -->
-        /<!--\s*\((\d+)\)!\s*([^-]*?)-->/g,
-        // CSS comments: /* (1)! explanation text */
-        /\/\*\s*\((\d+)\)!\s*([^*]*?)\*\//g,
-        // SQL comments: -- (1)! explanation text
-        /--\s*\((\d+)\)!\s*([^\n\r]*)/g
+        // Python, JavaScript, TypeScript comments: # (+) explanation text
+        /(?:\/\/|#)\s*\(\+\)\s*([^\n\r]*)/g,
+        // HTML comments: <!-- (+) explanation text -->
+        /<!--\s*\(\+\)\s*([^-]*?)-->/g,
+        // CSS comments: /* (+) explanation text */
+        /\/\*\s*\(\+\)\s*([^*]*?)\*\//g,
+        // SQL comments: -- (+) explanation text
+        /--\s*\(\+\)\s*([^\n\r]*)/g
     ];
 
     /**
@@ -41,21 +41,17 @@ console.log('🎯 Code Annotations script loaded!');
 
             // Process each annotation pattern
             ANNOTATION_PATTERNS.forEach(pattern => {
-                codeContent = codeContent.replace(pattern, (match, number, explanationText) => {
+                codeContent = codeContent.replace(pattern, (match, explanationText) => {
                     hasAnnotations = true;
                     console.log(`✨ Found annotation: ${match}`);
-                    console.log(`📝 Number: ${number}, Explanation: "${explanationText}"`);
+                    console.log(`📝 Explanation: "${explanationText}"`);
                     
                     // Clean up the explanation text
-                    const explanation = explanationText ? explanationText.trim() : `Annotation ${number}`;
+                    const explanation = explanationText ? explanationText.trim() : 'Click for details';
                     
-                    if (explanation && explanation !== `Annotation ${number}`) {
-                        annotations.set(number, explanation);
-                    }
-                    
-                    // Replace with HTML annotation marker
-                    return `<span class="code-annotation" data-annotation="${number}">
-                        <span class="code-annotation-marker">${number}</span>
+                    // Replace with HTML annotation marker using + symbol
+                    return `<span class="code-annotation">
+                        <span class="code-annotation-marker">+</span>
                         <div class="code-annotation-tooltip">${explanation}</div>
                     </span>`;
                 });
@@ -117,20 +113,17 @@ console.log('🎯 Code Annotations script loaded!');
      */
     function positionTooltip(annotation, tooltip) {
         // Reset classes
-        annotation.classList.remove('tooltip-left', 'tooltip-right');
+        annotation.classList.remove('tooltip-right');
         
         // Get viewport and element dimensions
         const rect = annotation.getBoundingClientRect();
-        const tooltipRect = tooltip.getBoundingClientRect();
         const viewportWidth = window.innerWidth;
         
-        // Check if tooltip would overflow on the right
-        if (rect.left + tooltipRect.width / 2 > viewportWidth - 20) {
+        // Check if tooltip would overflow on the right side of viewport
+        // Default: tooltip appears to the right of the annotation
+        if (rect.right + 420 > viewportWidth) {
+            // If it would overflow, show it on the left instead
             annotation.classList.add('tooltip-right');
-        }
-        // Check if tooltip would overflow on the left
-        else if (rect.left - tooltipRect.width / 2 < 20) {
-            annotation.classList.add('tooltip-left');
         }
     }
 

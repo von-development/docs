@@ -270,77 +270,63 @@ button.version-picker-button svg {
   position: relative;
   display: inline;
   cursor: pointer;
+  margin-left: 0.5rem;
 }
 
 .code-annotation-marker {
-  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
-  margin-left: 0.25rem;
-  background-color: var(--brand-600);
-  color: white;
+  width: 16px;
+  height: 16px;
+  background-color: rgba(125, 125, 125, 0.2);
+  color: rgba(0, 0, 0, 0.5);
   border-radius: 50%;
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 10px;
+  font-weight: 700;
   line-height: 1;
-  vertical-align: middle;
-  z-index: 10;
-  transition: all 0.2s ease;
+  vertical-align: baseline;
+  transition: background-color 0.25s;
+  font-family: 'Roboto Mono', 'SFMono-Regular', 'Consolas', 'Monaco', monospace;
 }
 
 .code-annotation-marker:hover {
-  background-color: var(--brand-600);
-  transform: scale(1.1);
-  box-shadow: 0 2px 8px rgba(47, 104, 104, 0.3);
+  background-color: rgba(125, 125, 125, 0.4);
 }
 
 .code-annotation-tooltip {
   position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-bottom: 8px;
-  padding: 12px;
-  background-color: var(--bg-primary);
-  border: 1px solid var(--border-primary);
-  border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  font-size: 13px;
-  line-height: 1.4;
-  color: var(--text-secondary-700);
-  white-space: nowrap;
-  max-width: 300px;
+  top: 50%;
+  left: calc(100% + 8px);
+  transform: translateY(-50%);
+  padding: 8px 12px;
+  background-color: rgba(0, 0, 0, 0.87);
+  color: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.6;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-weight: 400;
+  min-width: 200px;
+  max-width: 400px;
   white-space: normal;
   width: max-content;
-  z-index: 1000;
+  z-index: 10000;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.2s ease, visibility 0.2s ease;
+  transition: opacity 0.25s, visibility 0.25s;
   pointer-events: none;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
 }
 
 .code-annotation-tooltip::after {
   content: '';
   position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 5px solid transparent;
-  border-top-color: var(--bg-primary);
-}
-
-.code-annotation-tooltip::before {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-top-color: var(--border-primary);
-  z-index: -1;
+  top: 50%;
+  right: 100%;
+  transform: translateY(-50%);
+  border: 4px solid transparent;
+  border-right-color: rgba(0, 0, 0, 0.87);
 }
 
 .code-annotation:hover .code-annotation-tooltip,
@@ -349,44 +335,54 @@ button.version-picker-button svg {
   visibility: visible;
 }
 
-/* Adjust tooltip position for annotations near edges */
-.code-annotation.tooltip-left .code-annotation-tooltip {
-  left: 0;
-  transform: none;
-}
-
-.code-annotation.tooltip-left .code-annotation-tooltip::after,
-.code-annotation.tooltip-left .code-annotation-tooltip::before {
-  left: 20px;
-  transform: none;
-}
-
+/* Adjust tooltip position for annotations near right edge */
 .code-annotation.tooltip-right .code-annotation-tooltip {
-  right: 0;
   left: auto;
-  transform: none;
+  right: calc(100% + 8px);
+  transform: translateY(-50%);
 }
 
-.code-annotation.tooltip-right .code-annotation-tooltip::after,
-.code-annotation.tooltip-right .code-annotation-tooltip::before {
-  right: 20px;
-  left: auto;
-  transform: none;
+.code-annotation.tooltip-right .code-annotation-tooltip::after {
+  right: auto;
+  left: 100%;
+  border-right-color: transparent;
+  border-left-color: rgba(0, 0, 0, 0.87);
+}
+
+/* Ensure code blocks don't overflow and hide tooltips */
+pre {
+  overflow: visible !important;
+  position: relative;
+}
+
+pre code {
+  overflow-x: auto;
+  overflow-y: visible;
+  display: block;
 }
 
 /* Dark mode adjustments */
 @media (prefers-color-scheme: dark) {
+  .code-annotation-marker {
+    background-color: rgba(200, 200, 200, 0.2);
+    color: rgba(255, 255, 255, 0.5);
+  }
+  
+  .code-annotation-marker:hover {
+    background-color: rgba(200, 200, 200, 0.3);
+  }
+  
   .code-annotation-tooltip {
-    background-color: var(--bg-tertiary);
-    border-color: var(--border-primary);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    background-color: rgba(250, 250, 250, 0.95);
+    color: rgba(0, 0, 0, 0.87);
   }
   
   .code-annotation-tooltip::after {
-    border-top-color: var(--bg-tertiary);
+    border-right-color: rgba(250, 250, 250, 0.95);
   }
   
-  .code-annotation-tooltip::before {
-    border-top-color: var(--border-primary);
+  .code-annotation.tooltip-right .code-annotation-tooltip::after {
+    border-right-color: transparent;
+    border-left-color: rgba(250, 250, 250, 0.95);
   }
 }
