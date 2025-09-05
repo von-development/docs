@@ -695,6 +695,7 @@
                       {
                         "group": "Integrations",
                         "pages": [
+                          "langsmith/integrations",
                           "langsmith/trace-with-langchain",
                           "langsmith/trace-with-langgraph",
                           "langsmith/trace-anthropic",
@@ -1749,6 +1750,7 @@
                       {
                         "group": "Integrations",
                         "pages": [
+                          "langsmith/integrations",
                           "langsmith/trace-with-langchain",
                           "langsmith/trace-with-langgraph",
                           "langsmith/trace-anthropic",
