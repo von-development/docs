@@ -1,15 +1,27 @@
 ---
 title: Self-hosted
+sidebarTitle: Overview
 ---
+
+
+<Info>
+**Important**
+The Self-Hosted deployment option requires an [Enterprise](/langgraph-platform/plans) plan.
+</Info>
+
+<Note>
+For a guide on deployment, refer to:
+
+* [How to deploy the Self-Hosted Full Platform](/langgraph-platform/deploy-self-hosted-full-platform)
+* [How to deploy the Self-Hosted Standalone Server](/langgraph-platform/deploy-standalone-server)
+
+Supported Compute Platforms: [Kubernetes](https://kubernetes.io/) (for Control Plane), any compute platform (for Standalone Server Only)
+</Note>
+
 The Self-Hosted deployment option allows you to run all components entirely within your own cloud environment. You can choose between two deployment models:
 
 1. **[Full Platform](#full-platform)**: Deploy both control plane and data plane with full UI/API management capabilities
 2. **[Standalone Server](#standalone-server)**: Deploy standalone instances of a LangGraph Server without the control plane UI
-
-<Info>
-**Important**
-The Self-Hosted deployment options require an [Enterprise](/langgraph-platform/plans) plan.
-</Info>
 
 ## Full Platform
 
@@ -25,10 +37,12 @@ The Full Platform deployment model is a fully self-hosted solution where you man
 
 ### Requirements
 
-* You use `langgraph-cli` and/or [LangGraph Studio](/langgraph-platform/langgraph-studio) app to test graph locally.
+* You use `langgraph-cli` and/or [Studio](/langgraph-platform/langgraph-studio) app to test graph locally.
 * You use `langgraph build` command to build image.
 * You have a Self-Hosted LangSmith instance deployed.
 * You are using Ingress for your LangSmith instance. All agents will be deployed as Kubernetes services behind this ingress.
+
+With the full platform option, build a Docker image using the [LangGraph CLI](/langgraph-platform/langgraph-cli) and deploy your LangGraph Server from the [control plane UI](/langgraph-platform/control-plane#control-plane-ui) or using the container deployment tooling of your choice.
 
 ### Architecture
 
