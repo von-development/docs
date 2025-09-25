@@ -96,25 +96,6 @@ model.batch([message])
 [" Who's there?"]
 ```
 
-## Chaining
-
-You can also easily combine with a prompt template for easy structuring of user input. We can do this using [LCEL](/oss/concepts/lcel)
-
-```python
-from langchain_core.prompts import PromptTemplate
-
-prompt = PromptTemplate.from_template("Tell me a joke about {topic}")
-chain = prompt | model
-```
-
-```python
-chain.invoke({"topic": "bears"})
-```
-
-```output
-' Why did the teddy bear cross the road?\nBecause he had bear crossings.\n\nWould you like to hear another joke? '
-```
-
 ## API reference
 
 For detailed documentation of all `Cohere` llm features and configurations head to the API reference: [python.langchain.com/api_reference/community/llms/langchain_community.llms.cohere.Cohere.html](https://python.langchain.com/api_reference/community/llms/langchain_community.llms.cohere.Cohere.html)
