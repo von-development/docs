@@ -1196,12 +1196,8 @@ Instead, dynamically select a small, relevant subset of tools per turn. With `cr
 :::
 
 <Tip>
-For deeper middleware capabilities (approval gates, retries, editing requests, etc.), see the middleware guide: [Middleware](/oss/langchain/middleware).
-</Tip>
-
-<Info>
 Keep the active tool set small (e.g., top 3-10). This maximizes signal-to-noise for the model while keeping prompts lean.
-</Info>
+</Tip>
 
 :::python
 ### How it works with `create_agent`
@@ -1279,13 +1275,17 @@ agent.invoke(
 ```
 :::
 :::js
-```ts
+<CodeGroup>
+```ts expandable simple.ts
 import { z } from "zod";
 import { createAgent, createMiddleware, tool, HumanMessage } from "langchain";
 
 // GitHub tools
 const githubCreateIssue = tool(
-  async ({ repo, title }) => ({ url: `https://github.com/${repo}/issues/1`, title }),
+  async ({ repo, title }) => ({
+    url: `https://github.com/${repo}/issues/1`,
+    title,
+  }),
   {
     name: "github_create_issue",
     description: "Create an issue in a GitHub repository",
@@ -1295,7 +1295,10 @@ const githubCreateIssue = tool(
 
 // GitLab tools
 const gitlabCreateIssue = tool(
-  async ({ project, title }) => ({ url: `https://gitlab.com/${project}/-/issues/1`, title }),
+  async ({ project, title }) => ({
+    url: `https://gitlab.com/${project}/-/issues/1`,
+    title,
+  }),
   {
     name: "gitlab_create_issue",
     description: "Create an issue in a GitLab project",
@@ -1306,34 +1309,57 @@ const gitlabCreateIssue = tool(
 const allTools = [githubCreateIssue, gitlabCreateIssue];
 
 // Choose tools based on user context (e.g., vcsProvider = "github" | "gitlab")
-const toolSelector = createMiddleware({
-  name: "ToolSelector",
+const vcsToolGate = createMiddleware({
+  name: "VcsToolGate",
   contextSchema: z.object({ vcsProvider: z.string() }),
-  modifyModelRequest: (request, _state, runtime) => { // [!code highlight]
-    const provider = (runtime?.context?.vcsProvider ?? "github").toLowerCase();
-    const active = provider === "gitlab" ? [gitlabCreateIssue] : [githubCreateIssue];
-    return { ...request, tools: active }; // [!code highlight]
+  modifyModelRequest: (request, _state, runtime) => {
+    const provider = runtime.context.vcsProvider.toLowerCase();
+    const active =
+      provider === "gitlab" ? [gitlabCreateIssue] : [githubCreateIssue];
+    return { ...request, tools: active };
   },
 });
 
 const agent = createAgent({
   model: "openai:gpt-4o",
   tools: allTools, // superset for validation; middleware narrows per turn
-  middleware: [toolSelector] as const,
+  middleware: [vcsToolGate],
 });
 
 // GitHub user
-await agent.invoke(
-  { messages: [new HumanMessage("Open an issue titled 'Bug: login fails' in my auth repo")] },
-  { context: { vcsProvider: "github" } } // [!code highlight]
+const resultGithub = await agent.invoke(
+  {
+    messages: [
+      new HumanMessage(
+        "Open an issue titled 'Bug: login fails' in my langchain-ai/langchainjs project"
+      ),
+    ],
+  },
+  {
+    context: { vcsProvider: "github" },
+  }
 );
+console.log("GitHub tool call result:", resultGithub.messages.at(-1)?.content);
 
 // GitLab user
-await agent.invoke(
-  { messages: [new HumanMessage("Open an issue titled 'Bug: login fails' in my auth project")] },
-  { context: { vcsProvider: "gitlab" } } // [!code highlight]
+const resultGitlab = await agent.invoke(
+  {
+    messages: [
+      new HumanMessage(
+        "Open an issue titled 'Bug: login fails' in my langchain-ai/langchainjs project"
+      ),
+    ],
+  },
+  { context: { vcsProvider: "gitlab" } }
 );
+console.log("GitLab tool call result:", resultGitlab.messages.at(-1)?.content);
 ```
+
+```sh Simple Example Output
+GitHub tool call result: The issue titled "Bug: login fails" has been successfully created in the langchain-ai/langchainjs project. You can view it [here](https://github.com/langchain-ai/langchainjs/issues/1).
+GitLab tool call result: The issue titled "Bug: login fails" has been created in your langchain-ai/langchainjs project. You can view it [here](https://gitlab.com/langchain-ai/langchainjs/-/issues/1).
+```
+</CodeGroup>
 :::
 
 When a middleware defines a `contextSchema`, its properties become required on the agent invocation `context`.
@@ -1341,9 +1367,7 @@ When a middleware defines a `contextSchema`, its properties become required on t
 - In the example above, `vcsProvider` must be set in `{ context: { vcsProvider: "github" | "gitlab" } }`.
 - Add any additional fields your middleware requires, or provide defaults in the schema to make them optional.
 
-Prefer context for stable configuration (env, flags, tenant), and state for dynamic properties that change during the run (recent tool outcomes, user choices). See [Middleware](/oss/langchain/middleware) .
-
-See [Middleware](/oss/langchain/middleware) for details on `contextSchema`, type enforcement and more structured context/state patterns.
+Prefer context for stable configuration (env, flags, tenant), and state for dynamic properties that change during the run (recent tool outcomes, user choices).
 
 #### Advanced: semantic similarity over a large tool catalog
 
@@ -1412,14 +1436,15 @@ agent = create_agent(
 )
 
 agent.invoke({
-    "messages": [HumanMessage("I need to travel to Japan next month—what visas do I need?")],
+    "messages": [HumanMessage("I need to travel to Japan next month—what visas do I need? I live in Germany.")],
 })
 ```
 :::
 :::js
-```ts
+<CodeGroup>
+```ts expandable advanced.ts
 import { z } from "zod";
-import { createAgent, createMiddleware, tool, HumanMessage, type Tool } from "langchain";
+import { createAgent, createMiddleware, tool, HumanMessage, type StructuredTool } from "langchain";
 import { OpenAIEmbeddings } from "@langchain/openai";
 
 // 1) Define tools with good names/descriptions
@@ -1433,22 +1458,21 @@ const bookFlight = tool(
 );
 
 const lookupVisa = tool(
-  async ({ country }) => `Visa info for ${country}`,
+  async ({ country }) =>
+    `For all travelers from ${country}, it is required to have a visa and travel with a banana.`,
   {
     name: "lookup_visa_requirements",
-    description: "Check visa requirements and documentation by destination country",
+    description:
+      "Check visa requirements and documentation by destination country",
     schema: z.object({ country: z.string() }),
   }
 );
 
-const localWeather = tool(
-  async ({ city }) => `Weather in ${city}: Sunny`,
-  {
-    name: "local_weather",
-    description: "Get current weather and short-term forecast for a city",
-    schema: z.object({ city: z.string() }),
-  }
-);
+const localWeather = tool(async ({ city }) => `Weather in ${city}: Sunny`, {
+  name: "local_weather",
+  description: "Get current weather and short-term forecast for a city",
+  schema: z.object({ city: z.string() }),
+});
 
 const fullCatalog = [bookFlight, lookupVisa, localWeather];
 
@@ -1457,8 +1481,11 @@ const embedder = new OpenAIEmbeddings({ model: "text-embedding-3-small" });
 const toolTexts = fullCatalog.map((t) => `${t.name}: ${t.description}`);
 const toolVectors = await embedder.embedDocuments(toolTexts);
 
-type CatalogItem = { tool: Tool; vector: number[] };
-const catalog: CatalogItem[] = fullCatalog.map((tool, i) => ({ tool, vector: toolVectors[i] }));
+type CatalogItem = { tool: StructuredTool; vector: number[] };
+const catalog: CatalogItem[] = fullCatalog.map((tool, i) => ({
+  tool,
+  vector: toolVectors[i],
+}));
 
 function cosineSimilarity(a: number[], b: number[]) {
   const dot = a.reduce((s, v, i) => s + v * b[i], 0);
@@ -1478,11 +1505,12 @@ async function selectTopKBySimilarity(query: string, k = 6) {
 
 // 3) Use middleware to expose only the top-k most relevant tools each turn
 const selectToolsMiddleware = createMiddleware({
-  name: "SemanticToolGate",
+  name: "SelectToolsMiddleware",
   modifyModelRequest: async (request, state) => {
     const last = state.messages.at(-1);
     const active = last?.content
-      ? await selectTopKBySimilarity(last.content, 8)
+      ? // only give me the most relevant tool
+        await selectTopKBySimilarity(last.content as string, 1)
       : fullCatalog.slice(0, 5);
     return { ...request, tools: active };
   },
@@ -1494,20 +1522,28 @@ const semanticAgent = createAgent({
   middleware: [selectToolsMiddleware] as const,
 });
 
-await semanticAgent.invoke({
-  messages: [new HumanMessage("I need to travel to Japan next month—what visas do I need?")],
+const result = await semanticAgent.invoke({
+  messages: [
+    new HumanMessage(
+      "I need to travel to Japan next month—what visas do I need? I live in Germany."
+    ),
+  ],
 });
+console.log(result.messages.at(-1)?.content);
 ```
+
+```sh Advanced Example Output
+Travelers from Germany to Japan typically need a visa. Additionally, a peculiar requirement is to travel with a banana. Please ensure that you meet these requirements before traveling.
+```
+</CodeGroup>
 :::
 
-<Note>
-Production tips:
+When deploying dynamic tool selection in production, consider these key optimization strategies:
 
 - Precompute tool embeddings offline and refresh on change. Cache them in memory or a vector DB.
 - Use top-k and score thresholds; fall back to a small safe default tool set if confidence is low.
 - Log and evaluate tool recall/precision. Adjust names/descriptions—they matter for retrieval quality.
-- Combine with middleware for safety gates (human approval, rate limiting, tenancy filtering). See [Middleware](/oss/langchain/middleware).
-</Note>
+- Combine with middleware for safety gates (human approval, rate limiting, tenancy filtering)
 
 ### Design guidelines
 
