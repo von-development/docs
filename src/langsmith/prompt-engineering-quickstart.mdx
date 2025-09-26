@@ -3,6 +3,8 @@ title: Prompt engineering quickstart
 sidebarTitle: Test prompts
 ---
 
+import WorkspaceSecret from '/snippets/langsmith/set-workspace-secrets.mdx';
+
 Prompts guide the behavior of large language models (LLM). [_Prompt engineering_](/langsmith/prompt-engineering-concepts) is the process of crafting, testing, and refining the instructions you give to an LLM so it produces reliable and useful responses.
 
 LangSmith provides tools to create, version, test, and collaborate on prompts. You’ll also encounter common concepts like [_prompt templates_](/langsmith/prompt-engineering-concepts#prompts-vs-prompt-templates), which let you reuse structured prompts, and [_variables_](/langsmith/prompt-engineering-concepts#f-string-vs-mustache), which allow you to dynamically insert values (such as a user’s question) into a prompt.
@@ -26,7 +28,11 @@ Select the tab for UI or SDK workflows:
 <Tabs>
 <Tab title="UI" icon="window">
 
-## 1. Create a prompt
+## 1. Set workspace secret
+
+<WorkspaceSecret/>
+
+## 2. Create a prompt
 
 1. In the [LangSmith UI](https://smith.langchain.com), navigate to the **Prompts** section in the left-hand menu.
 1. Click on **+ Prompt** to create a prompt.
@@ -47,7 +53,7 @@ Select the tab for UI or SDK workflows:
 </div>
 
 
-## 2. Test a prompt
+## 3. Test a prompt
 
 1. Under the **Prompts** heading select the gear <Icon icon="gear" iconType="solid" /> icon next to the model name, which will launch the **Prompt Settings** window on the **Model Configuration** tab.
 1. Set the [model configuration](/langsmith/managing-model-configurations) you want to use. The **Provider** and **Model** you select will determine the parameters that are configurable on this configuration page. Once set, click **Save as**.
@@ -87,7 +93,7 @@ Select the tab for UI or SDK workflows:
 
 1. After testing and refining your prompt, click **Save** to store it for future use.
 
-## 3. Iterate on a prompt
+## 4. Iterate on a prompt
 
 LangSmith allows for team-based prompt iteration. [Workspace](/langsmith/administration-overview#workspaces) members can experiment with prompts in the playground and save their changes as a new [_commit_](/langsmith/prompt-engineering-concepts#commits) when ready.
 
