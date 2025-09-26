@@ -3,6 +3,8 @@ title: Evaluation quickstart
 sidebarTitle: Evaluate an application
 ---
 
+import WorkspaceSecret from '/snippets/langsmith/set-workspace-secrets.mdx';
+
 [_Evaluations_](/langsmith/evaluation-concepts) are a quantitative way to measure the performance of LLM applications. LLMs can behave unpredictably, even small changes to prompts, models, or inputs can significantly affect results. Evaluations provide a structured way to identify failures, compare versions, and build more reliable AI applications.
 
 Running an evaluation in LangSmith requires three key components:
@@ -30,7 +32,11 @@ Before you begin, make sure you have:
 <Tabs>
 <Tab title="UI" icon="window">
 
-## 1. Create a prompt
+## 1. Set workspace secrets
+
+<WorkspaceSecret/>
+
+## 2. Create a prompt
 
 LangSmith's [Prompt Playground](/langsmith/observability-concepts#prompt-playground) makes it possible to run evaluations over different prompts, new models, or test different model configurations.
 
@@ -41,7 +47,7 @@ LangSmith's [Prompt Playground](/langsmith/observability-concepts#prompt-playgro
     Answer the following question accurately:
     ```
 
-## 2. Create a dataset
+## 3. Create a dataset
 
 1. Click **Set up Evaluation**, which will open a **New Experiment** table at the bottom of the page.
 1. In the **Select or create a new dataset** dropdown, click the **+ New** button to create a new dataset.
