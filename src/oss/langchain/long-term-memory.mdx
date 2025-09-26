@@ -30,11 +30,11 @@ def embed(texts: list[str]) -> list[list[float]]:
 
 
 # InMemoryStore saves data to an in-memory dictionary. Use a DB-backed store in production use.
-store = InMemoryStore(index={"embed": embed, "dims": 2})
+store = InMemoryStore(index={"embed": embed, "dims": 2}) # [!code highlight]
 user_id = "my-user"
 application_context = "chitchat"
-namespace = (user_id, application_context)
-store.put(
+namespace = (user_id, application_context) # [!code highlight]
+store.put( # [!code highlight]
     namespace,
     "a-memory",
     {
@@ -46,9 +46,9 @@ store.put(
     },
 )
 # get the "memory" by ID
-item = store.get(namespace, "a-memory")
+item = store.get(namespace, "a-memory") # [!code highlight]
 # search for "memories" within this namespace, filtering on content equivalence, sorted by vector similarity
-items = store.search(
+items = store.search( # [!code highlight]
     namespace, filter={"my-key": "my-value"}, query="language preferences"
 )
 ```
@@ -64,12 +64,12 @@ const embed = (texts: string[]): number[][] => {
 };
 
 // InMemoryStore saves data to an in-memory dictionary. Use a DB-backed store in production use.
-const store = new InMemoryStore({ index: { embed, dims: 2 } });
+const store = new InMemoryStore({ index: { embed, dims: 2 } }); // [!code highlight]
 const userId = "my-user";
 const applicationContext = "chitchat";
-const namespace = [userId, applicationContext];
+const namespace = [userId, applicationContext]; // [!code highlight]
 
-await store.put(
+await store.put( // [!code highlight]
     namespace,
     "a-memory",
     {
@@ -82,10 +82,10 @@ await store.put(
 );
 
 // get the "memory" by ID
-const item = await store.get(namespace, "a-memory");
+const item = await store.get(namespace, "a-memory"); // [!code highlight]
 
 // search for "memories" within this namespace, filtering on content equivalence, sorted by vector similarity
-const items = await store.search(
+const items = await store.search( // [!code highlight]
     namespace,
     {
         filter: { "my-key": "my-value" },
@@ -100,7 +100,7 @@ For more information about the memory store, see the [Persistence](/oss/langgrap
 ## Read long-term memory in tools
 
 :::python
-```python title="A tool the agent can use to look up user information"
+```python A tool the agent can use to look up user information
 from dataclasses import dataclass
 
 from langchain_core.runnables import RunnableConfig
@@ -157,17 +157,17 @@ agent.invoke(
 :::
 
 :::js
-```typescript A tool the agent can use to look up user information highlight={5,9-17,24,38}
+```typescript A tool the agent can use to look up user information
 import { z } from "zod";
 import { createAgent, tool } from "langchain";
 import { InMemoryStore, type Runtime } from "@langchain/langgraph";
 
-const store = new InMemoryStore();
+const store = new InMemoryStore(); // [!code highlight]
 const contextSchema = z.object({
     userId: z.string(),
 });
 
-await store.put(
+await store.put( // [!code highlight]
     ["users"],
     "user_123",
     {
@@ -190,13 +190,13 @@ const agent = createAgent({
     model: "openai:gpt-4o-mini",
     tools: [getUserInfo],
     contextSchema,
-    store,
+    store, // [!code highlight]
 });
 
 // Run the agent
 const result = await agent.invoke(
     { messages: [{ role: "user", content: "look up user information" }] },
-    { context: { userId: "user_123" } }
+    { context: { userId: "user_123" } } // [!code highlight]
 );
 
 console.log(result.messages.at(-1)?.content);
@@ -230,7 +230,7 @@ from langchain.agents import create_agent
 from langgraph.config import get_store
 from langgraph.store.memory import InMemoryStore
 
-store = InMemoryStore() # (1)!
+store = InMemoryStore() # (1)! # [!code highlight]
 
 class UserInfo(TypedDict): # (2)!
     name: str
@@ -238,21 +238,21 @@ class UserInfo(TypedDict): # (2)!
 def save_user_info(user_info: UserInfo, config: RunnableConfig) -> str: # (3)!
     """Save user info."""
     # Same as that provided to `create_agent`
-    store = get_store() # (4)!
+    store = get_store() # (4)! # [!code highlight]
     user_id = config["configurable"].get("user_id")
-    store.put(("users",), user_id, user_info) # (5)!
+    store.put(("users",), user_id, user_info) # (5)! # [!code highlight]
     return "Successfully saved user info."
 
 agent = create_agent(
     model="anthropic:claude-3-7-sonnet-latest",
     tools=[save_user_info],
-    store=store
+    store=store # [!code highlight]
 )
 
 # Run the agent
 agent.invoke(
     {"messages": [{"role": "user", "content": "My name is John Smith"}]},
-    config={"configurable": {"user_id": "user_123"}} # (6)!
+    config={"configurable": {"user_id": "user_123"}} # (6)! # [!code highlight]
 )
 
 # You can access the store directly to get the value
@@ -268,12 +268,12 @@ store.get(("users",), "user_123").value
 :::
 
 :::js
-```typescript title="Example of a tool that updates user information" highlight={5,11-14,19,39}
+```typescript Example of a tool that updates user information
 import { z } from "zod";
 import { tool, createAgent, type AgentRuntime } from "langchain";
 import { InMemoryStore, type Runtime } from "@langchain/langgraph";
 
-const store = new InMemoryStore();
+const store = new InMemoryStore(); // [!code highlight]
 
 const contextSchema = z.object({
     userId: z.string(),
@@ -295,13 +295,13 @@ const agent = createAgent({
     model: "openai:gpt-4o-mini",
     tools: [saveUserInfo],
     contextSchema,
-    store,
+    store, // [!code highlight]
 });
 
 // Run the agent
 await agent.invoke(
     { messages: [{ role: "user", content: "My name is John Smith" }] },
-    { context: { userId: "user_123" } }
+    { context: { userId: "user_123" } } // [!code highlight]
 );
 
 // You can access the store directly to get the value
