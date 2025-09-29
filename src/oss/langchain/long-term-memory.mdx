@@ -185,6 +185,11 @@ const getUserInfo = tool(
     // Retrieve data from store - returns StoreValue object with value and metadata
     const userInfo = await runtime.store.get(["users"], userId);
     return userInfo?.value ? JSON.stringify(userInfo.value) : "Unknown user";
+  },
+  {
+    name: "getUserInfo",
+    description: "Look up user info by userId from the store.",
+    schema: z.object({}),
   }
 );
 
