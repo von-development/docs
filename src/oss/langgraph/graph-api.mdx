@@ -1003,8 +1003,17 @@ LangGraph can easily handle migrations of graph definitions (nodes, edges, and s
 
 ## Runtime Context
 
+:::python
+
 When creating a graph, you can specify a `context_schema` for runtime context passed to nodes. This is useful for passing
 information to nodes that is not part of the graph state. For example, you might want to pass dependencies such as model name or a database connection.
+
+:::
+
+:::js
+When creating a graph, you can specify a `contextSchema` for runtime context passed to nodes. This is useful for passing
+information to nodes that is not part of the graph state. For example, you might want to pass dependencies such as model name or a database connection.
+:::
 
 :::python
 ```python
