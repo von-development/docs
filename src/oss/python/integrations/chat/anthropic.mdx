@@ -892,6 +892,28 @@ response.content
     'end_block_index': 248}]}]
 ```
 
+## Context management
+
+Anthropic supports a context editing feature that will automatically manage the model's context window (e.g., by clearing tool results).
+
+See [Anthropic documentation](https://docs.claude.com/en/docs/build-with-claude/context-editing) for details and configuration options.
+
+<Info>
+    **Context management is supported since `langchain-anthropic>=0.3.21`**
+</Info>
+
+```python
+from langchain_anthropic import ChatAnthropic
+
+llm = ChatAnthropic(
+    model="claude-sonnet-4-5-20250929",
+    betas=["context-management-2025-06-27"],
+    context_management={"edits": [{"type": "clear_tool_uses_20250919"}]},
+)
+llm_with_tools = llm.bind_tools([{"type": "web_search_20250305", "name": "web_search"}])
+response = llm_with_tools.invoke("Search for recent developments in AI")
+```
+
 ## Built-in tools
 
 Anthropic supports a variety of [built-in tools](https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/text-editor-tool), which can be bound to the model in the [usual way](/oss/langchain/tools/). Claude will generate tool calls adhering to its internal schema for the tool:
@@ -1025,6 +1047,26 @@ for i, file_id in enumerate(file_ids):
 ```
 
 </Accordion>
+
+### Memory tool
+
+Claude supports a memory tool for client-side storage and retrieval of context across conversational threads. See docs [here](https://docs.claude.com/en/docs/agents-and-tools/tool-use/memory-tool) for details.
+
+<Info>
+    **Anthropic's built-in memory tool is supported since `langchain-anthropic>=0.3.21`**
+</Info>
+
+```python
+from langchain_anthropic import ChatAnthropic
+
+llm = ChatAnthropic(
+    model="claude-sonnet-4-5-20250929",
+    betas=["context-management-2025-06-27"],
+)
+llm_with_tools = llm.bind_tools([{"type": "memory_20250818", "name": "memory"}])
+
+response = llm_with_tools.invoke("What are my interests?")
+```
 
 ### Remote MCP
 
