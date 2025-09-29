@@ -538,13 +538,8 @@
                     "group": "LangGraph Studio",
                     "pages": [
                       "langgraph-platform/langgraph-studio",
-                      "langgraph-platform/invoke-studio",
-                      "langgraph-platform/manage-assistants-studio",
-                      "langgraph-platform/threads-studio",
-                      "langgraph-platform/iterate-graph-studio",
-                      "langgraph-platform/run-evals-studio",
-                      "langgraph-platform/clone-traces-studio",
-                      "langgraph-platform/datasets-studio",
+                      "langgraph-platform/use-studio",
+                      "langgraph-platform/observability-studio",
                       "langgraph-platform/troubleshooting-studio"
                     ]
                   }
@@ -1319,7 +1314,8 @@
                           "/oss/integrations/chat/azure",
                           "/oss/integrations/text_embedding/azure_openai"
                         ]
-                      }
+                      },
+                      "oss/javascript/integrations/providers/all_providers"
                     ]
                   },
                   {
@@ -1594,13 +1590,8 @@
                     "group": "LangGraph Studio",
                     "pages": [
                       "langgraph-platform/langgraph-studio",
-                      "langgraph-platform/invoke-studio",
-                      "langgraph-platform/manage-assistants-studio",
-                      "langgraph-platform/threads-studio",
-                      "langgraph-platform/iterate-graph-studio",
-                      "langgraph-platform/run-evals-studio",
-                      "langgraph-platform/clone-traces-studio",
-                      "langgraph-platform/datasets-studio",
+                      "langgraph-platform/use-studio",
+                      "langgraph-platform/observability-studio",
                       "langgraph-platform/troubleshooting-studio"
                     ]
                   }
