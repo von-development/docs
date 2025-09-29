@@ -46,6 +46,7 @@ LINK_MAPS: list[LinkMap] = [
             "Command": "reference/types/#langgraph.types.Command",
             "CompiledStateGraph": "reference/graphs/#langgraph.graph.state.CompiledStateGraph",
             "create_react_agent": "reference/prebuilt/#langgraph.prebuilt.chat_agent_executor.create_react_agent",
+            "get_runtime": "reference/runtime/#langgraph.runtime.get_runtime",
             "create_supervisor": "reference/supervisor/#langgraph_supervisor.supervisor.create_supervisor",
             "EncryptedSerializer": "reference/checkpoints/#langgraph.checkpoint.serde.encrypted.EncryptedSerializer",
             "entrypoint.final": "reference/func/#langgraph.func.entrypoint.final",
@@ -68,6 +69,7 @@ LINK_MAPS: list[LinkMap] = [
             "pre_model_hook": "reference/prebuilt/#langgraph.prebuilt.chat_agent_executor.create_react_agent",
             "protocol": "reference/checkpoints/#langgraph.checkpoint.serde.base.SerializerProtocol",
             "Reference": "https://python.langchain.com/api_reference/",
+            "Runtime": "reference/runtime/#langgraph.runtime.Runtime",
             "Send": "reference/types/#langgraph.types.Send",
             "SerializerProtocol": "reference/checkpoints/#langgraph.checkpoint.serde.base.SerializerProtocol",
             "SqliteSaver": "reference/checkpoints/#langgraph.checkpoint.sqlite.SqliteSaver",
@@ -164,6 +166,13 @@ LINK_MAPS: list[LinkMap] = [
             "RunnableConfig": "interfaces/_langchain_core.runnables.RunnableConfig.html",
             "Reference": "index.html",
             "Embeddings": "classes/_langchain_core.embeddings.Embeddings.html",
+        },
+    },
+    {
+        "host": "https://reference.langchain.com/javascript/",
+        "scope": "js",
+        "links": {
+            "Runtime": "interfaces/_langchain_langgraph.index.Runtime.html",
         },
     },
 ]
