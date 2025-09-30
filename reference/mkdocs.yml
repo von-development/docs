@@ -1,5 +1,5 @@
 site_name: "LangChain Reference"
-site_url: https://reference.langchain.com
+site_url: https://reference.langchain.com/python/
 site_description: Unified reference documentation for LangChain and LangGraph
 site_author: LangChain
 
@@ -106,7 +106,7 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
   font:
-    text: "Public Sans"
+    text: "Inter"
     code: "Roboto Mono"
 
 # https://www.mkdocs.org/user-guide/configuration/#plugins
@@ -354,14 +354,14 @@ extra_css:
   - stylesheets/version_admonitions.css
 
 # https://www.mkdocs.org/user-guide/configuration/#extra_javascript
-# extra_javascript:
-#   - javascripts/extra.js
+extra_javascript:
+  - javascripts/shortcuts.js
 
 # https://www.mkdocs.org/user-guide/configuration/#extra_templates
 # extra_templates:
 
 copyright: >
-  Copyright &copy; 2025 LangChain, Inc
+  Copyright &copy; 2025 <a href="https://www.langchain.com/">LangChain, Inc</a> — <a href="https://docs.langchain.com/oss/python/contributing/documentation">Edit page</a>
 
 # https://www.mkdocs.org/user-guide/configuration/#extra
 extra:

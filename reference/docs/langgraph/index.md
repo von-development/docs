@@ -2,12 +2,6 @@
 title: LangGraph
 ---
 
-<style>
-.md-sidebar {
-  display: block !important;
-}
-</style>
-
 # Reference
 
 Welcome to the LangGraph reference docs! These pages detail the core interfaces you will use when building with LangGraph. Each section covers a different part of the ecosystem.
