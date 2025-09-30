@@ -148,30 +148,6 @@ completion
   "- Bedrock was founded in 2021 and is based in San Fran"... 116 more characters
 ```
 
-## Chaining
-
-We can [chain](/oss/how-to/sequence/) our completion model with a prompt template like so:
-
-```typescript
-import { PromptTemplate } from "@langchain/core/prompts"
-
-const prompt = PromptTemplate.fromTemplate("Human: How to say {input} in {output_language}:\nAssistant:")
-
-const chain = prompt.pipe(llm);
-await chain.invoke(
-  {
-    output_language: "German",
-    input: "I love programming.",
-  }
-)
-```
-
-```output
-' Here is how to say "I love programming" in German:\n' +
-  "\n" +
-  "Ich liebe das Programmieren."
-```
-
 ## API reference
 
 For detailed documentation of all Bedrock features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_community_llms_bedrock.Bedrock.html).

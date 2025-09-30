@@ -95,37 +95,6 @@ print(ai_msg.content)
 J'adore la programmation.
 ```
 
-## Chaining
-
-We can [chain](/oss/python/how-to/sequence/) our model with a prompt template as follows:
-
-```python
-from langchain_core.prompts import ChatPromptTemplate
-
-prompt = ChatPromptTemplate.from_messages(
-    [
-        (
-            "system",
-            "You are a helpful assistant that translates {input_language} to {output_language}.",
-        ),
-        ("human", "{input}"),
-    ]
-)
-
-chain = prompt | llm
-chain.invoke(
-    {
-        "input_language": "English",
-        "output_language": "German",
-        "input": "I love programming.",
-    }
-)
-```
-
-```output
-AIMessage(content='Ich liebe das Programmieren.', response_metadata={'token_usage': {'completion_tokens': 7, 'prompt_tokens': 30, 'total_tokens': 37}, 'model_name': 'meta-llama/Llama-3-70b-chat-hf', 'system_fingerprint': None, 'finish_reason': 'stop', 'logprobs': None}, id='run-a249aa24-ee31-46ba-9bf9-f4eb135b0a95-0', usage_metadata={'input_tokens': 30, 'output_tokens': 7, 'total_tokens': 37})
-```
-
 ## API reference
 
 For detailed documentation of all ChatTogether features and configurations, head to the API reference: [python.langchain.com/api_reference/together/chat_models/langchain_together.chat_models.ChatTogether.html](https://python.langchain.com/api_reference/together/chat_models/langchain_together.chat_models.ChatTogether.html)

@@ -1327,7 +1327,6 @@
                       "oss/javascript/integrations/stores/index",
                       "oss/javascript/integrations/document_transformers/index",
                       "oss/javascript/integrations/llm_caching/index",
-                      "oss/javascript/integrations/memory/index",
                       "oss/javascript/integrations/callbacks/index"
                     ]
                   },

@@ -774,8 +774,6 @@ db.create_index()
 
 Timescale Vector also supports the self-querying retriever functionality, which gives it the ability to query itself. Given a natural language query with a query statement and filters (single or composite), the retriever uses a query constructing LLM chain to write a SQL query and then applies it to the underlying PostgreSQL database in the Timescale Vector vectorstore.
 
-For more on self-querying, [see the docs](/oss/how-to/self_query).
-
 To illustrate self-querying with Timescale Vector, we'll use the same gitlog dataset from Part 3.
 
 ```python
