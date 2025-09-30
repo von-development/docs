@@ -109,37 +109,6 @@ print(ai_msg.text)
 J'adore la programmation.
 ```
 
-## Chaining
-
-We can [chain](/oss/how-to/sequence/) our model with a prompt template like so:
-
-```python
-from langchain_core.prompts import ChatPromptTemplate
-
-prompt = ChatPromptTemplate.from_messages(
-    [
-        (
-            "system",
-            "You are a helpful assistant that translates {input_language} to {output_language}.",
-        ),
-        ("human", "{input}"),
-    ]
-)
-
-chain = prompt | llm
-chain.invoke(
-    {
-        "input_language": "English",
-        "output_language": "German",
-        "input": "I love programming.",
-    }
-)
-```
-
-```output
-AIMessage(content='Ich liebe das Programmieren.', additional_kwargs={'refusal': None}, response_metadata={'token_usage': {'completion_tokens': 6, 'prompt_tokens': 26, 'total_tokens': 32}, 'model_name': 'gpt-4o-2024-05-13', 'system_fingerprint': 'fp_3aa7262c27', 'finish_reason': 'stop', 'logprobs': None}, id='run-350585e1-16ca-4dad-9460-3d9e7e49aaf1-0', usage_metadata={'input_tokens': 26, 'output_tokens': 6, 'total_tokens': 32})
-```
-
 ## Streaming usage metadata
 
 OpenAI's Chat Completions API does not stream token usage statistics by default
@@ -233,7 +202,7 @@ ai_msg.tool_calls
   'type': 'tool_call'}]
 ```
 
-For more on binding tools and tool call outputs, head to the [tool calling](/oss/how-to/function_calling) docs.
+For more on binding tools and tool call outputs, head to the [tool calling](/oss/langchain/tools) docs.
 
 ### Structured output and tool calls
 

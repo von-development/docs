@@ -22,7 +22,7 @@ This notebook covers how to load documents from `Docugami`. It provides the adva
 3. Create an access token via the Developer Playground for your workspace. [Detailed instructions](https://help.docugami.com/home/docugami-api)
 4. Explore the [Docugami API](https://api-docs.docugami.com) to get a list of your processed docset IDs, or just the document IDs for a particular docset.
 6. Use the DocugamiLoader as detailed below, to get rich semantic chunks for your documents.
-7. Optionally, build and publish one or more [reports or abstracts](https://help.docugami.com/home/reports). This helps Docugami improve the semantic XML with better tags based on your preferences, which are then added to the DocugamiLoader output as metadata. Use techniques like [self-querying retriever](/oss/how-to/self_query) to do high accuracy Document QA.
+7. Optionally, build and publish one or more [reports or abstracts](https://help.docugami.com/home/reports). This helps Docugami improve the semantic XML with better tags based on your preferences, which are then added to the DocugamiLoader output as metadata. Use techniques like self-querying retriever to do high accuracy Document QA.
 
 ## Advantages vs Other Chunking Techniques
 
@@ -196,7 +196,7 @@ print(chunks[0].metadata)
 {'xpath': '/docset:OFFICELEASE-section/dg:chunk', 'id': '47297e277e556f3ce8b570047304560b', 'name': 'Sample Commercial Leases/Shorebucks LLC_AZ.pdf', 'source': 'Sample Commercial Leases/Shorebucks LLC_AZ.pdf', 'structure': 'h1 h1 p', 'tag': 'chunk Lease', 'Lease Date': 'March  29th , 2019', 'Landlord': 'Menlo Group', 'Tenant': 'Shorebucks LLC', 'Premises Address': '1564  E Broadway Rd ,  Tempe ,  Arizona  85282', 'Term of Lease': '96  full calendar months', 'Square Feet': '16,159'}
 ```
 
-We can use a [self-querying retriever](/oss/how-to/self_query) to improve our query accuracy, using this additional metadata:
+We can use a self-querying retriever to improve our query accuracy, using this additional metadata:
 
 ```python
 !poetry run pip install -U lark --quiet

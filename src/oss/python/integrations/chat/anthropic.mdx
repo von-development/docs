@@ -105,37 +105,6 @@ print(ai_msg.text)
 J'adore la programmation.
 ```
 
-## Chaining
-
-We can [chain](/oss/how-to/sequence/) our model with a prompt template like so:
-
-```python
-from langchain_core.prompts import ChatPromptTemplate
-
-prompt = ChatPromptTemplate.from_messages(
-    [
-        (
-            "system",
-            "You are a helpful assistant that translates {input_language} to {output_language}.",
-        ),
-        ("human", "{input}"),
-    ]
-)
-
-chain = prompt | llm
-chain.invoke(
-    {
-        "input_language": "English",
-        "output_language": "German",
-        "input": "I love programming.",
-    }
-)
-```
-
-```output
-AIMessage(content="Here's the German translation:\n\nIch liebe Programmieren.", response_metadata={'id': 'msg_01GhkRtQZUkA5Ge9hqmD8HGY', 'model': 'claude-3-5-sonnet-20240620', 'stop_reason': 'end_turn', 'stop_sequence': None, 'usage': {'input_tokens': 23, 'output_tokens': 18}}, id='run-da5906b4-b200-4e08-b81a-64d4453643b6-0', usage_metadata={'input_tokens': 23, 'output_tokens': 18, 'total_tokens': 41})
-```
-
 ## Content blocks
 
 When using tools, [extended thinking](#extended-thinking), and other features, content from a single Anthropic AI message can either be a single string or a list of content blocks. For example, when an Anthropic model invokes a tool, the tool invocation is part of the message content (as well as being exposed in the standardized `AIMessage.tool_calls`):

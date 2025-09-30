@@ -263,49 +263,6 @@ const modelWithBoundCachedContent = new ChatVertexAI({
 
 Note that not all models currently support context caching.
 
-## Chaining
-
-We can [chain](/oss/how-to/sequence/) our model with a prompt template like so:
-
-```typescript
-import { ChatPromptTemplate } from "@langchain/core/prompts"
-
-const prompt = ChatPromptTemplate.fromMessages(
-    [
-        [
-            "system",
-            "You are a helpful assistant that translates {input_language} to {output_language}.",
-        ],
-        ["human", "{input}"],
-    ]
-)
-
-const chain = prompt.pipe(llm);
-await chain.invoke(
-  {
-    input_language: "English",
-    output_language: "German",
-    input: "I love programming.",
-  }
-);
-```
-
-```output
-AIMessageChunk {
-  "content": "Ich liebe das Programmieren. \n",
-  "additional_kwargs": {},
-  "response_metadata": {},
-  "tool_calls": [],
-  "tool_call_chunks": [],
-  "invalid_tool_calls": [],
-  "usage_metadata": {
-    "input_tokens": 15,
-    "output_tokens": 9,
-    "total_tokens": 24
-  }
-}
-```
-
 ## API reference
 
 For detailed documentation of all ChatVertexAI features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_google_vertexai.ChatVertexAI.html).

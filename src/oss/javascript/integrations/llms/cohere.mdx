@@ -108,39 +108,6 @@ completion
 Cohere is a company that provides natural language processing models that help companies improve human-machine interactions. Cohere was founded in 2019 by Aidan Gomez, Ivan Zhang, and Nick Frosst.
 ```
 
-## Chaining
-
-We can [chain](/oss/how-to/sequence/) our completion model with a prompt template like so:
-
-```typescript
-import { PromptTemplate } from "@langchain/core/prompts"
-
-const prompt = new PromptTemplate({
-  template: "How to say {input} in {output_language}:\n",
-  inputVariables: ["input", "output_language"],
-})
-
-const chain = prompt.pipe(llm);
-await chain.invoke(
-  {
-    output_language: "German",
-    input: "I love programming.",
-  }
-)
-```
-
-```output
- Ich liebe Programming.
-
-But for day to day purposes Ich mag Programming. would be enough and perfectly understood.
-
-I love programming is "Ich liebe Programming" and I like programming is "Ich mag Programming" respectively.
-
-There are also other ways to express this feeling, such as "Ich habe Spaß mit Programming", which means "I enjoy programming". But "Ich mag" and "Ich liebe" are the most common expressions for this.
-
-Let me know if I can be of further help with something else!
-```
-
 ## API reference
 
 For detailed documentation of all Cohere features and configurations head to the [API reference](https://api.js.langchain.com/classes/langchain_cohere.Cohere.html).

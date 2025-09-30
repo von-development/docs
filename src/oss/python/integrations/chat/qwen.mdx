@@ -77,38 +77,6 @@ ai_msg
 AIMessage(content="J'adore la programmation.", additional_kwargs={}, response_metadata={'finish_reason': 'stop', 'model_name': 'qwen-flash'}, id='run--40f2e75b-7d28-4a71-8f5f-561509ac2010-0', usage_metadata={'input_tokens': 32, 'output_tokens': 8, 'total_tokens': 40, 'input_token_details': {}, 'output_token_details': {}})
 ```
 
-## Chaining
-
-We can [chain](/oss/python/how-to/sequence/) our model with a prompt template like so:
-
-```python
-from langchain_core.prompts import ChatPromptTemplate
-
-prompt = ChatPromptTemplate(
-    [
-        (
-            "system",
-            "You are a helpful assistant that translates"
-            "{input_language} to {output_language}.",
-        ),
-        ("human", "{input}"),
-    ]
-)
-
-chain = prompt | llm
-chain.invoke(
-    {
-        "input_language": "English",
-        "output_language": "German",
-        "input": "I love programming.",
-    }
-)
-```
-
-```output
-AIMessage(content='Ich liebe Programmierung.', additional_kwargs={}, response_metadata={'finish_reason': 'stop', 'model_name': 'qwen-flash'}, id='run--ed052510-82f4-4dc5-a7f1-761a792c0dd4-0', usage_metadata={'input_tokens': 28, 'output_tokens': 5, 'total_tokens': 33, 'input_token_details': {}, 'output_token_details': {}})
-```
-
 ## Tool Calling
 
 ChatQwen supports tool calling API that lets you describe tools and their arguments, and have the model return a JSON object with a tool to invoke and the inputs to that tool.
