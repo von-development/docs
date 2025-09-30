@@ -446,6 +446,8 @@ const model = await initChatModel("openai:gpt-5-nano");
 const response = await model.invoke("Hello!");
 console.log(response.usage_metadata);
 ```
+
+```json
 {
   "output_tokens": 304,
   "input_tokens": 8,
