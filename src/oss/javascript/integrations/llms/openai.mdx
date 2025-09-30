@@ -97,34 +97,6 @@ OpenAI has received funding from various sources, including tech giants like Mic
 In addition to its research and development
 ```
 
-## Chaining
-
-We can [chain](/oss/how-to/sequence/) our completion model with a prompt template like so:
-
-```typescript
-import { PromptTemplate } from "@langchain/core/prompts"
-
-const prompt = new PromptTemplate({
-  template: "How to say {input} in {output_language}:\n",
-  inputVariables: ["input", "output_language"],
-})
-
-const chain = prompt.pipe(llm);
-await chain.invoke(
-  {
-    output_language: "German",
-    input: "I love programming.",
-  }
-)
-```
-
-```output
-Ich liebe Programmieren.
-```
-
-If you're part of an organization, you can set `process.env.OPENAI_ORGANIZATION` to your OpenAI organization id, or pass it in as `organization` when
-initializing the model.
-
 ## Custom URLs
 
 You can customize the base URL the SDK sends requests to by passing a `configuration` parameter like this:
