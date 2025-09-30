@@ -999,7 +999,7 @@ def select_tools(request: ModelRequest, state: AgentState) -> ModelRequest:
     """Select tools based on the VCS provider."""
     runtime = get_runtime(Context)
     provider = runtime.context.provider
-    selected_tools = [gitlab_create_issue if provider == "gitlab" else github_create_issue]
+    selected_tools = ["gitlab_create_issue"] if provider == "gitlab" else ["github_create_issue"]
     request.tools = selected_tools
     return request
 
@@ -1054,11 +1054,11 @@ const gitlabCreateIssue = tool(
 
 const allTools = [githubCreateIssue, gitlabCreateIssue];
 
-const vcsToolSelector = createMiddleware({
-  name: "VcsToolSelector",
-  contextSchema: z.object({ vcsProvider: z.enum(["github", "gitlab"]) }),
+const toolSelector = createMiddleware({
+  name: "toolSelector",
+  contextSchema: z.object({ provider: z.enum(["github", "gitlab"]) }),
   modifyModelRequest: (request, _state, runtime) => {
-    const provider = runtime.context.vcsProvider;
+    const provider = runtime.context.provider;
     const toolName = provider === "gitlab" ? "gitlab_create_issue" : "github_create_issue";
     return { ...request, tools: [toolName] };
   },
@@ -1067,7 +1067,7 @@ const vcsToolSelector = createMiddleware({
 const agent = createAgent({
   model: "openai:gpt-4o",
   tools: allTools,
-  middleware: [vcsToolSelector],
+  middleware: [toolSelector],
 });
 
 // Invoke with GitHub context
@@ -1078,7 +1078,7 @@ await agent.invoke(
     ],
   },
   {
-    context: { vcsProvider: "github" },
+    context: { provider: "github" },
   }
 );
 ```
