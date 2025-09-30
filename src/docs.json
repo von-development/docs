@@ -1280,8 +1280,8 @@
                         "group": "OpenAI",
                         "pages": [
                           "oss/javascript/integrations/providers/openai",
-                          "/oss/integrations/chat/openai",
-                          "/oss/integrations/text_embedding/openai"
+                          "oss/javascript/integrations/chat/openai",
+                          "oss/javascript/integrations/text_embedding/openai"
                         ]
                       },
                       {
@@ -1295,55 +1295,40 @@
                         "group": "Google",
                         "pages": [
                           "oss/javascript/integrations/providers/google",
-                          "/oss/integrations/chat/google_generative_ai",
-                          "/oss/integrations/text_embedding/google_generativeai"
+                          "oss/javascript/integrations/chat/google_generative_ai",
+                          "oss/javascript/integrations/text_embedding/google_generativeai"
                         ]
                       },
                       {
                         "group": "AWS",
                         "pages": [
                           "oss/javascript/integrations/providers/aws",
-                          "/oss/integrations/chat/bedrock",
-                          "/oss/integrations/text_embedding/bedrock"
+                          "oss/javascript/integrations/chat/bedrock",
+                          "oss/javascript/integrations/text_embedding/bedrock"
                         ]
                       },
                       {
                         "group": "Microsoft",
                         "pages": [
                           "oss/javascript/integrations/providers/microsoft",
-                          "/oss/integrations/chat/azure",
-                          "/oss/integrations/text_embedding/azure_openai"
+                          "oss/javascript/integrations/chat/azure",
+                          "oss/javascript/integrations/text_embedding/azure_openai"
                         ]
                       },
                       "oss/javascript/integrations/providers/all_providers"
                     ]
                   },
                   {
-                    "group": "General integrations",
+                    "group": "Integrations by component",
                     "pages": [
                       "oss/javascript/integrations/chat/index",
                       "oss/javascript/integrations/tools/index",
-                      "oss/javascript/integrations/llms/index",
-                      "oss/javascript/integrations/stores/index",
-                      "oss/javascript/integrations/document_transformers/index",
-                      "oss/javascript/integrations/llm_caching/index",
-                      "oss/javascript/integrations/callbacks/index"
-                    ]
-                  },
-                  {
-                    "group": "RAG integrations",
-                    "pages": [
                       "oss/javascript/integrations/retrievers/index",
+                      "oss/javascript/integrations/splitters/index",
                       "oss/javascript/integrations/text_embedding/index",
                       "oss/javascript/integrations/vectorstores/index",
-                      {
-                        "group": "Document loaders",
-                        "pages": [
-                          "oss/javascript/integrations/document_loaders/index",
-                          "oss/javascript/integrations/document_loaders/file_loaders/index",
-                          "oss/javascript/integrations/document_loaders/web_loaders/index"
-                        ]
-                      }
+                      "oss/javascript/integrations/document_loaders/index",
+                      "oss/javascript/integrations/stores/index"
                     ]
                   }
                 ]
