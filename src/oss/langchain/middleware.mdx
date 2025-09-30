@@ -929,102 +929,111 @@ const middleware = createMiddleware({
 ```
 :::
 
-## Dynamic tools
+## Examples
 
-When you have hundreds or thousands of tools, always giving all of them to the model is costly and counterproductive:
+### Dynamically selecting tools
 
-- **Context pressure**: Long tool name/description lists consume context and can truncate important content.
-- **Worse tool choice**: Too many options confuse models, increasing wrong or spurious calls.
-- **Latency and cost**: Bigger prompts and more tool calls slow things down and cost more.
+In many applications, you may have a large set of tools, but only a small subset is relevant for a specific request. To optimize performance and accuracy, it’s best to **expose only the tools that are needed for each request**.
 
-:::python
-Instead, dynamically select a small, relevant subset of tools per turn. With `create_agent`, you can do this cleanly using a light middleware that gates and filters tools based on state/context.
-:::
-:::js
-Instead, dynamically select a small, relevant subset of tools per turn. With `createAgent`, you can do this cleanly using a light middleware that gates and filters tools based on state/context.
-:::
+Doing so provides several benefits:
 
-<Tip>
-Keep the active tool set small (e.g., top 3-10). This maximizes signal-to-noise for the model while keeping prompts lean.
-</Tip>
+* **Shorter prompts** – reducing unnecessary complexity.
+* **Improved accuracy** – the model chooses from fewer options.
+* **Permission control** – can select tools based on user permissions.
 
-:::python
-### How it works with `create_agent`
+Use middleware to dynamically select which tools are available at runtime based on context.
 
-Pass the full tool catalog to `create_agent` and use middleware hooks (prefer `modify_model_request`) to set `request.tools` to a small, relevant subset of tool names each turn. This avoids overflowing the prompt while keeping the validation superset intact.
-:::
-:::js
-### How it works with `createAgent`
+```python
+from langchain.agents import create_agent
+from langchain.agents.middleware import AgentState, ModelRequest, modify_model_request
 
-Pass the full tool catalog to `createAgent` and use middleware hooks (prefer `modifyModelRequest`) to set `request.tools` to a small, relevant subset of tool names each turn. This avoids overflowing the prompt while keeping the validation superset intact.
-:::
+@modify_model_request
+def tool_selector(state: AgentState, request: ModelRequest) -> ModelRequest:
+    """Middleware to select relevant tools based on state/context."""
+    # Select a small, relevant subset of tools based on state/context
+    request.tools = ["relevant_tool_1", "relevant_tool_2"] # [!code highlight]
+    return request
 
-#### Simple: context/state-gated tool choice
+agent = create_agent(
+    ...,
+    tools=all_tools,  # All available tools need to be registered upfront
+    # Middleware can be used to select a smaller subset that's relevant for the given
+    # run.
+    middleware=[tool_selector], # [!code highlight]
+)
+```
 
-Select tools using a user property (e.g., VCS provider: GitHub vs GitLab).
 
-:::python
+<Expandable title="Extended example: Select tools based on runtime context">
+
+In this example, we have two sets of tools for creating issues in GitHub and GitLab. We use middleware to dynamically
+select which set of tools to enable based on the user's VCS provider, passed in the runtime context.
+    
+    
+:::python 
 ```python
 from dataclasses import dataclass
 
 from langchain.agents import create_agent
-from langchain.agents.middleware import AgentMiddleware, AgentState, ModelRequest
-from langchain_core.messages import HumanMessage
-from langchain_core.tools import tool
+from langchain.agents.middleware import AgentState, ModelRequest
+from langchain.agents.middleware.types import modify_model_request
+from langchain.tools import tool
 from langgraph.runtime import get_runtime
+from typing import Literal
 
-
-# GitHub tools
-@tool(name="github_create_issue", description="Create an issue in a GitHub repository")
+@tool
 def github_create_issue(repo: str, title: str) -> dict:
+    """Create an issue in a GitHub repository."""
+    # Placeholder for actual implementation
     return {"url": f"https://github.com/{repo}/issues/1", "title": title}
 
-
-# GitLab tools
-@tool(name="gitlab_create_issue", description="Create an issue in a GitLab project")
+@tool
 def gitlab_create_issue(project: str, title: str) -> dict:
-    return {"url": f"https://gitlab.com/{project}/-/issues/1", "title": title}
+    """Create an issue in a GitLab project."""
+    # Placeholder for actual implementation
+    return {"url": "https://gitlab.com/{project}/-/issues/1", "title": title}
 
 all_tools = [github_create_issue, gitlab_create_issue]
 
-# Choose tools based on user context (e.g., vcs_provider = "github" | "gitlab")
 @dataclass
 class Context:
-    vcs_provider: str
+    """Custom runtime context."""
+    provider: Literal["github", "gitlab"]
+    """Runtime context for the agent."""
 
 
-class ToolSelector(AgentMiddleware):
-    def modify_model_request(self, request: ModelRequest, state: AgentState) -> ModelRequest:  # [!code highlight]
-        runtime = get_runtime(Context)
-        provider = (
-            runtime.context.vcs_provider if getattr(runtime, "context", None) else "github"
-        ).lower()
-        active = ["gitlab_create_issue"] if provider == "gitlab" else ["github_create_issue"]
-        request.tools = active  # [!code highlight]
-        return request  # [!code highlight]
+@modify_model_request
+def select_tools(request: ModelRequest, state: AgentState) -> ModelRequest:
+    """Select tools based on the provider."""
+    runtime = get_runtime(Context)
+    provider = runtime.context.provider
+    selected_tools = [gitlab_create_issue] if provider == "gitlab" else [github_create_issue]
+    request.tools = selected_tools  
+    return request  
 
 agent = create_agent(
     model="openai:gpt-4o",
     tools=all_tools,  # superset for validation; middleware narrows per turn
-    middleware=[ToolSelector()],
+    middleware=[select_tools],
     context_schema=Context,
 )
 
 # GitHub user
 agent.invoke(
-    {"messages": [HumanMessage("Open an issue titled 'Bug: login fails' in my auth repo")]},
-    context=Context(vcs_provider="github"),  # [!code highlight]
-)
-
-# GitLab user
-agent.invoke(
-    {"messages": [HumanMessage("Open an issue titled 'Bug: login fails' in my auth project")]},
-    context=Context(vcs_provider="gitlab"),  # [!code highlight]
-)
+    {
+        "messages": [
+            {
+                "role": "user", 
+                "content": "Open an issue titled 'Bug: where are the cats' in the repository `its-a-cats-game`"
+            },
+        ]
+    },
+    context=Context(provider="github"),  
+)   
 ```
 :::
+    
 :::js
-<CodeGroup>
 ```ts expandable simple.ts
 import { z } from "zod";
 import { createAgent, createMiddleware, tool, HumanMessage } from "langchain";
@@ -1102,11 +1111,6 @@ const resultGitlab = await agent.invoke(
 console.log("GitLab tool call result:", resultGitlab.messages.at(-1)?.content);
 ```
 
-```sh Simple Example Output
-GitHub tool call result: The issue titled "Bug: login fails" has been successfully created in the langchain-ai/langchainjs project. You can view it [here](https://github.com/langchain-ai/langchainjs/issues/1).
-GitLab tool call result: The issue titled "Bug: login fails" has been created in your langchain-ai/langchainjs project. You can view it [here](https://gitlab.com/langchain-ai/langchainjs/-/issues/1).
-```
-</CodeGroup>
 :::
 
 When a middleware defines a `contextSchema`, its properties become required on the agent invocation `context`.
@@ -1115,201 +1119,5 @@ When a middleware defines a `contextSchema`, its properties become required on t
 - Add any additional fields your middleware requires, or provide defaults in the schema to make them optional.
 
 Prefer context for stable configuration (env, flags, tenant), and state for dynamic properties that change during the run (recent tool outcomes, user choices).
-
-#### Advanced: semantic similarity over a large tool catalog
-
-For large catalogs, rank tools by semantic similarity between the user request and each tool’s name/description. Expose only the top-k most relevant tools via middleware.
-
-:::python
-```python
-from dataclasses import dataclass
-from typing import List
-
-from langchain.agents import create_agent
-from langchain.agents.middleware import AgentMiddleware, AgentState, ModelRequest
-from langchain.embeddings import init_embeddings
-from langchain_core.messages import HumanMessage
-from langchain_core.tools import tool
-
-# 1) Define tools with good names/descriptions
-@tool(name="book_flight", description="Book commercial flights between cities")
-def book_flight(from_city: str, to_city: str) -> str:
-    return f"Booked from {from_city} to {to_city}"
-
-@tool(name="lookup_visa_requirements", description="Check visa requirements and documentation by destination country")
-def lookup_visa_requirements(country: str) -> str:
-    return f"Visa info for {country}"
-
-@tool(name="local_weather", description="Get current weather and short-term forecast for a city")
-def local_weather(city: str) -> str:
-    return f"Weather in {city}: Sunny"
-
-full_catalog = [book_flight, lookup_visa_requirements, local_weather]
-
-# 2) Precompute and cache embeddings for tool metadata
-embedder = init_embeddings("openai:text-embedding-3-small")
-tool_texts = [f"{t.name}: {t.description}" for t in full_catalog]
-tool_vectors: List[List[float]] = embedder.embed_documents(tool_texts)
-
-catalog = list(zip(full_catalog, tool_vectors))
-
-def cosine_similarity(a: List[float], b: List[float]) -> float:
-    dot = sum(x * y for x, y in zip(a, b))
-    na = sum(x * x for x in a) ** 0.5
-    nb = sum(y * y for y in b) ** 0.5
-    return (dot / (na * nb)) if (na and nb) else 0.0
-
-
-def select_top_k_by_similarity(query: str, k: int = 6):
-    qv = embedder.embed_query(query)
-    ranked = sorted(((t, cosine_similarity(qv, vec)) for t, vec in catalog), key=lambda r: r[1], reverse=True)
-    return [t for t, _ in ranked[:k]]
-
-# 3) Use middleware to expose only the top-k most relevant tools each turn
-class SelectToolsMiddleware(AgentMiddleware):
-    def modify_model_request(self, request: ModelRequest, state: AgentState) -> ModelRequest:
-        last = state["messages"][-1] if state.get("messages") else None
-        content = (
-            last["content"] if isinstance(last, dict) else getattr(last, "content", None)
-        )
-        active_tools = select_top_k_by_similarity(content, 8) if content else full_catalog[:5]
-        request.tools = [tool.name for tool in active_tools]
-        return request
-
-agent = create_agent(
-    model="openai:gpt-4o",
-    tools=full_catalog,  # superset for validation and typing
-    middleware=[SelectToolsMiddleware()],
-)
-
-agent.invoke({
-    "messages": [HumanMessage("I need to travel to Japan next month—what visas do I need? I live in Germany.")],
-})
-```
-:::
-:::js
-<CodeGroup>
-```ts expandable advanced.ts
-import { z } from "zod";
-import { createAgent, createMiddleware, tool, HumanMessage, type StructuredTool } from "langchain";
-import { OpenAIEmbeddings } from "@langchain/openai";
-
-// 1) Define tools with good names/descriptions
-const bookFlight = tool(
-  async ({ from, to }) => `Booked from ${from} to ${to}`,
-  {
-    name: "book_flight",
-    description: "Book commercial flights between cities",
-    schema: z.object({ from: z.string(), to: z.string() }),
-  }
-);
-
-const lookupVisa = tool(
-  async ({ country }) =>
-    `For all travelers from ${country}, it is required to have a visa and travel with a banana.`,
-  {
-    name: "lookup_visa_requirements",
-    description:
-      "Check visa requirements and documentation by destination country",
-    schema: z.object({ country: z.string() }),
-  }
-);
-
-const localWeather = tool(async ({ city }) => `Weather in ${city}: Sunny`, {
-  name: "local_weather",
-  description: "Get current weather and short-term forecast for a city",
-  schema: z.object({ city: z.string() }),
-});
-
-const fullCatalog = [bookFlight, lookupVisa, localWeather];
-
-// 2) Precompute and cache embeddings for tool metadata
-const embedder = new OpenAIEmbeddings({ model: "text-embedding-3-small" });
-const toolTexts = fullCatalog.map((t) => `${t.name}: ${t.description}`);
-const toolVectors = await embedder.embedDocuments(toolTexts);
-
-type CatalogItem = { tool: StructuredTool; vector: number[] };
-const catalog: CatalogItem[] = fullCatalog.map((tool, i) => ({
-  tool,
-  vector: toolVectors[i],
-}));
-
-function cosineSimilarity(a: number[], b: number[]) {
-  const dot = a.reduce((s, v, i) => s + v * b[i], 0);
-  const na = Math.hypot(...a);
-  const nb = Math.hypot(...b);
-  return na && nb ? dot / (na * nb) : 0;
-}
-
-async function selectTopKBySimilarity(query: string, k = 6) {
-  const qv = await embedder.embedQuery(query);
-  return catalog
-    .map((c) => ({ c, score: cosineSimilarity(qv, c.vector) }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, k)
-    .map(({ c }) => c.tool);
-}
-
-// 3) Use middleware to expose only the top-k most relevant tools each turn
-const selectToolsMiddleware = createMiddleware({
-  name: "SelectToolsMiddleware",
-  modifyModelRequest: async (request, state) => {
-    const last = state.messages.at(-1);
-    const activeTools = last?.content
-      ? // only give me the most relevant tool
-        await selectTopKBySimilarity(last.content as string, 1)
-      : fullCatalog.slice(0, 5);
-    return { ...request, tools: activeTools.map(tool => tool.name) };
-  },
-});
-
-const semanticAgent = createAgent({
-  model: "openai:gpt-4o",
-  tools: fullCatalog, // superset for validation and typing
-  middleware: [selectToolsMiddleware] as const,
-});
-
-const result = await semanticAgent.invoke({
-  messages: [
-    new HumanMessage(
-      "I need to travel to Japan next month—what visas do I need? I live in Germany."
-    ),
-  ],
-});
-console.log(result.messages.at(-1)?.content);
-```
-
-```sh Advanced Example Output
-Travelers from Germany to Japan typically need a visa. Additionally, a peculiar requirement is to travel with a banana. Please ensure that you meet these requirements before traveling.
-```
-</CodeGroup>
-:::
-
-When deploying dynamic tool selection in production, consider these key optimization strategies:
-
-- Precompute tool embeddings offline and refresh on change. Cache them in memory or a vector DB.
-- Use top-k and score thresholds; fall back to a small safe default tool set if confidence is low.
-- Log and evaluate tool recall/precision. Adjust names/descriptions—they matter for retrieval quality.
-- Combine with middleware for safety gates (human approval, rate limiting, tenancy filtering)
-
-### Design guidelines
-
-Use these pragmatic guidelines to keep large tool catalogs efficient, accurate, and safe:
-
-<Steps>
-  <Step title="Keep catalogs clean" icon="sparkles">
-    Good names and concise descriptions beat long, noisy ones.
-  </Step>
-  <Step title="Gate early" icon="filter">
-    First filter by domain/tenant/feature flag, then apply semantic ranking.
-  </Step>
-  <Step title="Keep k small" icon="scissors">
-    Start with 3-10 tools exposed per turn; increase only if needed.
-  </Step>
-  <Step title="Measure" icon="clock">
-    Track tool usage, errors, and latency to tune k and thresholds.
-  </Step>
-  <Step title="Safety first" icon="shield-check">
-    Use middleware to restrict or approve high-impact tools.
-  </Step>
-</Steps>
+    
+</Expandable>
