@@ -100,7 +100,23 @@ We can use `tiktoken` to estimate tokens used using @[TokenTextSplitter]. It wil
 1. How the text is split: by character passed in.
 2. How the chunk size is measured: by `tiktoken` tokenizer.
 
-<JSInstallCommands packages="@langchain/textsplitters" />
+<CodeGroup>
+```bash npm
+npm install @langchain/textsplitters
+```
+
+```bash pnpm
+pnpm install @langchain/textsplitters
+```
+
+```bash yarn
+yarn add @langchain/textsplitters
+```
+
+```bash bun
+bun add @langchain/textsplitters
+```
+</CodeGroup>
 
 ```ts
 import { TokenTextSplitter } from "@langchain/textsplitters";
