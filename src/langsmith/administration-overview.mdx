@@ -107,8 +107,8 @@ Service keys are prefixed with `lsv2_sk_`
 <Warning>
 Use the `X-Tenant-Id` header to specify the target workspace.
 
-- If the header is omitted, the request defaults to the workspace where the API key was created (unless the key is organization-scoped).
-- When using an organization-scoped service key, you must include the `X-Tenant-Id` header for workspace-scoped resources; otherwise the request will return 403 Forbidden.
+- When using PATs, if you don't provide this header, operations will default to the selected default workspace upon key creation.
+- When using an organization-scoped service key, you must include the `X-Tenant-Id` header for workspace-scoped resources; otherwise the request will return `403 Forbidden`.
 </Warning>
 
 <Note>
