@@ -2222,5 +2222,19 @@
   },
   "interaction": {
     "drilldown": true
+  },
+  "redirects": [
+  {
+    "source": "/oss/:slug*/langchain-agents",
+    "destination": "/oss/:slug*/langchain/agents"
+  },
+  {
+    "source": "/oss/:slug*/releases-v1",
+    "destination": "/oss/:slug*/releases/langchain-v1"
+  },
+  {
+    "source": "/oss/:slug*/langgraph/human-in-the-loop",
+    "destination": "/oss/:slug*/langgraph/add-human-in-the-loop"
   }
+]
 }
