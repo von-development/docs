@@ -384,7 +384,7 @@ When models make [tool calls](/oss/langchain/models#tool-calling), they're inclu
 ```python
 from langchain.chat_models import init_chat_model
 
-model = init_chat_model("openai:gpt-5-nano")  # for example
+model = init_chat_model("openai:gpt-5-nano")
 
 def get_weather(location: str) -> str:
     """Get the weather at a location."""
@@ -428,7 +428,8 @@ model = init_chat_model("openai:gpt-5-nano")
 response = model.invoke("Hello!")
 response.usage_metadata
 ```
-```
+
+```json
 {'input_tokens': 8,
  'output_tokens': 304,
  'total_tokens': 312,
@@ -444,7 +445,6 @@ const model = await initChatModel("openai:gpt-5-nano");
 
 const response = await model.invoke("Hello!");
 console.log(response.usage_metadata);
-```
 ```
 {
   "output_tokens": 304,
@@ -586,7 +586,7 @@ const response = await model.invoke(messages);  // Model processes the result
         :::python
 
         ```python
-        from langchain_core.messages import ToolMessage
+        from langchain.messages import ToolMessage
 
         # Sent to model
         message_content = "It was the best of times, it was the worst of times."
