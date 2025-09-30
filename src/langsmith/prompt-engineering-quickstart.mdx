@@ -149,8 +149,8 @@ To improve your prompts:
 1. Set your API keys:
 
     ```bash
-    export LANGSMITH_API_KEY = '<your_api_key>'
-    export OPENAI_API_KEY = '<your_api_key>'
+    export LANGSMITH_API_KEY='<your_api_key>'
+    export OPENAI_API_KEY='<your_api_key>'
     ```
 
 ## 2. Create a prompt
@@ -214,11 +214,13 @@ Use the language-specific constructor and push method:
 
     </CodeGroup>
 
-You can view your prompts with the [SDK](https://docs.smith.langchain.com/reference/python/reference) or the [UI](https://smith.langchain.com). With the SDK, call [`list_prompts`](https://docs.smith.langchain.com/reference/python/client/langsmith.client.Client#langsmith.client.Client.list_prompts) (Python) or [`listPrompts`](https://docs.smith.langchain.com/reference/js/classes/client.Client#listprompts) (TypeScript) to display the prompts in your [workspace](/langsmith/administration-overview#workspaces).
+Follow the resulting link to view the newly created Prompt Hub prompt in the LangSmith UI.
 
 ## 3. Test a prompt
 
-To test a prompt, you'll pull the prompt you created in [step 2](#2-test-a-prompt) by name (`"prompt-quickstart"`), format it with a test input, convert it to OpenAI’s chat format, and call the OpenAI Chat Completions API.
+To test a prompt, you'll pull the prompt you created in [step 2](#2-create-a-prompt) by name (`"prompt-quickstart"`), format it with a test input, convert it to OpenAI’s chat format, and call the OpenAI Chat Completions API.
+
+Then, you'll iterate on the prompt by creating a new version. Members of your workspace can open an existing prompt, experiment with changes in the UI, and save those changes as a new commit on the same prompt, which preserves history for the whole team.
 
 1. Add the following to a `test_prompt` file:
 
@@ -263,7 +265,7 @@ To test a prompt, you'll pull the prompt you created in [step 2](#2-test-a-promp
     ```
     </CodeGroup>
 
-    This loads the prompt by name using `pull` for the latest committed version of the prompt that you're testing. You can also specify a specific commit by passing the commit hash `"<prompt-name>:<commit-hash>"`.
+    This loads the prompt by name using `pull` for the latest committed version of the prompt that you're testing. You can also specify a specific commit by passing the commit hash `"<prompt-name>:<commit-hash>"`
 
 1. Run `test_prompt` :
 
@@ -279,12 +281,7 @@ To test a prompt, you'll pull the prompt you created in [step 2](#2-test-a-promp
 
     </CodeGroup>
 
-
-## 4. Iterate on a prompt
-
-LangSmith makes prompt iteration collaborative and transparent. Members of your workspace can open an existing prompt, experiment with changes in the UI, and save those changes as a new commit on the same prompt, which preserves history for the whole team.
-
-1. To create a new version of a prompt, call the same push method you used initially with the same prompt name and your updated template. LangSmith will record it as a new commit and preserve prior versions. You can add a tag to label the change.
+1. To create a new version of a prompt, call the same push method you used initially with the same prompt name and your updated template. LangSmith will record it as a new commit and preserve prior versions.
 
     Copy the following code to an `iterate_prompt` file:
 
@@ -301,7 +298,7 @@ LangSmith makes prompt iteration collaborative and transparent. Members of your 
         ("user", "{question}"),
     ])
 
-    client.push_prompt("prompt-quickstart", object=new_prompt, tags=["Spanish"])
+    client.push_prompt("prompt-quickstart", object=new_prompt)
     ```
 
     ```typescript TypeScript
@@ -316,8 +313,7 @@ LangSmith makes prompt iteration collaborative and transparent. Members of your 
     ]);
 
     await client.pushPrompt("prompt-quickstart", {
-        object: newPrompt,
-        tags: ["Spanish"]
+        object: newPrompt
     });
     ```
 
@@ -336,7 +332,7 @@ LangSmith makes prompt iteration collaborative and transparent. Members of your 
     ```
     </CodeGroup>
 
-    Now your prompt will contain two commits and one commit will include the tag `Spanish`.
+    Now your prompt will contain two commits.
 
 To improve your prompts:
 
