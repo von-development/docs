@@ -55,7 +55,6 @@ In addition to that, each middleware can define the following static properties:
 - `name`: The name of the middleware (required)
 - `tools`: The tools that the middleware makes available to the agent (optional)
 - `state_schema`: The schema of the state that the middleware requires (optional)
-- `context_schema`: The schema of the context that the middleware requires (optional)
 :::
 :::js
 - `beforeModel`: Runs before model execution. Can update state or jump to a different node (`model`, `tools`, `end`)
