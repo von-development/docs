@@ -79,6 +79,17 @@ code,
   overflow-x: hidden !important;
 }
 
+/* Content area constraints */
+#content-area {
+  max-width: 100% !important;
+  flex: 1 !important;
+}
+
+footer {
+  align-items: start !important;
+  padding-left: 2rem !important;
+}
+
 /* Responsive tables with horizontal scrolling */
 .prose table, article table, .markdown table, .content table, [class*="prose"] table {
   width: 100% !important;
