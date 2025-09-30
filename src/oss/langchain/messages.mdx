@@ -381,8 +381,16 @@ const response = await model.invoke(messages);
 When models make [tool calls](/oss/langchain/models#tool-calling), they're included in the AI message:
 
 :::python
-```python Tool calling
-model_with_tools = model.bind_tools([GetWeather])
+```python
+from langchain.chat_models import init_chat_model
+
+model = init_chat_model("openai:gpt-5-nano")  # for example
+
+def get_weather(location: str) -> str:
+    """Get the weather at a location."""
+    ...
+
+model_with_tools = model.bind_tools([get_weather])
 response = model_with_tools.invoke("What's the weather in Paris?")
 
 for tool_call in response.tool_calls:
@@ -406,6 +414,53 @@ for (const toolCall of response.tool_calls) {
 :::
 
 Other structured data, such as reasoning or citations, can also appear in message [content](/oss/langchain/messages#content).
+
+#### Token usage
+
+An `AIMessage` can hold token counts and other usage metadata in its `usage_metadata` field:
+
+:::python
+```python
+from langchain.chat_models import init_chat_model
+
+model = init_chat_model("openai:gpt-5-nano")
+
+response = model.invoke("Hello!")
+response.usage_metadata
+```
+```
+{'input_tokens': 8,
+ 'output_tokens': 304,
+ 'total_tokens': 312,
+ 'input_token_details': {'audio': 0, 'cache_read': 0},
+ 'output_token_details': {'audio': 0, 'reasoning': 256}}
+```
+:::
+:::js
+```typescript
+import { initChatModel } from "langchain";
+
+const model = await initChatModel("openai:gpt-5-nano");
+
+const response = await model.invoke("Hello!");
+console.log(response.usage_metadata);
+```
+```
+{
+  "output_tokens": 304,
+  "input_tokens": 8,
+  "total_tokens": 312,
+  "input_token_details": {
+    "cache_read": 0
+  },
+  "output_token_details": {
+    "reasoning": 256
+  }
+}
+```
+:::
+
+See [reference](https://python.langchain.com/api_reference/core/messages/langchain_core.messages.ai.UsageMetadata.html#langchain_core.messages.ai.UsageMetadata) for details.
 
 #### Streaming and chunks
 
