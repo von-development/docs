@@ -2,8 +2,8 @@
 
 ## TODO
 
-- [ ] Make it clear in the header that this is **reference** documentation
-- [ ] Figure out why the copy page button isn't showing up
+- [ ] Copy page support (may need to be post-processing step to generate markdown files)
 - [ ] Language switcher
 - [ ] [Google Analytics](https://mrkeo.github.io/setup/setting-up-site-analytics)
 - [ ] [Versioning?](https://mrkeo.github.io/setup/setting-up-versioning)
+- [ ] [Show keyboard shortcut in search window](https://github.com/squidfunk/mkdocs-material/issues/2574#issuecomment-821979698)
