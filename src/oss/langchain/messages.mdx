@@ -1214,7 +1214,7 @@ Content blocks are represented (either when creating a message or accessing the 
                 ```
             </Accordion>
             <Accordion title="ToolCallChunk" icon="puzzle-piece">
-                **Purpose:** Streaming tool fragments
+                **Purpose:** Streaming tool call fragments
 
                 <ParamField body="type" type="string" required>
                     Always `"tool_call_chunk"`
@@ -1232,7 +1232,7 @@ Content blocks are represented (either when creating a message or accessing the 
                     Tool call identifier
                 </ParamField>
 
-                <ParamField body="index" type="number">
+                <ParamField body="index" type="number | string">
                     Position of this chunk in the stream
                 </ParamField>
             </Accordion>
@@ -1247,8 +1247,8 @@ Content blocks are represented (either when creating a message or accessing the 
                     Name of the tool that failed to be called
                 </ParamField>
 
-                <ParamField body="args" type="string">
-                    Raw arguments that failed to parse
+                <ParamField body="args" type="object">
+                    Arguments to pass to the tool
                 </ParamField>
 
                 <ParamField body="error" type="string">
@@ -1260,55 +1260,69 @@ Content blocks are represented (either when creating a message or accessing the 
 
     <Accordion title="Server-Side Tool Execution" icon="server">
         <AccordionGroup>
-            <Accordion title="WebSearchCall" icon="magnifying-glass">
-                **Purpose:** Built-in web search
+            <Accordion title="ServerToolCall" icon="wrench">
+                **Purpose:** Tool call that is executed server-side.
 
                 <ParamField body="type" type="string" required>
-                    Always `"web_search_call"`
+                    Always `"server_tool_call"`
                 </ParamField>
 
-                <ParamField body="query" type="string">
-                    The search query to execute
+                <ParamField body="id" type="string" required>
+                    An identifier associated with the tool call.
+                </ParamField>
+
+                <ParamField body="name" type="string" required>
+                    The name of the tool to be called.
+                </ParamField>
+
+                <ParamField body="args" type="string" required>
+                    Partial tool arguments (may be incomplete JSON)
                 </ParamField>
             </Accordion>
-            <Accordion title="WebSearchResult" icon="globe">
+            <Accordion title="ServerToolCallChunk" icon="puzzle-piece">
+                **Purpose:** Streaming server-side tool call fragments
+
+                <ParamField body="type" type="string" required>
+                    Always `"server_tool_call_chunk"`
+                </ParamField>
+
+                <ParamField body="id" type="string">
+                    An identifier associated with the tool call.
+                </ParamField>
+
+                <ParamField body="name" type="string">
+                    Name of the tool being called
+                </ParamField>
+
+                <ParamField body="args" type="string">
+                    Partial tool arguments (may be incomplete JSON)
+                </ParamField>
+
+                <ParamField body="index" type="number | string">
+                    Position of this chunk in the stream
+                </ParamField>
+            </Accordion>
+            <Accordion title="ServerToolResult" icon="globe">
                 **Purpose:** Search results
 
                 <ParamField body="type" type="string" required>
-                    Always `"web_search_result"`
+                    Always `"server_tool_result"`
                 </ParamField>
 
-                <ParamField body="urls" type="string[]">
-                    URLs of the search results
+                <ParamField body="tool_call_id" type="string" required>
+                    Identifier of the corresponding server tool call.
                 </ParamField>
 
-                **Returns:** Top search results with associated URLs.
-            </Accordion>
-            <Accordion title="CodeInterpreterCall" icon="code">
-                **Purpose:** Code execution
-
-                <ParamField body="type" type="string" required>
-                    Always `"code_interpreter_call"`
+                <ParamField body="id" type="string">
+                    Identifier associated with the server tool result.
                 </ParamField>
 
-                <ParamField body="language" type="string">
-                    Programming language to execute (e.g. `python`,
-                    `javascript`, `sql`)
+                <ParamField body="status" type="string" required>
+                    Execution status of the server-side tool. `"success"` or `"error"`.
                 </ParamField>
 
-                <ParamField body="code" type="string">
-                    Code to execute
-                </ParamField>
-            </Accordion>
-            <Accordion title="CodeInterpreterResult" icon="terminal">
-                **Purpose:** Execution results
-
-                <ParamField body="type" type="string" required>
-                    Always `"code_interpreter_result"`
-                </ParamField>
-
-                <ParamField body="output" type="CodeInterpreterOutput[]">
-                    Output from the code execution
+                <ParamField body="output">
+                    Output of the executed tool.
                 </ParamField>
             </Accordion>
         </AccordionGroup>
@@ -1516,7 +1530,7 @@ Content blocks are represented (either when creating a message or accessing the 
                     Tool call identifier
                 </ParamField>
 
-                <ParamField body="index" type="number" required>
+                <ParamField body="index" type="number | string" required>
                     Position of this chunk in the stream
                 </ParamField>
             </Accordion>
