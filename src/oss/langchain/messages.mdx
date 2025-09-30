@@ -376,9 +376,9 @@ const response = await model.invoke(messages);
     :::
 </Accordion>
 
-#### Tool calling responses
+#### Tool calls
 
-When models make tool calls, they're included in the AI message:
+When models make [tool calls](/oss/langchain/models#tool-calling), they're included in the AI message:
 
 :::python
 ```python Tool calling
@@ -404,6 +404,8 @@ for (const toolCall of response.tool_calls) {
 }
 ```
 :::
+
+Other structured data, such as reasoning or citations, can also appear in message [content](/oss/langchain/messages#content).
 
 #### Streaming and chunks
 
