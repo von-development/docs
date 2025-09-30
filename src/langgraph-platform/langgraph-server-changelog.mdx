@@ -7,11 +7,11 @@ sidebarTitle: Server changelog
 
 <a id="2025-09-30"></a>
 ## v0.4.30
-- Added support for context when using stream_mode="events" and included new tests for this functionality.
+- Added support for context when using `stream_mode="events"` and included new tests for this functionality.
 - Added support for overriding the server port using `$LANGGRAPH_SERVER_PORT` and removed an unnecessary Dockerfile `ARG` for cleaner configuration.
 - Applied authorization filters to all table references in thread delete CTE to enhance security.
 - Introduced self-hosted metrics ingestion capability, allowing metrics to be sent to an OTLP collector every minute when the corresponding environment variables are set.
-- Ensured that the set_latest function properly updates the name and description of the version.
+- Ensured that the `set_latest` function properly updates the name and description of the version.
 
 <a id="2025-09-26"></a>
 ## v0.4.29
