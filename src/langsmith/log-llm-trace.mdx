@@ -1,18 +1,18 @@
 ---
-title: Guidelines for for logging LLM calls
-sidebarTitle: Guidelines for for logging LLM calls
+title: Guidelines for logging LLM calls
+sidebarTitle: Guidelines for logging LLM calls
 ---
 
 LangSmith provides special rendering and processing for LLM traces. This includes pretty rendering for the list of messages, token counting (assuming token counts are not available from the model provider) and token-based cost calculation.
 
-<Tip>In order to make the most of LangSmith's LLM trace processing, **we recommend logging your LLM traces in a specified formats**.
+<Tip>In order to make the most of LangSmith's LLM trace processing, **we recommend logging your LLM traces in one of the specified formats**.
 If you don't log your LLM traces in the suggested formats, you will still be able to log the data to LangSmith, but it may not be processed or rendered in expected ways. </Tip>
 
 
 
 
 <Note>
-The examples below uses the `traceable` decorator/wrapper to log the model run (which is the recommended approach for Python and JS/TS). However, the same idea applies if you are using the [RunTree](/langsmith/annotate-code#use-the-runtree-api) or [API](https://api.smith.langchain.com/redoc) directly.
+The examples below use the `traceable` decorator/wrapper to log the model run (which is the recommended approach for Python and JS/TS). However, the same idea applies if you are using the [RunTree](/langsmith/annotate-code#use-the-runtree-api) or [API](https://api.smith.langchain.com/redoc) directly.
 </Note>
 
 ## Using LangChain OSS or LangSmith wrappers
@@ -21,7 +21,7 @@ If you are using [LangChain OSS to call language models](https://python.langchai
 
 ## Tracing a Model with a Custom Input/Output Format
 
-When a tracing custom model, follow the guidelines below to ensure your LLM traces are rendered properly and features such as token tracking and cost calculation work as expected.
+When tracing a custom model, follow the guidelines below to ensure your LLM traces are rendered properly and features such as token tracking and cost calculation work as expected.
 
 ### Input Format
 
@@ -222,7 +222,7 @@ If you're using a custom input or output format, you can convert it to a LangSmi
 
 `process_inputs` and `process_outputs` accept functions that allow you to transform the inputs and outputs of a specific trace before they are logged to LangSmith. They have access to the trace's inputs and outputs, and can return a new dictionary with the processed data.
 
-Here's an boilerplate example of how to use `process_inputs` and `process_outputs` to convert a custom I/O format into a LangSmith compatible format:
+Here's a boilerplate example of how to use `process_inputs` and `process_outputs` to convert a custom I/O format into a LangSmith compatible format:
 
 <CodeGroup>
 
