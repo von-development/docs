@@ -2225,16 +2225,68 @@
   },
   "redirects": [
   {
-    "source": "/oss/:slug*/langchain-agents",
-    "destination": "/oss/:slug*/langchain/agents"
+    "source": "/oss/python/langchain-agents",
+    "destination": "/oss/python/langchain/agents"
   },
   {
-    "source": "/oss/:slug*/releases-v1",
-    "destination": "/oss/:slug*/releases/langchain-v1"
+    "source": "/oss/javascript/langchain-agents",
+    "destination": "/oss/javascript/langchain/agents"
   },
   {
-    "source": "/oss/:slug*/langgraph/human-in-the-loop",
-    "destination": "/oss/:slug*/langgraph/add-human-in-the-loop"
+    "source": "/oss/python/langchain-models",
+    "destination": "/oss/python/langchain/models"
+  },
+  {
+    "source": "/oss/javascript/langchain-models",
+    "destination": "/oss/javascript/langchain/models"
+  },
+  {
+    "source": "/oss/python/langchain-messages",
+    "destination": "/oss/python/langchain/messages"
+  },
+  {
+    "source": "/oss/javascript/langchain-messages",
+    "destination": "/oss/javascript/langchain/messages"
+  },
+  {
+    "source": "/oss/python/langchain-tools",
+    "destination": "/oss/python/langchain/tools"
+  },
+  {
+    "source": "/oss/javascript/langchain-tools",
+    "destination": "/oss/javascript/langchain/tools"
+  },
+  {
+    "source": "/oss/python/langchain-memory",
+    "destination": "/oss/python/langchain/short-term-memory"
+  },
+  {
+    "source": "/oss/javascript/langchain-memory",
+    "destination": "/oss/javascript/langchain/short-term-memory"
+  },
+  {
+    "source": "/oss/python/langchain-streaming",
+    "destination": "/oss/python/langchain/streaming"
+  },
+  {
+    "source": "/oss/javascript/langchain-streaming",
+    "destination": "/oss/javascript/langchain/streaming"
+  },
+  {
+    "source": "/oss/python/releases-v1",
+    "destination": "/oss/python/releases/langchain-v1"
+  },
+  {
+    "source": "/oss/javascript/releases-v1",
+    "destination": "/oss/javascript/releases/langchain-v1"
+  },
+  {
+    "source": "/oss/python/langgraph/human-in-the-loop",
+    "destination": "/oss/python/langgraph/add-human-in-the-loop"
+  },
+  {
+    "source": "/oss/javascript/langgraph/human-in-the-loop",
+    "destination": "/oss/javascript/langgraph/add-human-in-the-loop"
   }
 ]
 }
