@@ -1624,3 +1624,12 @@ const imageBlock: ContentBlock.Multimodal.Image = {
 <Info>
     Content blocks were introduced as a new property on messages in LangChain v1 to standardize content formats across providers while maintaining backward compatibility with existing code. Content blocks are not a replacement for the `content` property, but rather a new property that can be used to access the content of a message in a standardized format.
 </Info>
+
+## Use with chat models
+
+[Chat models](/oss/langchain/models) accept a sequence of message objects as input and return an `AIMessage` as output. Interactions are often stateless, so that a simple conversational loop involves invoking a model with a growing list of messages.
+
+Refer to the below guides to learn more:
+
+- Built-in features for [persisting and managing conversation histories](/oss/langchain/short-term-memory)
+- Strategies for managing context windows, including [trimming and summarizing messages](/oss/langchain/short-term-memory#common-patterns)
