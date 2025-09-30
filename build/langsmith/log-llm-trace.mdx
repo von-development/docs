@@ -1,0 +1,697 @@
+---
+title: Guidelines for for logging LLM calls
+sidebarTitle: Guidelines for for logging LLM calls
+---
+
+LangSmith provides special rendering and processing for LLM traces. This includes pretty rendering for the list of messages, token counting (assuming token counts are not available from the model provider) and token-based cost calculation.
+
+<Tip>In order to make the most of LangSmith's LLM trace processing, **we recommend logging your LLM traces in a specified formats**.
+If you don't log your LLM traces in the suggested formats, you will still be able to log the data to LangSmith, but it may not be processed or rendered in expected ways. </Tip>
+
+
+
+
+<Note>
+The examples below uses the `traceable` decorator/wrapper to log the model run (which is the recommended approach for Python and JS/TS). However, the same idea applies if you are using the [RunTree](/langsmith/annotate-code#use-the-runtree-api) or [API](https://api.smith.langchain.com/redoc) directly.
+</Note>
+
+## Using LangChain OSS or LangSmith wrappers
+
+If you are using [LangChain OSS to call language models](https://python.langchain.com/docs/tutorials/llm_chain/) or LangSmith wrappers ([OpenAI](/langsmith/trace-openai), [Anthropic](/langsmith/trace-anthropic)), then you're all set! These approaches will automatically log traces in the correct format.
+
+## Tracing a Model with a Custom Input/Output Format
+
+When a tracing custom model, follow the guidelines below to ensure your LLM traces are rendered properly and features such as token tracking and cost calculation work as expected.
+
+### Input Format
+
+A Python dictionary or TypeScript object containing a `"messages"` key with a list of messages in [LangChain](https://python.langchain.com/docs/concepts/messages), [OpenAI](https://platform.openai.com/docs/api-reference/messages) (chat completions) or [Anthropic](https://docs.anthropic.com/en/api/messages) format. The messages key must be in the top level of the input field.
+
+* Each message must contain the key `"role"` and `"content"`.
+    * `"role"`: `"system" | "user" | "assistant" | "tool"`
+    *  `"content"`: string
+* Messages with the `"assistant"` role may contain `"tool_calls"`. These `"tool_calls"` may be in [OpenAI](https://platform.openai.com/docs/guides/function-calling?api-mode=chat) format or [LangChain's format](https://python.langchain.com/api_reference/core/messages/langchain_core.messages.tool.ToolCall.html#langchain_core.messages.tool.ToolCall).
+* LangSmith may use additional parameters in this input dict that match OpenAI's [chat completion endpoint](https://platform.openai.com/docs/guides/text?api-mode=chat) for rendering in the trace view, such as a list of available `tools` for the model to call.
+
+Here are some examples:
+
+
+<CodeGroup>
+
+```python LangChain format: List of messages
+inputs = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "What's the weather like in San Francisco?"},
+    {
+        "role": "assistant",
+        "content": "I need to check the weather for you.",
+        "tool_calls": [
+            {
+                "id": "call_XXX",
+                "type": "function",
+                "function": {
+                    "name": "get_weather",
+                    "arguments": '{"location": "string"}'
+                }
+            }
+        ]
+    },
+    {
+        "role": "tool",
+        "tool_call_id": "call_XXXX",
+        "content": "<weather>."
+    }
+]
+```
+
+```python OpenAI completions format: Messages dict
+inputs = {
+    "messages": [
+        {"role": "system", "content": "You are a helpful assistant."},
+        {"role": "user", "content": "What's the weather like?"}
+    ],
+    "tools": [
+        {
+            "type": "function",
+            "function": {
+                "name": "get_weather",
+                "description": "Get current weather",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "location": {"type": "string"}
+                    }
+                }
+            }
+        }
+    ]
+}
+```
+
+```python Anthropic format: Messages dict
+inputs = {
+        "messages": [
+      {
+        "role": "user",
+        "content": "What is the weather like in San Francisco?"
+      }
+    ],
+    "tools": [
+      {
+        "name": "get_weather",
+        "description": "Get the current weather in a given location",
+        "input_schema": {
+          "type": "object",
+          "properties": {
+            "location": {
+              "type": "string",
+              "description": "The city and state, e.g. San Francisco, CA"
+            }
+          },
+          "required": ["location"]
+        }
+      }
+    ]
+  }
+```
+
+</CodeGroup>
+
+### Output Format
+
+The output is accepted in any of the following formats:
+
+* A dictionary/object that contains the key `message` with a value that is a message object with the keys `role` and `content`.
+* A dictionary/object that contains the key `choices` with a value that is a list of dictionaries/objects. Each dictionary/object must contain the key `message`, which maps to a message object with the keys `role` and `content`.
+* A tuple/array of two elements, where the first element is the role and the second element is the content.
+* A dictionary/object that contains the key `role` and `content`.
+* Similar to the input format, outputs may contain `"tool_calls"`. These `"tool_calls"` may be in OpenAI format or LangChain’s format.
+
+
+Here are some examples:
+
+<CodeGroup>
+
+```python Message format
+from langsmith import traceable
+
+@traceable(run_type="llm")
+def chat_model_message(messages):
+    # Your model logic here
+    return {
+        "message": {
+            "role": "assistant",
+            "content": "Sure, what time would you like to book the table for?"
+        }
+    }
+
+# Usage
+inputs = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "I'd like to book a table for two."}
+]
+chat_model_message(inputs)
+```
+
+```python OpenAI completions format: Choices
+from langsmith import traceable
+
+@traceable(run_type="llm")
+def chat_model_choices(messages):
+    # Your model logic here
+    return {
+        "choices": [
+            {
+                "message": {
+                    "role": "assistant",
+                    "content": "Sure, what time would you like to book the table for?"
+                }
+            }
+        ]
+    }
+
+# Usage
+inputs = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "I'd like to book a table for two."}
+]
+chat_model_choices(inputs)
+```
+
+```python Tuple format
+from langsmith import traceable
+
+@traceable(run_type="llm")
+def chat_model_tuple(messages):
+    # Your model logic here
+    return ["assistant", "Sure, what time would you like to book the table for?"]
+
+# Usage
+inputs = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "I'd like to book a table for two."}
+]
+chat_model_tuple(inputs)
+```
+
+```python Direct format
+from langsmith import traceable
+
+@traceable(run_type="llm")
+def chat_model_direct(messages):
+    # Your model logic here
+    return {
+        "role": "assistant",
+        "content": "Sure, what time would you like to book the table for?"
+    }
+
+# Usage
+inputs = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "I'd like to book a table for two."}
+]
+chat_model_direct(inputs)
+```
+
+</CodeGroup>
+
+
+### Converting custom I/O formats into LangSmith compatible formats
+
+If you're using a custom input or output format, you can convert it to a LangSmith compatible format using `process_inputs` and `process_outputs` functions on the [`@traceable` decorator](https://docs.smith.langchain.com/reference/python/run_helpers/langsmith.run_helpers.traceable). Note that these parameters are only available in the Python SDK.
+
+`process_inputs` and `process_outputs` accept functions that allow you to transform the inputs and outputs of a specific trace before they are logged to LangSmith. They have access to the trace's inputs and outputs, and can return a new dictionary with the processed data.
+
+Here's an boilerplate example of how to use `process_inputs` and `process_outputs` to convert a custom I/O format into a LangSmith compatible format:
+
+<CodeGroup>
+
+```python Python
+class OriginalInputs(BaseModel):
+    """Your app's custom request shape"""
+
+class OriginalOutputs(BaseModel):
+    """Your app's custom response shape."""
+
+class LangSmithInputs(BaseModel):
+    """The input format LangSmith expects."""
+
+class LangSmithOutputs(BaseModel):
+    """The output format LangSmith expects."""
+
+def process_inputs(inputs: dict) -> dict:
+    """Dict -> OriginalInputs -> LangSmithInputs -> dict"""
+
+def process_outputs(output: Any) -> dict:
+    """OriginalOutputs -> LangSmithOutputs -> dict"""
+
+
+@traceable(run_type="llm", process_inputs=process_inputs, process_outputs=process_outputs)
+def chat_model(inputs: dict) -> dict:
+    """
+    Your app's model call. Keeps your custom I/O shape.
+    The decorators call process_* to log LangSmith-compatible format.
+    """
+
+```
+</CodeGroup>
+
+
+### Identifying a custom model in traces
+
+When using a custom model, it is recommended to also provide the following `metadata` fields to identify the model when viewing traces and when filtering.
+
+* `ls_provider`: The provider of the model, eg "openai", "anthropic", etc.
+* `ls_model_name`: The name of the model, eg "gpt-4o-mini", "claude-3-opus-20240307", etc.
+
+<CodeGroup>
+
+```python Python
+from langsmith import traceable
+
+inputs = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "I'd like to book a table for two."},
+]
+output = {
+    "choices": [
+        {
+            "message": {
+                "role": "assistant",
+                "content": "Sure, what time would you like to book the table for?"
+            }
+        }
+    ]
+}
+
+@traceable(
+    run_type="llm",
+    metadata={"ls_provider": "my_provider", "ls_model_name": "my_model"}
+)
+def chat_model(messages: list):
+    return output
+
+chat_model(inputs)
+```
+
+```typescript TypeScript
+import { traceable } from "langsmith/traceable";
+
+const messages = [
+    { role: "system", content: "You are a helpful assistant." },
+    { role: "user", content: "I'd like to book a table for two." }
+];
+const output = {
+    choices: [
+        {
+            message: {
+                role: "assistant",
+                content: "Sure, what time would you like to book the table for?",
+            },
+        },
+    ],
+    usage_metadata: {
+        input_tokens: 27,
+        output_tokens: 13,
+        total_tokens: 40,
+    },
+};
+
+// Can also use one of:
+// const output = {
+//   message: {
+//     role: "assistant",
+//     content: "Sure, what time would you like to book the table for?"
+//   }
+// };
+//
+// const output = {
+//   role: "assistant",
+//   content: "Sure, what time would you like to book the table for?"
+// };
+//
+// const output = ["assistant", "Sure, what time would you like to book the table for?"];
+
+const chatModel = traceable(
+    async ({ messages }: { messages: { role: string; content: string }[] }) => {
+        return output;
+    },
+    {
+        run_type: "llm",
+        name: "chat_model",
+        metadata: {
+            ls_provider: "my_provider",
+            ls_model_name: "my_model"
+        }
+    }
+);
+
+await chatModel({ messages });
+```
+
+</CodeGroup>
+
+The above code will log the following trace:
+
+<div style={{ textAlign: 'center' }}>
+<img
+    className="block dark:hidden"
+    src="/langsmith/images/chat-model-light.png"
+    alt="LangSmith UI showing an LLM call trace called ChatOpenAI with a system and human input followed by an AI Output."
+/>
+
+<img
+    className="hidden dark:block"
+    src="/langsmith/images/chat-model-dark.png"
+    alt="LangSmith UI showing an LLM call trace called ChatOpenAI with a system and human input followed by an AI Output."
+/>
+</div>
+If you implement a custom streaming chat_model, you can "reduce" the outputs into the same format as the non-streaming version. This is currently only supported in Python.
+
+```python
+def _reduce_chunks(chunks: list):
+    all_text = "".join([chunk["choices"][0]["message"]["content"] for chunk in chunks])
+    return {"choices": [{"message": {"content": all_text, "role": "assistant"}}]}
+
+@traceable(
+    run_type="llm",
+    reduce_fn=_reduce_chunks,
+    metadata={"ls_provider": "my_provider", "ls_model_name": "my_model"}
+)
+def my_streaming_chat_model(messages: list):
+    for chunk in ["Hello, " + messages[1]["content"]]:
+        yield {
+            "choices": [
+                {
+                    "message": {
+                        "content": chunk,
+                        "role": "assistant",
+                    }
+                }
+            ]
+        }
+
+list(
+    my_streaming_chat_model(
+        [
+            {"role": "system", "content": "You are a helpful assistant. Please greet the user."},
+            {"role": "user", "content": "polly the parrot"},
+        ],
+    )
+)
+```
+
+<Check>
+If `ls_model_name` is not present in `extra.metadata`, other fields might be used from the `extra.metadata` for estimating token counts. The following fields are used in the order of precedence:
+
+1. `metadata.ls_model_name`
+2. `inputs.model`
+3. `inputs.model_name`
+</Check>
+
+To learn more about how to use the `metadata` fields, see [this guide](/langsmith/add-metadata-tags).
+
+
+### Provide token and cost information
+
+By default, LangSmith uses [tiktoken](https://github.com/openai/tiktoken) to count tokens, utilizing a best guess at the model's tokenizer based on the `ls_model_name` provided. It also calculates costs automatically by using the [model pricing table](https://smith.langchain.com/settings/workspaces/models). To learn how LangSmith calculates token-based costs, see [this guide](/langsmith/calculate-token-based-costs).
+
+However, many models already include exact token counts as part of the response. If you have this information, you can override the default token calculation in LangSmith in one of two ways:
+
+1. Extract usage within your traced function and set a `usage_metadata` field on the run's metadata.
+2. Return a `usage_metadata` field in your traced function outputs.
+
+In both cases, the usage metadata you send should contain a subset of the following LangSmith-recognized fields:
+
+<Warning>
+You cannot set any fields other than the ones listed below. You do not need to include all fields.
+</Warning>
+
+```python
+class UsageMetadata(TypedDict, total=False):
+    input_tokens: int
+    """The number of tokens used for the prompt."""
+    output_tokens: int
+    """The number of tokens generated as output."""
+    total_tokens: int
+    """The total number of tokens used."""
+    input_token_details: dict[str, float]
+    """The details of the input tokens."""
+    output_token_details: dict[str, float]
+    """The details of the output tokens."""
+    input_cost: float
+    """The cost of the input tokens."""
+    output_cost: float
+    """The cost of the output tokens."""
+    total_cost: float
+    """The total cost of the tokens."""
+    input_cost_details: dict[str, float]
+    """The cost details of the input tokens."""
+    output_cost_details: dict[str, float]
+    """The cost details of the output tokens."""
+```
+
+Note that the usage data can also include cost information, in case you do not want to rely on LangSmith's token-based cost formula. This is useful for models with pricing that is not linear by token type.
+
+#### Setting run metadata
+
+You can [modify the current run's metadata](/langsmith/add-metadata-tags) with usage information within your traced function. The advantage of this approach is that you do not need to change your traced function's runtime outputs. Here's an example:
+
+<Note>
+Requires `langsmith>=0.3.43` (Python) and `langsmith>=0.3.30` (JS/TS).
+</Note>
+
+<CodeGroup>
+
+```python Python
+from langsmith import traceable, get_current_run_tree
+
+inputs = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "I'd like to book a table for two."},
+]
+
+@traceable(
+    run_type="llm",
+    metadata={"ls_provider": "my_provider", "ls_model_name": "my_model"}
+)
+def chat_model(messages: list):
+    llm_output = {
+        "choices": [
+            {
+                "message": {
+                    "role": "assistant",
+                    "content": "Sure, what time would you like to book the table for?"
+                }
+            }
+        ],
+        "usage_metadata": {
+            "input_tokens": 27,
+            "output_tokens": 13,
+            "total_tokens": 40,
+            "input_token_details": {"cache_read": 10},
+            # If you wanted to specify costs:
+            # "input_cost": 1.1e-6,
+            # "input_cost_details": {"cache_read": 2.3e-7},
+            # "output_cost": 5.0e-6,
+        },
+    }
+    run = get_current_run_tree()
+    run.set(usage_metadata=llm_output["usage_metadata"])
+    return llm_output["choices"][0]["message"]
+
+chat_model(inputs)
+```
+
+```typescript TypeScript
+import { traceable, getCurrentRunTree } from "langsmith/traceable";
+
+const messages = [
+    { role: "system", content: "You are a helpful assistant." },
+    { role: "user", content: "I'd like to book a table for two." }
+];
+
+const chatModel = traceable(
+    async ({
+        messages,
+    }: {
+        messages: { role: string; content: string }[];
+        model: string;
+    }) => {
+        const llmOutput = {
+            choices: [
+                {
+                    message: {
+                        role: "assistant",
+                        content: "Sure, what time would you like to book the table for?",
+                    },
+                },
+            ],
+            usage_metadata: {
+                input_tokens: 27,
+                output_tokens: 13,
+                total_tokens: 40,
+            },
+        };
+        const runTree = getCurrentRunTree();
+        runTree.metadata.usage_metadata = llmOutput.usage_metadata;
+        return llmOutput.choices[0].message;
+    },
+    {
+        run_type: "llm",
+        name: "chat_model",
+        metadata: {
+            ls_provider: "my_provider",
+            ls_model_name: "my_model"
+        }
+    }
+);
+
+await chatModel({ messages });
+```
+
+</CodeGroup>
+
+#### Setting run outputs
+
+You can add a `usage_metadata` key to the function's response to set manual token counts and costs.
+
+<CodeGroup>
+
+```python Python
+from langsmith import traceable
+
+inputs = [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "I'd like to book a table for two."},
+]
+output = {
+    "choices": [
+        {
+            "message": {
+                "role": "assistant",
+                "content": "Sure, what time would you like to book the table for?"
+            }
+        }
+    ],
+    "usage_metadata": {
+        "input_tokens": 27,
+        "output_tokens": 13,
+        "total_tokens": 40,
+        "input_token_details": {"cache_read": 10},
+        # If you wanted to specify costs:
+        # "input_cost": 1.1e-6,
+        # "input_cost_details": {"cache_read": 2.3e-7},
+        # "output_cost": 5.0e-6,
+    },
+}
+
+@traceable(
+    run_type="llm",
+    metadata={"ls_provider": "my_provider", "ls_model_name": "my_model"}
+)
+def chat_model(messages: list):
+    return output
+
+chat_model(inputs)
+```
+
+```typescript TypeScript
+import { traceable } from "langsmith/traceable";
+
+const messages = [
+    { role: "system", content: "You are a helpful assistant." },
+    { role: "user", content: "I'd like to book a table for two." }
+];
+const output = {
+    choices: [
+        {
+            message: {
+                role: "assistant",
+                content: "Sure, what time would you like to book the table for?",
+            },
+        },
+    ],
+    usage_metadata: {
+        input_tokens: 27,
+        output_tokens: 13,
+        total_tokens: 40,
+    },
+};
+
+const chatModel = traceable(
+    async ({
+        messages,
+    }: {
+        messages: { role: string; content: string }[];
+        model: string;
+    }) => {
+        return output;
+    },
+    {
+        run_type: "llm",
+        name: "chat_model",
+        metadata: {
+            ls_provider: "my_provider",
+            ls_model_name: "my_model"
+        }
+    }
+);
+
+await chatModel({ messages });
+```
+
+</CodeGroup>
+
+## Time-to-first-token
+
+If you are using `traceable` or one of our SDK wrappers, LangSmith will automatically populate time-to-first-token for streaming LLM runs.
+However, if you are using the `RunTree` API directly, you will need to add a `new_token` event to the run tree in order to properly populate time-to-first-token.
+
+Here's an example:
+
+<CodeGroup>
+
+```python Python
+from langsmith.run_trees import RunTree
+run_tree = RunTree(
+    name="CustomChatModel",
+    run_type="llm",
+    inputs={ ... }
+)
+run_tree.post()
+llm_stream = ...
+first_token = None
+for token in llm_stream:
+    if first_token is None:
+      first_token = token
+      run_tree.add_event({
+        "name": "new_token"
+      })
+run_tree.end(outputs={ ... })
+run_tree.patch()
+```
+
+```typescript TypeScript
+import { RunTree } from "langsmith";
+const runTree = new RunTree({
+    name: "CustomChatModel",
+    run_type: "llm",
+    inputs: { ... },
+});
+await runTree.postRun();
+const llmStream = ...;
+let firstToken;
+for (const token of llmStream) {
+    if (firstToken == null) {
+      firstToken = token;
+      runTree.addEvent({ name: "new_token" });
+    }
+}
+await runTree.end({
+    outputs: { ... },
+});
+await runTree.patchRun();
+```
+
+</CodeGroup>
