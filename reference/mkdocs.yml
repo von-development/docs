@@ -14,8 +14,8 @@ theme:
   # Also used to add files
   custom_dir: overrides
 
-  logo_dark_mode: static/brand/langchain-docs-lilac.svg
-  logo_light_mode: static/brand/langchain-docs-teal.svg
+  logo_dark_mode: static/brand/reference-dark.svg
+  logo_light_mode: static/brand/reference-light.svg
   favicon: static/brand/docs-favicon.png
 
   icon:
@@ -190,6 +190,7 @@ nav:
       - Tools: langchain/tools.md
       - Memory: langchain/memory.md
       - Streaming: langchain/streaming.md
+    - Core: langchain/core.md
   - LangGraph:
     - langgraph/index.md
     - LangGraph:
