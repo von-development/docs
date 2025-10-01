@@ -6,6 +6,18 @@ The site is built using [MkDocs](https://www.mkdocs.org/) with the [Material for
 
 The `docs/` directory contains the markdown files for the site, with the main entry point being `index.md`. At build time, the stubs provided in each file are substituted with the generated API reference documentation by `mkdocstrings`. This allows us to architect content ordering, layout, etc. in markdown, while still generating the API reference documentation automatically from the source code. Consequently, to make content changes to the API references themselves, you need to make changes in the source code (e.g., docstrings, class/method names, etc.) and then rebuild the site.
 
+---
+
+## Contributing
+
+As these docs are built from the source code, the best way to contribute is to make changes in the source code itself. This can include:
+
+- Improving docstrings
+- Adding missing docstrings
+- Fixing typos
+- etc.
+
+---
 ## TODO
 
 This site is currently being migrated from a previous Sphinx-based implementation, so there are still some rough edges to be smoothed out. Here are some known issues and potential improvements:
@@ -26,6 +38,8 @@ This site is currently being migrated from a previous Sphinx-based implementatio
 - [ ] [Google Analytics](https://mrkeo.github.io/setup/setting-up-site-analytics)
 - [ ] [Versioning?](https://mrkeo.github.io/setup/setting-up-versioning)
 - [ ] [Show keyboard shortcut in search window](https://github.com/squidfunk/mkdocs-material/issues/2574#issuecomment-821979698)
+
+---
 
 ## Local Development
 
