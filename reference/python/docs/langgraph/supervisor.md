@@ -1,6 +1,6 @@
 # LangGraph Supervisor
 
-::: langgraph_supervisor.supervisor
+<!-- ::: langgraph_supervisor.supervisor
     options:
       members:
         - create_supervisor
@@ -9,4 +9,4 @@
     options:
       members:
         - create_handoff_tool
-        - create_forward_message_tool
+        - create_forward_message_tool -->
