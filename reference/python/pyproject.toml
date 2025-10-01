@@ -33,20 +33,20 @@ dependencies = [
     "langchain-tests",
     "langchain-text-splitters",
     "langchain-anthropic",
-    "langchain-chroma",
-    "langchain-deepseek",
-    "langchain-exa",
-    "langchain-fireworks",
-    "langchain-groq",
-    "langchain-huggingface",
-    "langchain-mistralai",
-    "langchain-nomic",
-    "langchain-ollama",
+    #"langchain-chroma",
+    #"langchain-deepseek",
+    #"langchain-exa",
+    #"langchain-fireworks",
+    #"langchain-groq",
+    #"langchain-huggingface",
+    #"langchain-mistralai",
+    #"langchain-nomic",
+    #"langchain-ollama",
     "langchain-openai",
-    "langchain-perplexity",
-    "langchain-prompty",
-    "langchain-qdrant",
-    "langchain-xai",
+    #"langchain-perplexity",
+    #"langchain-prompty",
+    #"langchain-qdrant",
+    #"langchain-xai",
     #"langchain-experimental",
     #"langchain-community",
     "langchain-mcp-adapters",
@@ -84,9 +84,9 @@ dependencies = [
     "langgraph-checkpoint-sqlite",
     "langgraph-checkpoint-postgres",
     "langgraph-sdk",
-    "langgraph-supervisor",
-    "langgraph-swarm",
-    "langgraph-checkpoint-aws",
+    #"langgraph-supervisor",
+    #"langgraph-swarm",
+    #"langgraph-checkpoint-aws",
 ]
 
 
@@ -134,7 +134,7 @@ langchain-mcp-adapters = { git = "https://github.com/langchain-ai/langchain-mcp-
 ## Other langchain-ai org packages (alphabetical)
 langchain-astradb = { git = "https://github.com/langchain-ai/langchain-datastax.git", subdirectory = "libs/astradb" }
 langchain-ai21 = { git = "https://github.com/langchain-ai/langchain-ai21.git", subdirectory = "libs/ai21" }
-langchain-aws = { git = "https://github.com/langchain-ai/langchain-aws.git", subdirectory = "libs/aws" }
+langchain-aws = { git = "https://github.com/langchain-ai/langchain-aws.git", subdirectory = "libs/aws", branch = "michaelnchin:v1.0.0-rebase-09222025" }
 langchain-azure-ai = { git = "https://github.com/langchain-ai/langchain-azure.git", subdirectory = "libs/azure-ai" }
 langchain-azure-dynamic-sessions = { git = "https://github.com/langchain-ai/langchain-azure.git", subdirectory = "libs/azure-dynamic-sessions" }
 langchain-cerebras = { git = "https://github.com/langchain-ai/langchain-cerebras.git", subdirectory = "libs/cerebras" }
@@ -164,12 +164,12 @@ langchain-weaviate = { git = "https://github.com/langchain-ai/langchain-weaviate
 langchain-tavily = { git = "https://github.com/tavily-ai/langchain-tavily.git" }
 
 ## LangGraph monorepo packages (alphabetical)
-langgraph = { git = "https://github.com/langchain-ai/langgraph", subdirectory = "libs/langgraph" }
-langgraph-prebuilt = { git = "https://github.com/langchain-ai/langgraph", subdirectory = "libs/prebuilt" }
-langgraph-checkpoint = { git = "https://github.com/langchain-ai/langgraph", subdirectory = "libs/checkpoint" }
-langgraph-checkpoint-sqlite = { git = "https://github.com/langchain-ai/langgraph", subdirectory = "libs/checkpoint-sqlite" }
-langgraph-checkpoint-postgres = { git = "https://github.com/langchain-ai/langgraph", subdirectory = "libs/checkpoint-postgres" }
-langgraph-sdk = { git = "https://github.com/langchain-ai/langgraph", subdirectory = "libs/sdk-py" }
+langgraph = { git = "https://github.com/langchain-ai/langgraph", subdirectory = "libs/langgraph", branch = "v1-dev" }
+langgraph-prebuilt = { git = "https://github.com/langchain-ai/langgraph", subdirectory = "libs/prebuilt", branch = "v1-dev" }
+langgraph-checkpoint = { git = "https://github.com/langchain-ai/langgraph", subdirectory = "libs/checkpoint", branch = "v1-dev" }
+langgraph-checkpoint-sqlite = { git = "https://github.com/langchain-ai/langgraph", subdirectory = "libs/checkpoint-sqlite", branch = "v1-dev" }
+langgraph-checkpoint-postgres = { git = "https://github.com/langchain-ai/langgraph", subdirectory = "libs/checkpoint-postgres", branch = "v1-dev" }
+langgraph-sdk = { git = "https://github.com/langchain-ai/langgraph", subdirectory = "libs/sdk-py", branch = "v1-dev" }
 
 # External repos (alphabetical)
 langgraph-supervisor = { git = "https://github.com/langchain-ai/langgraph-supervisor-py" }
