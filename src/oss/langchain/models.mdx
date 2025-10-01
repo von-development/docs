@@ -1077,7 +1077,7 @@ LangChain supports all major model providers, including OpenAI, Anthropic, Googl
 
 ---
 
-## Advanced configuration
+## Advanced topics
 
 ### Multimodal
 
@@ -1180,6 +1180,71 @@ Many providers offer prompt caching features to reduce latency and cost on repea
 Prompt caching is often only engaged above a minimum input token threshold. See [provider pages](/oss/python/integrations/chat) for details.
 
 Cache usage will be reflected in the [usage metadata](/oss/langchain/messages#token-usage) of the model response.
+
+### Server-side tool use
+
+Some providers support server-side [tool-calling](#tool-calling) loops: models can interact with web search, code interpreters, and other tools and analyze the results in a single conversational turn.
+
+If a model invokes a tool server-side, the content of the response message will include content representing the invocation and result of the tool. Accessing the [content blocks](/oss/langchain/messages#standard-content-blocks) of the response will return the server-side tool calls and results in a provider-agnostic format:
+
+:::python
+```python
+from langchain.chat_models import init_chat_model
+
+model = init_chat_model("openai:gpt-4.1-mini")
+
+tool = {"type": "web_search"}
+model_with_tools = model.bind_tools([tool])
+
+response = model_with_tools.invoke("What was a positive news story from today?")
+response.content_blocks
+```
+```
+[
+  {
+    "type": "server_tool_call",
+    "name": "web_search",
+    "args": {
+      "query": "positive news stories today",
+      "type": "search"
+    },
+    "id": "ws_abc123"
+  },
+  {
+    "type": "server_tool_result",
+    "tool_call_id": "ws_abc123",
+    "status": "success"
+  },
+  {
+    "type": "text",
+    "text": "Here are some positive news stories from today...",
+    "annotations": [
+      {
+        "end_index": 410,
+        "start_index": 337,
+        "title": "article title",
+        "type": "citation",
+        "url": "..."
+      }
+    ]
+  }
+]
+```
+:::
+:::js
+```typescript
+import { initChatModel } from "langchain";
+
+const model = await initChatModel("openai:gpt-4.1-mini");
+const modelWithTools = model.bindTools([{ type: "web_search" }])
+
+await llm.invoke("What was a positive news story from today?");
+console.log(message.contentBlocks);
+```
+:::
+This represents a single conversational turn; there are no associated [ToolMessage](/oss/langchain/messages#tool-message) objects that need to be passed in as in client-side [tool-calling](#tool-calling).
+
+See the [integration page](/oss/integrations/chat) for your given provider for available tools and usage details.
 
 :::python
 ### Rate limiting
