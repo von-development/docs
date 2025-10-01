@@ -1,5 +1,9 @@
 .PHONY: build-docs serve-clean-docs serve-docs format-docs lint-docs tests
 
+# ---------------------------------------
+# Python reference documentation Makefile
+# ---------------------------------------
+
 # Build files for deployment
 build-docs:
 	uv run python -m mkdocs build -c -f mkdocs.yml --strict

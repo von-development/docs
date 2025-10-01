@@ -15,3 +15,39 @@
 - [ ] [Google Analytics](https://mrkeo.github.io/setup/setting-up-site-analytics)
 - [ ] [Versioning?](https://mrkeo.github.io/setup/setting-up-versioning)
 - [ ] [Show keyboard shortcut in search window](https://github.com/squidfunk/mkdocs-material/issues/2574#issuecomment-821979698)
+
+## Local
+
+`langchain-ai/` needed to be cloned locally for local reference doc generation:
+
+```txt
+langchain
+langchain-community
+langchain-mcp-adapters
+langchain-datastax
+langchain-ai21
+langchain-aws
+langchain-azure
+langchain-cerebras
+langchain-cohere
+langchain-ibm
+langchain-elastic
+langchain-google
+langchain-milvus
+langchain-mongodb
+langchain-neo4j
+langchain-nvidia
+langchain-pinecone
+langchain-postgres
+langchain-redis
+langchain-sema4
+langchain-snowflake
+langchain-together
+langchain-unstructured
+langchain-upstage
+langchain-weaviate
+langgraph
+langgraph-supervisor-py
+langgraph-swarm-py
+```
+
