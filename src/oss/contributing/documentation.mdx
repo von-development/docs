@@ -33,7 +33,7 @@ All documentation falls under one of four categories:
 
 ## Getting started
 
-### <Icon icon="text-slash" size={24}/> Quick edit: fix a typo
+### Quick edit: fix a typo
 
 For simple changes like fixing typos, you can edit directly on GitHub without setting up a local development environment:
 
@@ -189,39 +189,28 @@ Conceptual guide cover core concepts abstractly, providing deep understanding.
 
 ### References
 
-References contain detailed, low-level information describing exactly what functionality exists and how to use it.
+Reference documentation contains detailed, low-level information describing exactly what functionality exists and how to use it.
+
+**Existing references**
+- [LangChain Python API reference](https://reference.langchain.com/python/) (auto-generated from docstrings)
+- [LangChain JavaScript/TypeScript API reference](https://reference.langchain.com/javascript/) (auto-generated from docstrings)
+
+A good reference should:
+- Describe what exists (all parameters, options, return values)
+- Be comprehensive and structured for easy lookup
+- Serve as the authoritative source for technical details
 
 <AccordionGroup>
-    <Accordion title="Reference characteristics">
-        - **Information-focused**: Describe what exists
-        - **Comprehensive**: Cover all parameters and options
-        - **Structured**: Organized systematically
-        - **Authoritative**: The definitive source for technical details
-    </Accordion>
-
-    <Accordion title="Types of LangChain references">
-        - **API references**: Auto-generated from code docstrings
-        - **Integration guides**: Manual documentation for specific providers/tools
-        - **Configuration references**: Detailed parameter specifications
-        - **Schema documentation**: Data structure and format specifications
-    </Accordion>
-
     <Accordion title="Contributing to references">
         - **API references**: Update docstrings in source code repositories
-        - **Integration guides**: Create/edit `.mdx` files in the [docs repository](https://github.com/langchain-ai/docs) under `/src/`
-        - **Manual references**: Edit existing pages
     </Accordion>
 
     <Accordion title="LangChain reference best practices">
-        - **Integration consistency**: Follow existing patterns for provider-specific documentation
-        - **Code examples**: Include both basic usage and common edge cases/failure modes
-        - **Version compatibility**: Note when features require specific versions
+        - Be consistent; follow existing patterns for provider-specific documentation
+        - Include both basic usage (code snippets) and common edge cases/failure modes
+        - Note when features require specific versions
     </Accordion>
 </AccordionGroup>
-
-**Existing references**
-- [LangChain Python API reference](https://python.langchain.com/api_reference/) (auto-generated from docstrings)
-- [LangChain JavaScript/TypeScript API reference](https://v03.api.js.langchain.com/index.html) (auto-generated from docstrings)
 
 **When to create new reference documentation:**
 - New integrations or providers need dedicated reference pages
