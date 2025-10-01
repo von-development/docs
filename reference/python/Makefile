@@ -6,7 +6,7 @@
 # ---------------------------------------
 
 # Build files for deployment
-build-docs:
+build:
 	uv run python -m mkdocs build -c -f mkdocs.yml --strict
 
 # To preview what the docs will look like when built

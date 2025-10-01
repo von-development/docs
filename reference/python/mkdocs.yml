@@ -1,3 +1,5 @@
+site_dir: ../dist/python
+
 site_name: "LangChain Reference"
 site_url: "https://reference.langchain.com/python/"
 site_description: "Unified reference documentation for LangChain and LangGraph"
