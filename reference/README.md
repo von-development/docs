@@ -3,6 +3,8 @@
 ## TODO
 
 - [ ] See if it's possible to make our types clickable (like the Python ones)
+- [ ] Post-processing step to link out to imports from code blocks
+  - [ ] Maybe there's a plugin?
 - [ ] Fix `navigation.path` feature/plugin in `mkdocs.yml` not working
 - [ ] Fix search magnifying glass icon color in dark mode
 - [ ] Hyperlink deprecation messages in LangGraph docs (source code)
