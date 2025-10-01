@@ -260,24 +260,27 @@ Let's walk through each step:
     </Step>
     <Step title="Define response format">
         :::python
-        Use structured outputs to ensure predictable, consistent responses.
+        Optionally, define a structured response format if you need the agent responses to match
+        a specific schema.
         
         ```python
         from dataclasses import dataclass
+        from typing import Optional
 
         # We use a dataclass here, but Pydantic models are also supported.
         @dataclass
-        class AgentResponse:
-            """Final response schema for the agent."""
-            # Any interesting information about the weather if available
-            weather_conditions: Optional[str] = None
+        class ResponseFormat:
+            """Response schema for the agent."""
             # A punny response (always required)
             punny_response: str
+            # Any interesting information about the weather if available
+            weather_conditions: Optional[str] = None
         ```
         :::
 
         :::js
-        Use structured outputs to ensure predictable, consistent responses.
+        Optionally, define a structured response format if you need the agent responses to match
+        a specific schema.
 
         ```ts
         const responseFormat = z.object({
@@ -323,29 +326,38 @@ Let's walk through each step:
             prompt=system_prompt,
             tools=[get_user_location, get_weather_for_location],
             context_schema=Context,
-            response_format=WeatherResponse,
+            response_format=ResponseFormat,
             checkpointer=checkpointer
         )
 
-        # The `thread_id` is an identifier for a conversation thread
-        # with the agent.
+        # `thread_id` is a unique identifier for a given conversation.
         config = {"configurable": {"thread_id": "1"}}
-        
+
         response = agent.invoke(
             {"messages": [{"role": "user", "content": "what is the weather outside?"}]},
             config=config,
             context=Context(user_id="1")
         )
 
-        response['structured_response']
+        print(response['structured_response'])
+        # ResponseFormat(
+        #   punny_response="Florida is still having a 'sun-derful' day! The sunshine is playing 'ray-dio' hits all day long! I'd say it's the perfect weather for some 'solar-bration'! If you were hoping for rain, I'm afraid that idea is all 'washed up' - the forecast remains 'clear-ly' brilliant!",
+        #   weather_conditions="It's always sunny in Florida!"
+        # )
 
+
+        # Note that we can continue the conversation using the same `thread_id`.
         response = agent.invoke(
             {"messages": [{"role": "user", "content": "thank you!"}]},
             config=config,
-            context=Context(user_id="1")
+            context=Context(user_id="1") # 
         )
 
-        response['structured_response']
+        print(response['structured_response'])
+        # ResponseFormat(
+        #   punny_response="You're 'thund-erfully' welcome! It's always a 'breeze' to help you stay 'current' with the weather. I'm just 'cloud'-ing around waiting to 'shower' you with more forecasts whenever you need them. Have a 'sun-sational' day in the Florida sunshine!",
+        #   weather_conditions=None
+        # )
         ```
         :::
         :::js
