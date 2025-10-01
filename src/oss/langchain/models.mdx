@@ -1170,75 +1170,16 @@ LangChain supports running models locally on your own hardware. This is useful f
 
 [Ollama](/oss/integrations/chat/ollama) is one of the easiest ways to run models locally. See the full list of local integrations on the [integrations page](/oss/integrations/providers).
 
-### Caching
+### Prompt caching
 
-Chat model APIs can be slow and expensive to call. To help mitigate this, LangChain provides an optional caching layer for chat model integrations.
+Many providers offer prompt caching features to reduce latency and cost on repeat processing of the same tokens. These features can be **implicit** or **explicit**:
 
-:::python
-<Accordion title="Enable caching for your model" icon="database">
+- Implicit prompt caching: providers will automatically pass on cost savings if a request hits a cache. Examples: [OpenAI](/oss/integrations/chat/openai) and [Gemini](/oss/integrations/chat/google_generative_ai) (Gemini 2.5 and above).
+- Explicit caching: providers allow you to manually indicate cache points for greater control or to guarantee cost savings. Examples: [OpenAI](https://python.langchain.com/api_reference/openai/chat_models/langchain_openai.chat_models.base.ChatOpenAI.html) (via `prompt_cache_key`), [Anthropic](/oss/integrations/chat/anthropic#prompt-caching), [AWS Bedrock](/oss/integrations/chat/bedrock#prompt-caching), [Gemini](https://python.langchain.com/api_reference/google_genai/chat_models/langchain_google_genai.chat_models.ChatGoogleGenerativeAI.html).
 
-    By default, caching is disabled. To enable it, import:
+Prompt caching is often only engaged above a minimum input token threshold. See [provider pages](/oss/python/integrations/chat) for details.
 
-    ```python
-    from langchain_core.globals import set_llm_cache
-    ```
-
-    Next, choose a cache:
-
-    <AccordionGroup>
-        <Accordion title="In Memory Cache" icon="memory">
-            An ephemeral cache that stores model calls in memory. Wiped when your environment restarts. Not shared across processes.
-
-            ```python InMemoryCache
-            from langchain_core.caches import InMemoryCache
-
-            set_llm_cache(InMemoryCache())
-
-            response = model.invoke("Tell me a joke")
-            response = model.invoke("Tell me a joke")  # Fast, from cache
-            ```
-        </Accordion>
-        <Accordion title="SQLite Cache" icon="database">
-            Uses a SQLite database to store responses, and will last across process restarts
-
-            ```python SQLite Cache
-            # We can do the same thing with a SQLite cache
-            from langchain_community.cache import SQLiteCache
-
-            set_llm_cache(SQLiteCache(database_path=".langchain.db"))
-
-            response = model.invoke("Tell me a joke")
-            response = model.invoke("Tell me a joke")  # Fast, from cache
-            ```
-        </Accordion>
-    </AccordionGroup>
-</Accordion>
-:::
-
-:::js
-<Accordion title="Enable caching for your model" icon="database">
-    To enable caching, you can provide a cache object when initializing the model:
-
-    <AccordionGroup>
-        <Accordion title="In Memory Cache" icon="memory">
-            An ephemeral cache that stores model calls in memory. Wiped when your environment restarts. Not shared across processes.
-
-            ```typescript InMemoryCache
-            import { InMemoryCache } from "@langchain/core";
-            import { ChatOpenAI } from "@langchain/openai";
-
-            const model = new ChatOpenAI({
-                model: "gpt-4o",
-                cache: new InMemoryCache(),
-            });
-
-            const response = await model.invoke("Tell me a joke");
-            const response = await model.invoke("Tell me a joke");  // Fast, from cache
-            ```
-        </Accordion>
-    </AccordionGroup>
-</Accordion>
-:::
+Cache usage will be reflected in the [usage metadata](/oss/langchain/messages#token-usage) of the model response.
 
 :::python
 ### Rate limiting
