@@ -112,82 +112,82 @@ package = false
 ## LangChain monorepo packages (alphabetical)
 ### Top level
 ## TODO: re-map langchain-v1 on release, add legacy/classic
-langchain-cli = { path = "../../langchain/libs/cli", editable = true }
-langchain-core = { path = "../../langchain/libs/core", editable = true }
-langchain = { path = "../../langchain/libs/langchain_v1", editable = true }
-langchain-tests = { path = "../../langchain/libs/standard-tests", editable = true }
-langchain-text-splitters = { path = "../../langchain/libs/text-splitters", editable = true }
+langchain-cli = { path = "../../../langchain/libs/cli", editable = true }
+langchain-core = { path = "../../../langchain/libs/core", editable = true }
+langchain = { path = "../../../langchain/libs/langchain_v1", editable = true }
+langchain-tests = { path = "../../../langchain/libs/standard-tests", editable = true }
+langchain-text-splitters = { path = "../../../langchain/libs/text-splitters", editable = true }
 
 ### Partners
-langchain-anthropic = { path = "../../langchain/libs/partners/anthropic", editable = true }
-langchain-chroma = { path = "../../langchain/libs/partners/chroma", editable = true }
-langchain-deepseek = { path = "../../langchain/libs/partners/deepseek", editable = true }
-langchain-exa = { path = "../../langchain/libs/partners/exa", editable = true }
-langchain-fireworks = { path = "../../langchain/libs/partners/fireworks", editable = true }
-langchain-groq = { path = "../../langchain/libs/partners/groq", editable = true }
-langchain-huggingface = { path = "../../langchain/libs/partners/huggingface", editable = true }
-langchain-mistralai = { path = "../../langchain/libs/partners/mistralai", editable = true }
-langchain-nomic = { path = "../../langchain/libs/partners/nomic", editable = true }
-langchain-ollama = { path = "../../langchain/libs/partners/ollama", editable = true }
-langchain-openai = { path = "../../langchain/libs/partners/openai", editable = true }
-langchain-perplexity = { path = "../../langchain/libs/partners/perplexity", editable = true }
-langchain-prompty = { path = "../../langchain/libs/partners/prompty", editable = true }
-langchain-qdrant = { path = "../../langchain/libs/partners/qdrant", editable = true }
-langchain-xai = { path = "../../langchain/libs/partners/xai", editable = true }
+langchain-anthropic = { path = "../../../langchain/libs/partners/anthropic", editable = true }
+langchain-chroma = { path = "../../../langchain/libs/partners/chroma", editable = true }
+langchain-deepseek = { path = "../../../langchain/libs/partners/deepseek", editable = true }
+langchain-exa = { path = "../../../langchain/libs/partners/exa", editable = true }
+langchain-fireworks = { path = "../../../langchain/libs/partners/fireworks", editable = true }
+langchain-groq = { path = "../../../langchain/libs/partners/groq", editable = true }
+langchain-huggingface = { path = "../../../langchain/libs/partners/huggingface", editable = true }
+langchain-mistralai = { path = "../../../langchain/libs/partners/mistralai", editable = true }
+langchain-nomic = { path = "../../../langchain/libs/partners/nomic", editable = true }
+langchain-ollama = { path = "../../../langchain/libs/partners/ollama", editable = true }
+langchain-openai = { path = "../../../langchain/libs/partners/openai", editable = true }
+langchain-perplexity = { path = "../../../langchain/libs/partners/perplexity", editable = true }
+langchain-prompty = { path = "../../../langchain/libs/partners/prompty", editable = true }
+langchain-qdrant = { path = "../../../langchain/libs/partners/qdrant", editable = true }
+langchain-xai = { path = "../../../langchain/libs/partners/xai", editable = true }
 
 ## Experimental
-langchain-experimental = { path = "../../langchain-experimental/libs/experimental", editable = true }
+langchain-experimental = { path = "../../../langchain-experimental/libs/experimental", editable = true }
 
 ## Community
-langchain-community = { path = "../../langchain-community/libs/community", editable = true }
+langchain-community = { path = "../../../langchain-community/libs/community", editable = true }
 
 ## MCP
-langchain-mcp-adapters = { path = "../../langchain-mcp-adapters", editable = true }
+langchain-mcp-adapters = { path = "../../../langchain-mcp-adapters", editable = true }
 
 ## Other langchain-ai org packages (alphabetical)
-langchain-astradb = { path = "../../langchain-datastax/libs/astradb", editable = true }
-langchain-ai21 = { path = "../../langchain-ai21/libs/ai21", editable = true }
-langchain-aws = { path = "../../langchain-aws/libs/aws", editable = true }
-langchain-azure-ai = { path = "../../langchain-azure/libs/azure-ai", editable = true }
-langchain-azure-dynamic-sessions = { path = "../../langchain-azure/libs/azure-dynamic-sessions", editable = true }
-langchain-cerebras = { path = "../../langchain-cerebras/libs/cerebras", editable = true }
-langchain-cohere = { path = "../../langchain-cohere/libs/cohere", editable = true }
-langchain-db2 = { path = "../../langchain-ibm/libs/langchain-db2", editable = true }
-langchain-elasticsearch = { path = "../../langchain-elastic/libs/elasticsearch", editable = true }
-langchain-google-community = { path = "../../langchain-google/libs/community", editable = true }
-langchain-google-genai = { path = "../../langchain-google/libs/genai", editable = true }
-langchain-google-vertexai = { path = "../../langchain-google/libs/vertexai", editable = true }
-langchain-ibm = { path = "../../langchain-ibm/libs/ibm", editable = true }
-langchain-milvus = { path = "../../langchain-milvus/libs/milvus", editable = true }
-langchain-mongodb = { path = "../../langchain-mongodb/libs/langchain-mongodb", editable = true }
-langchain-neo4j = { path = "../../langchain-neo4j/libs/neo4j", editable = true }
-langchain-nvidia-ai-endpoints = { path = "../../langchain-nvidia/libs/ai-endpoints", editable = true }
-langchain-pinecone = { path = "../../langchain-pinecone/libs/pinecone", editable = true }
-langchain-postgres = { path = "../../langchain-postgres", editable = true }
-langchain-redis = { path = "../../langchain-redis/libs/redis", editable = true }
-langchain-sema4 = { path = "../../langchain-sema4/libs/sema4", editable = true }
-langchain-snowflake = { path = "../../langchain-snowflake/libs/snowflake", editable = true }
-langchain-sqlserver = { path = "../../langchain-azure/libs/sqlserver", editable = true }
-langchain-together = { path = "../../langchain-together/libs/together", editable = true }
-langchain-unstructured = { path = "../../langchain-unstructured/libs/unstructured", editable = true }
-langchain-upstage = { path = "../../langchain-upstage/libs/upstage", editable = true }
-langchain-weaviate = { path = "../../langchain-weaviate/libs/weaviate", editable = true }
+langchain-astradb = { path = "../../../langchain-datastax/libs/astradb", editable = true }
+langchain-ai21 = { path = "../../../langchain-ai21/libs/ai21", editable = true }
+langchain-aws = { path = "../../../langchain-aws/libs/aws", editable = true }
+langchain-azure-ai = { path = "../../../langchain-azure/libs/azure-ai", editable = true }
+langchain-azure-dynamic-sessions = { path = "../../../langchain-azure/libs/azure-dynamic-sessions", editable = true }
+langchain-cerebras = { path = "../../../langchain-cerebras/libs/cerebras", editable = true }
+langchain-cohere = { path = "../../../langchain-cohere/libs/cohere", editable = true }
+langchain-db2 = { path = "../../../langchain-ibm/libs/langchain-db2", editable = true }
+langchain-elasticsearch = { path = "../../../langchain-elastic/libs/elasticsearch", editable = true }
+langchain-google-community = { path = "../../../langchain-google/libs/community", editable = true }
+langchain-google-genai = { path = "../../../langchain-google/libs/genai", editable = true }
+langchain-google-vertexai = { path = "../../../langchain-google/libs/vertexai", editable = true }
+langchain-ibm = { path = "../../../langchain-ibm/libs/ibm", editable = true }
+langchain-milvus = { path = "../../../langchain-milvus/libs/milvus", editable = true }
+langchain-mongodb = { path = "../../../langchain-mongodb/libs/langchain-mongodb", editable = true }
+langchain-neo4j = { path = "../../../langchain-neo4j/libs/neo4j", editable = true }
+langchain-nvidia-ai-endpoints = { path = "../../../langchain-nvidia/libs/ai-endpoints", editable = true }
+langchain-pinecone = { path = "../../../langchain-pinecone/libs/pinecone", editable = true }
+langchain-postgres = { path = "../../../langchain-postgres", editable = true }
+langchain-redis = { path = "../../../langchain-redis/libs/redis", editable = true }
+langchain-sema4 = { path = "../../../langchain-sema4/libs/sema4", editable = true }
+langchain-snowflake = { path = "../../../langchain-snowflake/libs/snowflake", editable = true }
+langchain-sqlserver = { path = "../../../langchain-azure/libs/sqlserver", editable = true }
+langchain-together = { path = "../../../langchain-together/libs/together", editable = true }
+langchain-unstructured = { path = "../../../langchain-unstructured/libs/unstructured", editable = true }
+langchain-upstage = { path = "../../../langchain-upstage/libs/upstage", editable = true }
+langchain-weaviate = { path = "../../../langchain-weaviate/libs/weaviate", editable = true }
 
 ## Non-langchain-ai org packages (alphabetical)
-langchain-tavily = { path = "../../langchain-tavily", editable = true }
+langchain-tavily = { path = "../../../langchain-tavily", editable = true }
 
 ## LangGraph monorepo packages (alphabetical)
-langgraph = { path = "../../langgraph/libs/langgraph", editable = true }
-langgraph-prebuilt = { path = "../../langgraph/libs/prebuilt", editable = true }
-langgraph-checkpoint = { path = "../../langgraph/libs/checkpoint", editable = true }
-langgraph-checkpoint-sqlite = { path = "../../langgraph/libs/checkpoint-sqlite", editable = true }
-langgraph-checkpoint-postgres = { path = "../../langgraph/libs/checkpoint-postgres", editable = true }
-langgraph-sdk = { path = "../../langgraph/libs/sdk-py", editable = true }
+langgraph = { path = "../../../langgraph/libs/langgraph", editable = true }
+langgraph-prebuilt = { path = "../../../langgraph/libs/prebuilt", editable = true }
+langgraph-checkpoint = { path = "../../../langgraph/libs/checkpoint", editable = true }
+langgraph-checkpoint-sqlite = { path = "../../../langgraph/libs/checkpoint-sqlite", editable = true }
+langgraph-checkpoint-postgres = { path = "../../../langgraph/libs/checkpoint-postgres", editable = true }
+langgraph-sdk = { path = "../../../langgraph/libs/sdk-py", editable = true }
 
 # External repos (alphabetical)
-langgraph-supervisor = { path = "../../langgraph-supervisor-py", editable = true }
-langgraph-swarm = { path = "../../langgraph-swarm-py", editable = true }
-langgraph-checkpoint-aws = { path = "../../langchain-aws/libs/langgraph-checkpoint-aws", editable = true }
+langgraph-supervisor = { path = "../../../langgraph-supervisor-py", editable = true }
+langgraph-swarm = { path = "../../../langgraph-swarm-py", editable = true }
+langgraph-checkpoint-aws = { path = "../../../langchain-aws/libs/langgraph-checkpoint-aws", editable = true }
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 # Remote installs for prod
