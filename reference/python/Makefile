@@ -7,6 +7,7 @@
 
 # Build files for deployment
 build:
+	uv sync --link-mode=copy
 	uv run python -m mkdocs build -c -f mkdocs.yml --strict
 
 # To preview what the docs will look like when built
