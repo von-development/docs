@@ -402,9 +402,10 @@ Let's walk through each step:
         :::
     </Step>
 </Steps>
-
+    
+<Expandable title="Full example code">
 :::python
-```python Expandable Full example
+```python
 from dataclasses import dataclass
 from typing import Optional
 
@@ -502,7 +503,7 @@ print(response['structured_response'])
 
 
 :::js
-```ts Expandable Full example
+```ts
 import { createAgent, tool } from "langchain";
 import { initChatModel } from "langchain/chat_models";
 import { MemorySaver } from "@langchain/langgraph";
@@ -595,6 +596,7 @@ console.log(thankYouResponse.structuredResponse);
 // }
 ```
 :::
+</Expandable>
 
 Congratulations! You now have an AI agent that can:
 
