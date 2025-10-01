@@ -1238,7 +1238,7 @@ import { initChatModel } from "langchain";
 const model = await initChatModel("openai:gpt-4.1-mini");
 const modelWithTools = model.bindTools([{ type: "web_search" }])
 
-await llm.invoke("What was a positive news story from today?");
+const message = await modelWithTools.invoke("What was a positive news story from today?");
 console.log(message.contentBlocks);
 ```
 :::
