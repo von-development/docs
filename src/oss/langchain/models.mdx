@@ -541,6 +541,8 @@ Below, we show some common ways you can use tool calling.
     <Accordion title="Tool execution loop" icon="arrow-rotate-right">
         When a model returns tool calls, you need to execute the tools and pass the results back to the model. This creates a conversation loop where the model can use tool results to generate its final response.
 
+        LangChain includes [agent](/oss/langchain/agents) abstractions that handle this orchestration for you. Below, we illustrate a simple example:
+
         ```python Tool execution loop
         # Bind (potentially multiple) tools to the model
         model_with_tools = model.bind_tools([get_weather])
@@ -592,7 +594,7 @@ Below, we show some common ways you can use tool calling.
         print(response.tool_calls)
         # [
         #   {'name': 'get_weather', 'args': {'location': 'Boston'}, 'id': 'call_1'},
-        #   {'name': 'get_time', 'args': {'location': 'Tokyo'}, 'id': 'call_2'}
+        #   {'name': 'get_weather', 'args': {'location': 'Tokyo'}, 'id': 'call_2'},
         # ]
 
 
@@ -606,6 +608,13 @@ Below, we show some common ways you can use tool calling.
         ```
 
         The model intelligently determines when parallel execution is appropriate based on the independence of the requested operations.
+
+        <Tip>
+        Most models supporting tool calling enable parallel tool calls by default. Some (including [OpenAI](/oss/integrations/chat/openai) and [Anthropic](/oss/integrations/chat/anthropic)) allow you to disable this feature. To do this, set `parallel_tool_calls=False`:
+        ```python
+        model.bind_tools([get_weather], parallel_tool_calls=False)
+        ```
+        </Tip>
     </Accordion>
     <Accordion title="Streaming tool calls" icon="rss">
         When streaming responses, tool calls are progressively built through `ToolCallChunk`. This allows you to see tool calls as they're being generated rather than waiting for the complete response.
@@ -615,23 +624,29 @@ Below, we show some common ways you can use tool calling.
             "What's the weather in Boston and Tokyo?"
         ):
             # Tool call chunks arrive progressively
-            if chunk.tool_call_chunks:
-                for tool_chunk in chunk.tool_call_chunks:
-                    print(f"Tool: {tool_chunk.get('name', '')}")
-                    print(f"Args: {tool_chunk.get('args', '')}")
+            for tool_chunk in chunk.tool_call_chunks:
+                if name := tool_chunk.get("name"):
+                    print(f"Tool: {name}")
+                if id_ := tool_chunk.get("id"):
+                    print(f"ID: {id_}")
+                if args := tool_chunk.get("args"):
+                    print(f"Args: {args}")
 
         # Output:
-        # Tool: get_weather            # Loop 1
-        # Args:
-        # Tool:                        # Loop 2
-        # Args: {"loc
-        # Tool:                        # Loop 3
-        # Args: ation": "BOS"}
-        # Tool: get_time               # Loop 4
-        # Args:
-        # Args:
-        # Tool:                        # Loop 5
-        # Args: {"timezone": "Tokyo"}
+        # Tool: get_weather
+        # ID: call_SvMlU1TVIZugrFLckFE2ceRE
+        # Args: {"lo
+        # Args: catio
+        # Args: n": "B
+        # Args: osto
+        # Args: n"}
+        # Tool: get_weather
+        # ID: call_QMZdy6qInx13oWKE7KhuhOLR
+        # Args: {"lo
+        # Args: catio
+        # Args: n": "T
+        # Args: okyo
+        # Args: "}
         ```
 
         You can accumulate chunks to build complete tool calls:
@@ -640,7 +655,7 @@ Below, we show some common ways you can use tool calling.
         gathered = None
         for chunk in model_with_tools.stream("What's the weather in Boston?"):
             gathered = chunk if gathered is None else gathered + chunk
-            print(gathered.content_blocks)
+            print(gathered.tool_calls)
         ```
     </Accordion>
 </AccordionGroup>
