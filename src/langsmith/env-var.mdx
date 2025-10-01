@@ -103,7 +103,7 @@ Number of jobs per worker for the LangGraph Server task queue. Defaults to `10`.
 
 <Info>
 **Only for Hybrid and Self-Hosted**
-Custom Postgres instances are only available for [Hybrid](/langgraph-platform/hybrid) and [Self-Hosted](/langgraph-platform/self-hosted) deployments.
+Custom Postgres instances are only available for [Hybrid](/langsmith/hybrid) and [Self-Hosted](/langsmith/self-hosted) deployments.
 </Info>
 
 Specify `POSTGRES_URI_CUSTOM` to use a custom Postgres instance. The value of `POSTGRES_URI_CUSTOM` must be a valid [Postgres connection URI](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING-URIS).
@@ -153,7 +153,7 @@ Defaults to `''`.
 
 <Info>
 **Only for Hybrid and Self-Hosted**
-Custom Redis instances are only available for [Hybrid](/langgraph-platform/hybrid) and [Self-Hosted](/langgraph-platform/self-hosted) deployments.
+Custom Redis instances are only available for [Hybrid](/langsmith/hybrid) and [Self-Hosted](/langsmith/self-hosted) deployments.
 </Info>
 
 Specify `REDIS_URI_CUSTOM` to use a custom Redis instance. The value of `REDIS_URI_CUSTOM` must be a valid [Redis connection URI](https://redis-py.readthedocs.io/en/stable/connections.html#redis.Redis.from_url).
@@ -164,6 +164,6 @@ Time-to-live in seconds for resumable stream data in Redis.
 
 When a run is created and the output is streamed, the stream can be configured to be resumable (e.g. `stream_resumable=True`). If a stream is resumable, output from the stream is temporarily stored in Redis. The TTL for this data can be configured by setting `RESUMABLE_STREAM_TTL_SECONDS`.
 
-See the [Python](/langgraph-platform/python-sdk#langgraph_sdk.client.RunsClient.stream) and [JS/TS](https://langchain-ai.github.io/langgraphjs/reference/classes/sdk_client.RunsClient.html#stream) SDKs for more details on how to implement resumable streams.
+See the [Python](/langsmith/python-sdk#langgraph_sdk.client.RunsClient.stream) and [JS/TS](https://langchain-ai.github.io/langgraphjs/reference/classes/sdk_client.RunsClient.html#stream) SDKs for more details on how to implement resumable streams.
 
 Defaults to `120` seconds.
