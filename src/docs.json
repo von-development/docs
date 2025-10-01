@@ -815,16 +815,7 @@
                   {
                     "group": "Overview",
                     "pages": [
-                      "langsmith/deployment-options",
-                      {
-                        "group": "Platform components",
-                        "pages": [
-                          "langsmith/components",
-                          "langsmith/langgraph-server",
-                          "langsmith/data-plane",
-                          "langsmith/control-plane"
-                        ]
-                      }
+                      "langsmith/deployment-options"
                     ]
                   },
                   {
@@ -857,6 +848,15 @@
                         "pages": [
                           "langsmith/custom-docker",
                           "langsmith/egress-metrics-metadata"
+                        ]
+                      },
+                      {
+                        "group": "Platform components",
+                        "pages": [
+                          "langsmith/components",
+                          "langsmith/langgraph-server",
+                          "langsmith/data-plane",
+                          "langsmith/control-plane"
                         ]
                       },
                       {
