@@ -1,6 +1,6 @@
 # LangGraph Swarm
 
-::: langgraph_swarm.swarm
+<!-- ::: langgraph_swarm.swarm
     options:
       members:
         - SwarmState
@@ -10,4 +10,4 @@
 ::: langgraph_swarm.handoff
     options:
       members:
-        - create_handoff_tool
+        - create_handoff_tool -->
