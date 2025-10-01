@@ -815,16 +815,7 @@
                   {
                     "group": "Overview",
                     "pages": [
-                      "langsmith/deployment-options",
-                      {
-                        "group": "Platform components",
-                        "pages": [
-                          "langsmith/components",
-                          "langsmith/langgraph-server",
-                          "langsmith/data-plane",
-                          "langsmith/control-plane"
-                        ]
-                      }
+                      "langsmith/deployment-options"
                     ]
                   },
                   {
@@ -846,46 +837,55 @@
                     "pages": [
                       "langsmith/self-hosted",
                       {
-                        "group": "Deployment guides",
+                        "group": "Setup guides",
                         "pages": [
+                          {
+                            "group": "LangSmith Platform",
+                            "icon": "server",
+                            "pages": [
+                              "langsmith/kubernetes",
+                              "langsmith/docker"
+                            ]
+                          },
                           "langsmith/deploy-self-hosted-full-platform",
-                          "langsmith/deploy-standalone-server"
+                          "langsmith/deploy-standalone-server",
+                          {
+                            "group": "Manage an installation",
+                            "pages": [
+                              "langsmith/self-host-usage",
+                              "langsmith/self-host-upgrades",
+                              "langsmith/self-host-egress",
+                              "langsmith/self-host-organization-charts",
+                              "langsmith/langsmith-managed-clickhouse",
+                              "langsmith/self-host-ingress",
+                              "langsmith/self-host-mirroring-images"
+                            ]
+                          }
                         ]
                       },
                       {
                         "group": "Configuration",
                         "pages": [
+                          "langsmith/self-host-scale",
+                          "langsmith/self-host-ttl",
                           "langsmith/custom-docker",
-                          "langsmith/egress-metrics-metadata"
+                          "langsmith/egress-metrics-metadata",
+                          "langsmith/self-host-playground-environment-settings",
+                          "langsmith/troubleshooting"
+                        ]
+                      },
+                      {
+                        "group": "Platform components",
+                        "pages": [
+                          "langsmith/components",
+                          "langsmith/langgraph-server",
+                          "langsmith/data-plane",
+                          "langsmith/control-plane"
                         ]
                       },
                       {
                         "group": "(Existing LS content to organize) Self-host",
                         "pages": [
-                          "langsmith/architectural-overview",
-                          {
-                            "group": "Setup",
-                            "pages": [
-                              "langsmith/kubernetes",
-                              "langsmith/docker",
-                              "langsmith/self-host-usage",
-                              "langsmith/self-host-upgrades",
-                              "langsmith/self-host-egress",
-                              "langsmith/self-host-organization-charts",
-                              "langsmith/langsmith-managed-clickhouse"
-                            ]
-                          },
-                          {
-                            "group": "Configuration",
-                            "pages": [
-                              "langsmith/self-host-scale",
-                              "langsmith/self-host-ttl",
-                              "langsmith/self-host-ingress",
-                              "langsmith/self-host-mirroring-images",
-                              "langsmith/self-host-playground-environment-settings",
-                              "langsmith/troubleshooting"
-                            ]
-                          },
                           {
                             "group": "Authentication & access control",
                             "pages": [
