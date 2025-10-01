@@ -9,4 +9,4 @@ node_modules
 !package.json
 !pnpm-lock.yaml
 !tsconfig.json
-!.README.md
+!README.md
