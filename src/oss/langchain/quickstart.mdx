@@ -201,8 +201,8 @@ Let's walk through each step:
         );
 
         const getUserLocation = tool(
-          (_, config: Runtime) => {
-            const { user_id } = config.context as { user_id: string };
+          (_, config: Runtime<{ user_id: string }>) => {
+            const { user_id } = config.context;
             return user_id === "1" ? "Florida" : "SF";
           },
           {
@@ -541,8 +541,8 @@ const getWeather = tool(
 );
 
 const getUserLocation = tool(
-  (_, config: Runtime) => {
-    const { user_id } = config.context as { user_id: string };
+  (_, config: Runtime<{ user_id: string}>) => {
+    const { user_id } = config.context;
     return user_id === "1" ? "Florida" : "SF";
   },
   {
