@@ -3,6 +3,8 @@ title: Models
 ---
 
 import AlphaCallout from '/snippets/alpha-lc-callout.mdx';
+import ChatModelTabsPy from '/snippets/chat-model-tabs.mdx';
+import ChatModelTabsJS from '/snippets/chat-model-tabs-js.mdx';
 
 <AlphaCallout />
 
@@ -20,30 +22,24 @@ For provider-specific integration information and capabilities, see the provider
 ## Basic usage
 
 :::python
-The easiest way to get started with a model in LangChain is to use `init_chat_model` to initialize one from a [provider](/oss/integrations/providers) of your choice:
+The easiest way to get started with a model in LangChain is to use `init_chat_model` to initialize one from a [provider](/oss/integrations/providers) of your choice (examples below):
 
-```python Initialize a chat model
-from langchain.chat_models import init_chat_model
-
-model = init_chat_model("openai:gpt-5-nano")
+<ChatModelTabsPy />
+```python
 response = model.invoke("Why do parrots talk?")
 ```
-{/* TODO: a code block that has, instead of a language switcher, a provider switcher to change the code for the respective language to display init_chat using the respect `model_provider` and `model` name*/}
 See @[`init_chat_model`][init_chat_model] for more detail.
 :::
-
 :::js
-The easiest way to get started with a model in LangChain is to use `initChatModel` to initialize one from a [provider](/oss/integrations/providers) of your choice.
+The easiest way to get started with a model in LangChain is to use `init_chat_model` to initialize one from a [provider](/oss/integrations/providers) of your choice (examples below):
 
-```typescript Initialize a chat model
-import { initChatModel } from "langchain";
-
-const model = await initChatModel("openai:gpt-5-nano");
+<ChatModelTabsJS />
+```typescript
 const response = await model.invoke("Why do parrots talk?");
 ```
-
 See @[`initChatModel`][initChatModel] for more detail.
 :::
+
 
 ### Key methods
 
