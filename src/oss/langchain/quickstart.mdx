@@ -45,7 +45,7 @@ This quickstart takes you from a simple setup to a fully functional AI agent in 
 
 ## Build a basic agent
 
-Start by creating a simple agent that can answer questions and call tools. 
+Start by creating a simple agent that can answer questions and call tools.
 
 The agent will have the following components:
 
@@ -79,20 +79,24 @@ agent.invoke(
 ```ts
 import { createAgent, tool } from "langchain";
 
-const getWeather = tool((city: string) => `It's always sunny in ${city}!`, {
+const getWeather = tool(
+  (city) => `It's always sunny in ${city}!`,
+  {
     name: "get_weather",
     description: "Get the weather for a given city",
-});
+    schema: z.string().describe("The city to get the weather for"),
+  }
+);
 
 const agent = createAgent({
-    model: "anthropic:claude-3-7-sonnet-latest",
-    tools: [getWeather],
+  model: "anthropic:claude-3-7-sonnet-latest",
+  tools: [getWeather],
 });
 
 console.log(
-    await agent.invoke({
-        messages: [{ role: "user", content: "What's the weather in Tokyo?" }],
-    })
+  await agent.invoke({
+    messages: [{ role: "user", content: "What's the weather in Tokyo?" }],
+  })
 );
 ```
 :::
@@ -148,7 +152,7 @@ Let's walk through each step:
         :::python
         [Tools](/oss/langchain/tools) let a model interact with external systems by calling functions you define.
         Tools can depend on [runtime context](/oss/langchain/runtime) and also interact with [agent memory](/oss/langchain/memory).
-        
+
         Notice below how the `get_user_location` tool uses runtime context:
 
         ```python
@@ -181,27 +185,31 @@ Let's walk through each step:
         [Tools](/oss/langchain/tools) are functions your agent can call. They should be well-documented. Oftentimes tools will want to connect to external systems, and will rely on runtime configuration to do so. Notice here how the `getUserLocation` tool does exactly that:
 
         ```ts
+        import { type Runtime } from "@langchain/langgraph";
         import { tool } from "langchain";
         import { z } from "zod";
 
-        const getWeather = tool(({ city }) => `It's always sunny in ${city}!`, {
+        const getWeather = tool(
+          (input) => `It's always sunny in ${input.city}!`,
+          {
             name: "get_weather_for_location",
             description: "Get the weather for a given city",
             schema: z.object({
-                city: z.string(),
+              city: z.string().describe("The city to get the weather for"),
             }),
-        });
+          }
+        );
 
         const getUserLocation = tool(
-            (_, config) => {
-                const { user_id } = config.context as { user_id: string };
-                return user_id === "1" ? "Florida" : "SF";
-            },
-            {
-                name: "get_user_location",
-                description: "Retrieve user information based on user ID",
-                schema: z.object({}),
-            }
+          (_, config: Runtime) => {
+            const { user_id } = config.context as { user_id: string };
+            return user_id === "1" ? "Florida" : "SF";
+          },
+          {
+            name: "get_user_location",
+            description: "Retrieve user information based on user ID",
+            schema: z.object({}),
+          }
         );
         ```
 
@@ -213,21 +221,22 @@ Let's walk through each step:
             <Accordion title="Example: Using JSON schema for tool input">
                 ```ts
                 const getWeather = tool(
-                    ({ city }) => `It's always sunny in ${city}!`,
-                {
+                  ({ city }) => `It's always sunny in ${city}!`,
+                  {
                     name: "get_weather_for_location",
                     description: "Get the weather for a given city",
                     schema: {
-                    type: "object",
-                    properties: {
+                      type: "object",
+                      properties: {
                         city: {
-                            type: "string",
-                            description: "The city to get the weather for"
+                          type: "string",
+                          description: "The city to get the weather for"
                         }
+                      },
+                      required: ["city"]
                     },
-                    required: ["city"]
-                    },
-                });
+                  }
+                );
             ```
             </Accordion>
         </Note>
@@ -249,11 +258,11 @@ Let's walk through each step:
 
         :::js
         ```ts
-        import { initChatModel } from "langchain/chat_models";
+        import { initChatModel } from "langchain";
 
         const model = await initChatModel(
-            "anthropic:claude-3-7-sonnet-latest",
-            { temperature: 0 }
+          "anthropic:claude-3-7-sonnet-latest",
+          { temperature: 0 }
         );
         ```
         :::
@@ -262,7 +271,7 @@ Let's walk through each step:
         :::python
         Optionally, define a structured response format if you need the agent responses to match
         a specific schema.
-        
+
         ```python
         from dataclasses import dataclass
         from typing import Optional
@@ -284,8 +293,8 @@ Let's walk through each step:
 
         ```ts
         const responseFormat = z.object({
-            punny_response: z.string(),
-            weather_conditions: z.string().optional(),
+          punny_response: z.string(),
+          weather_conditions: z.string().optional(),
         });
         ```
         :::
@@ -309,9 +318,9 @@ Let's walk through each step:
         const checkpointer = new MemorySaver();
         ```
         :::
-        
+
         <Info>
-            In production, use a persistent checkpointer that saves to a database. 
+            In production, use a persistent checkpointer that saves to a database.
             See [add and manage memory](/oss/python/langgraph/add-memory) for more details.
         </Info>
     </Step>
@@ -319,7 +328,7 @@ Let's walk through each step:
         Now assemble your agent with all the components and run it!
 
         :::python
-        
+
         ```python
         agent = create_agent(
             model=model,
@@ -365,22 +374,22 @@ Let's walk through each step:
         import { createAgent } from "langchain";
 
         const agent = createAgent({
-            model: "anthropic:claude-3-7-sonnet-latest",
-            prompt: systemPrompt,
-            tools: [getUserLocation, getWeather],
-            responseFormat,
-            checkpointer,
+          model: "anthropic:claude-3-7-sonnet-latest",
+          prompt: systemPrompt,
+          tools: [getUserLocation, getWeather],
+          responseFormat,
+          checkpointer,
         });
 
         // `thread_id` is a unique identifier for a given conversation.
         const config = {
-            configurable: { thread_id: "1" },
-            context: { user_id: "1" },
+          configurable: { thread_id: "1" },
+          context: { user_id: "1" },
         };
 
         const response = await agent.invoke(
-            { messages: [{ role: "user", content: "what is the weather outside?" }] },
-            config
+          { messages: [{ role: "user", content: "what is the weather outside?" }] },
+          config
         );
         console.log(response.structuredResponse);
         // {
@@ -390,8 +399,8 @@ Let's walk through each step:
 
         // Note that we can continue the conversation using the same `thread_id`.
         const thankYouResponse = await agent.invoke(
-            { messages: [{ role: "user", content: "thank you!" }] },
-            config
+          { messages: [{ role: "user", content: "thank you!" }] },
+          config
         );
         console.log(thankYouResponse.structuredResponse);
         // {
@@ -402,7 +411,7 @@ Let's walk through each step:
         :::
     </Step>
 </Steps>
-    
+
 <Expandable title="Full example code">
 :::python
 ```python
@@ -506,7 +515,7 @@ print(response['structured_response'])
 ```ts
 import { createAgent, tool } from "langchain";
 import { initChatModel } from "langchain/chat_models";
-import { MemorySaver } from "@langchain/langgraph";
+import { MemorySaver, type Runtime } from "@langchain/langgraph";
 import { z } from "zod";
 
 // Define system prompt
@@ -521,38 +530,38 @@ If a user asks you for the weather, make sure you know the location. If you can 
 
 // Define tools
 const getWeather = tool(
-    ({ city }) => `It's always sunny in ${city}!`,
-    {
-        name: "get_weather_for_location",
-        description: "Get the weather for a given city",
-        schema: z.object({
-            city: z.string(),
-        }),
-    }
+  ({ city }) => `It's always sunny in ${city}!`,
+  {
+    name: "get_weather_for_location",
+    description: "Get the weather for a given city",
+    schema: z.object({
+      city: z.string(),
+    }),
+  }
 );
 
 const getUserLocation = tool(
-    (_, config) => {
-        const { user_id } = config.context as { user_id: string };
-        return user_id === "1" ? "Florida" : "SF";
-    },
-    {
-        name: "get_user_location",
-        description: "Retrieve user information based on user ID",
-        schema: z.object({}),
-    }
+  (_, config: Runtime) => {
+    const { user_id } = config.context as { user_id: string };
+    return user_id === "1" ? "Florida" : "SF";
+  },
+  {
+    name: "get_user_location",
+    description: "Retrieve user information based on user ID",
+    schema: z.object({}),
+  }
 );
 
 // Configure model
 const model = await initChatModel(
-    "anthropic:claude-3-7-sonnet-latest",
-    { temperature: 0 }
+  "anthropic:claude-3-7-sonnet-latest",
+  { temperature: 0 }
 );
 
 // Define response format
 const responseFormat = z.object({
-    punny_response: z.string(),
-    weather_conditions: z.string().optional(),
+  punny_response: z.string(),
+  weather_conditions: z.string().optional(),
 });
 
 // Set up memory
@@ -560,23 +569,23 @@ const checkpointer = new MemorySaver();
 
 // Create agent
 const agent = createAgent({
-    model: "anthropic:claude-3-7-sonnet-latest",
-    prompt: systemPrompt,
-    tools: [getUserLocation, getWeather],
-    responseFormat,
-    checkpointer,
+  model: "anthropic:claude-3-7-sonnet-latest",
+  prompt: systemPrompt,
+  tools: [getUserLocation, getWeather],
+  responseFormat,
+  checkpointer,
 });
 
 // Run agent
 // `thread_id` is a unique identifier for a given conversation.
 const config = {
-    configurable: { thread_id: "1" },
-    context: { user_id: "1" },
+  configurable: { thread_id: "1" },
+  context: { user_id: "1" },
 };
 
 const response = await agent.invoke(
-    { messages: [{ role: "user", content: "what is the weather outside?" }] },
-    config
+  { messages: [{ role: "user", content: "what is the weather outside?" }] },
+  config
 );
 console.log(response.structuredResponse);
 // {
@@ -586,8 +595,8 @@ console.log(response.structuredResponse);
 
 // Note that we can continue the conversation using the same `thread_id`.
 const thankYouResponse = await agent.invoke(
-    { messages: [{ role: "user", content: "thank you!" }] },
-    config
+  { messages: [{ role: "user", content: "thank you!" }] },
+  config
 );
 console.log(thankYouResponse.structuredResponse);
 // {
