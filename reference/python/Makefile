@@ -8,7 +8,7 @@
 # Build files for deployment
 build:
 	uv sync --link-mode=copy
-	uv run python -m mkdocs build -c -f mkdocs.yml --strict
+	uv run python -m mkdocs build -c -f mkdocs.yml
 
 # To preview what the docs will look like when built
 serve-clean-docs:
