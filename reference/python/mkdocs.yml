@@ -7,7 +7,7 @@ site_author: "LangChain"
 
 repo_url: "https://github.com/langchain-ai/docs"
 repo_name: "langchain-ai/docs"
-edit_uri: tree/main/reference/docs/
+edit_uri: tree/main/reference/python/docs/
 
 # https://www.mkdocs.org/user-guide/configuration/#theme
 theme:
