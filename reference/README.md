@@ -2,11 +2,12 @@
 
 ## TODO
 
+- [ ] See if it's possible to make our types clickable (like the Python ones)
+- [ ] Fix `navigation.path` feature/plugin in `mkdocs.yml` not working
+- [ ] Fix search magnifying glass icon color in dark mode
+- [ ] Hyperlink deprecation messages in LangGraph docs (source code)
 - [ ] Copy page support (may need to be post-processing step to generate markdown files)
 - [ ] Language switcher
-- [ ] Fix search magnifying glass icon color in dark mode
-- [ ] Fix `navigation.path` not working
-- [ ] Hyperlink deprecation messages in LangGraph docs
 - [ ] [Social cards](https://squidfunk.github.io/mkdocs-material/setup/setting-up-social-cards/)
 - [ ] [Google Analytics](https://mrkeo.github.io/setup/setting-up-site-analytics)
 - [ ] [Versioning?](https://mrkeo.github.io/setup/setting-up-versioning)
