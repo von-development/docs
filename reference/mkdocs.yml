@@ -253,10 +253,7 @@ nav:
     - LangChain:
       - Agents: langchain/agents.md
       - Models: langchain/models.md
-      - Messages: langchain/messages.md
-      - Tools: langchain/tools.md
-      - Memory: langchain/memory.md
-      - Streaming: langchain/streaming.md
+      - Embeddings: langchain/embeddings.md
     - Core: langchain/core.md
   - LangGraph:
     - langgraph/index.md

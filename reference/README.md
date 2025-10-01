@@ -7,6 +7,7 @@
 - [ ] Fix search magnifying glass icon color in dark mode
 - [ ] Fix `navigation.path` not working
 - [ ] Hyperlink deprecation messages in LangGraph docs
+- [ ] [Social cards](https://squidfunk.github.io/mkdocs-material/setup/setting-up-social-cards/)
 - [ ] [Google Analytics](https://mrkeo.github.io/setup/setting-up-site-analytics)
 - [ ] [Versioning?](https://mrkeo.github.io/setup/setting-up-versioning)
 - [ ] [Show keyboard shortcut in search window](https://github.com/squidfunk/mkdocs-material/issues/2574#issuecomment-821979698)
