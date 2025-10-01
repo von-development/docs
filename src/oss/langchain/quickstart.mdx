@@ -350,7 +350,7 @@ Let's walk through each step:
         response = agent.invoke(
             {"messages": [{"role": "user", "content": "thank you!"}]},
             config=config,
-            context=Context(user_id="1") # 
+            context=Context(user_id="1")
         )
 
         print(response['structured_response'])
