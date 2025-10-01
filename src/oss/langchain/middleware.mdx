@@ -129,13 +129,16 @@ agent = create_agent(
 :::
 :::js
 ```typescript
-import { createAgent } from "langchain";
-import { summarizationMiddleware, humanInTheLoopMiddleware } from "langchain/middleware";
+import {
+  createAgent,
+  summarizationMiddleware,
+  humanInTheLoopMiddleware,
+} from "langchain";
 
 const agent = createAgent({
-    // ...
-    middleware: [summarizationMiddleware, humanInTheLoopMiddleware],
-    // ...
+  // ...
+  middleware: [summarizationMiddleware, humanInTheLoopMiddleware],
+  // ...
 });
 ```
 :::
@@ -201,21 +204,19 @@ agent = create_agent(
 
 :::js
 ```typescript
-import { createAgent } from "langchain";
-import { summarizationMiddleware } from "langchain/middleware";
-import { ChatOpenAI } from "@langchain/openai";
+import { createAgent, summarizationMiddleware } from "langchain";
 
 const agent = createAgent({
-    model: "openai:gpt-4o",
-    tools: [weatherTool, calculatorTool],
-    middleware: [
-        summarizationMiddleware({
-            model: new ChatOpenAI({ model: "gpt-4o-mini" }),
-            maxTokensBeforeSummary: 4000, // Trigger summarization at 4000 tokens
-            messagesToKeep: 20, // Keep last 20 messages after summary
-            summaryPrompt: "Custom prompt for summarization...", // Optional
-        }),
-    ],
+  model: "openai:gpt-4o",
+  tools: [weatherTool, calculatorTool],
+  middleware: [
+    summarizationMiddleware({
+      model: "openai:gpt-4o-mini",
+      maxTokensBeforeSummary: 4000, // Trigger summarization at 4000 tokens
+      messagesToKeep: 20, // Keep last 20 messages after summary
+      summaryPrompt: "Custom prompt for summarization...", // Optional
+    }),
+  ],
 });
 ```
 :::
@@ -295,8 +296,7 @@ agent.invoke({"messages": [HumanMessage("What's my name?")]})
 :::
 :::js
 ```typescript
-import { createAgent, HumanMessage } from "langchain";
-import { anthropicPromptCachingMiddleware } from "langchain/middleware";
+import { createAgent, HumanMessage, anthropicPromptCachingMiddleware } from "langchain";
 
 const LONG_PROMPT = `
 Please be a helpful assistant.
@@ -375,8 +375,7 @@ For example, you can adjust the system prompt based on the user's expertise leve
 
 ```typescript
 import { z } from "zod";
-import { createAgent } from "langchain";
-import { dynamicSystemPromptMiddleware } from "langchain/middleware";
+import { createAgent, dynamicSystemPromptMiddleware } from "langchain";
 
 const contextSchema = z.object({
     userRole: z.enum(["expert", "beginner"]),
@@ -437,18 +436,18 @@ agent = create_agent(
 :::js
 ```typescript
 const agent = createAgent({
-    model: "openai:gpt-4o",
-    tools: [searchTool],
-    middleware: [
-        dynamicSystemPromptMiddleware((state) => {
-            const messageCount = state.messages.length;
+  model: "openai:gpt-4o",
+  tools: [searchTool],
+  middleware: [
+    dynamicSystemPromptMiddleware((state) => {
+      const messageCount = state.messages.length;
 
-            if (messageCount > 10) {
-                return "You are in an extended conversation. Be more concise.";
-            }
-            return "You are a helpful assistant.";
-        }),
-    ],
+      if (messageCount > 10) {
+        return "You are in an extended conversation. Be more concise.";
+      }
+      return "You are a helpful assistant.";
+    }),
+  ],
 });
 ```
 :::
@@ -508,11 +507,22 @@ class MyMiddleware(AgentMiddleware):
 :::
 :::js
 ```typescript
-import type { AgentState, AgentJump } from "langchain";
+import { createMiddleware, AIMessage } from "langchain";
 
-function beforeModel(state: AgentState): AgentState | AgentJump | undefined {
-    // ...
-}
+const myMiddleware = createMiddleware({
+  name: "MyMiddleware",
+  beforeModel: (state) => {
+    if (state.messages.length > 50) {
+      return {
+        messages: [
+          new AIMessage("I'm sorry, the conversation has been terminated."),
+        ],
+        jumpTo: "end",
+      };
+    }
+    return state;
+  },
+});
 ```
 :::
 
@@ -581,13 +591,18 @@ class MyMiddleware(AgentMiddleware):
 :::
 :::js
 ```typescript
-function modifyModelRequest (request: ModelRequest, state: AgentState): ModelRequest {
+import { createMiddleware, AIMessage } from "langchain";
+
+const myMiddleware = createMiddleware({
+  name: "MyMiddleware",
+  modifyModelRequest: (request) => {
     // Select specific tools by name for this model call
     return {
-        ...request,
-        tools: ["weatherTool", "calculatorTool"] // Array of tool names
+      ...request,
+      tools: ["weatherTool", "calculatorTool"], // Array of tool names
     };
-}
+  },
+});
 ```
 :::
 
@@ -612,11 +627,14 @@ class MyMiddleware(AgentMiddleware):
 :::
 :::js
 ```typescript
-import type { AgentState, AgentUpdate, AgentJump } from "langchain";
+import { createMiddleware } from "langchain";
 
-function afterModel (state: AgentState): AgentUpdate | AgentJump | undefined {
+const myMiddleware = createMiddleware({
+  name: "MyMiddleware",
+  afterModel: (state) => {
     // ...
-}
+  },
+});
 ```
 :::
 
@@ -653,34 +671,34 @@ class MyMiddleware(AgentMiddleware[MyState]):
 When a middleware defines required state properties through its `stateSchema`, these properties must be provided when invoking the agent:
 
 ```typescript
-import { createMiddleware, createAgent } from "langchain";
+import { createMiddleware, createAgent, HumanMessage } from "langchain";
 import { z } from "zod";
 
 // Middleware with custom state requirements
 const authMiddleware = createMiddleware({
-    name: "AuthMiddleware",
-    stateSchema: z.object({
-        userId: z.string(), // Required
-        userRole: z.string().default("user"), // Optional with default
-    }),
-    beforeModel: (state) => {
-        // Access custom state properties
-        console.log(`User ${state.userId} with role ${state.userRole}`);
-        return;
-    },
+  name: "AuthMiddleware",
+  stateSchema: z.object({
+    userId: z.string(), // Required
+    userRole: z.string().default("user"), // Optional with default
+  }),
+  beforeModel: (state) => {
+    // Access custom state properties
+    console.log(`User ${state.userId} with role ${state.userRole}`);
+    return;
+  },
 });
 
 const agent = createAgent({
-    model: "openai:gpt-4o",
-    tools: [],
-    middlewares: [authMiddleware] as const,
+  model: "openai:gpt-4o",
+  tools: [],
+  middleware: [authMiddleware] as const,
 });
 
 // TypeScript enforces required state properties
 const result = await agent.invoke({
-    messages: [new HumanMessage("Hello")],
-    userId: "user-123", // Required by middleware
-    // userRole is optional due to default value
+  messages: [new HumanMessage("Hello")],
+  userId: "user-123", // Required by middleware
+  // userRole is optional due to default value
 });
 ```
 :::
@@ -697,33 +715,38 @@ Context properties are configuration values passed through the runnable config. 
 Middleware can define context requirements that must be satisfied through the agent's configuration:
 
 ```typescript
-const rateLimitMiddleware = createMiddleware({
-    name: "RateLimitMiddleware",
-    contextSchema: z.object({
-        maxRequestsPerMinute: z.number(),
-        apiKey: z.string(),
-    }),
-    beforeModel: async (state, runtime) => {
-        // Access context through runtime
-        const { maxRequestsPerMinute, apiKey } = runtime.context;
+import { z } from "zod";
+import { createMiddleware, HumanMessage } from "langchain";
 
-        // Implement rate limiting logic
-        const allowed = await checkRateLimit(apiKey, maxRequestsPerMinute);
-        if (!allowed) {
-            return { jump_to: "END" };
-        }
-    },
+const rateLimitMiddleware = createMiddleware({
+  name: "RateLimitMiddleware",
+  contextSchema: z.object({
+    maxRequestsPerMinute: z.number(),
+    apiKey: z.string(),
+  }),
+  beforeModel: async (state, runtime) => {
+    // Access context through runtime
+    const { maxRequestsPerMinute, apiKey } = runtime.context;
+
+    // Implement rate limiting logic
+    const allowed = await checkRateLimit(apiKey, maxRequestsPerMinute);
+    if (!allowed) {
+      return { jumpTo: "END" };
+    }
+
+    return state;
+  },
 });
 
 // Context is provided through config
 await agent.invoke(
-    { messages: [new HumanMessage("Process data")] },
-    {
-        context: {
-            maxRequestsPerMinute: 60,
-            apiKey: "api-key-123",
-        },
-    }
+  { messages: [new HumanMessage("Process data")] },
+  {
+    context: {
+      maxRequestsPerMinute: 60,
+      apiKey: "api-key-123",
+    },
+  }
 );
 ```
 :::
@@ -768,34 +791,37 @@ agent = create_agent(
 
 :::js
 ```typescript
+import { createMiddleware, createAgent, HumanMessage } from "langchain";
+import { z } from "zod";
+
 const middleware1 = createMiddleware({
-    name: "Middleware1",
-    stateSchema: z.object({
-        prop1: z.string(),
-        sharedProp: z.number(),
-    }),
+  name: "Middleware1",
+  stateSchema: z.object({
+    prop1: z.string(),
+    sharedProp: z.number(),
+  }),
 });
 
 const middleware2 = createMiddleware({
-    name: "Middleware2",
-    stateSchema: z.object({
-        prop2: z.boolean(),
-        sharedProp: z.number(), // Same property name must have compatible types
-    }),
+  name: "Middleware2",
+  stateSchema: z.object({
+    prop2: z.boolean(),
+    sharedProp: z.number(), // Same property name must have compatible types
+  }),
 });
 
 const agent = createAgent({
-    model: "openai:gpt-4o",
-    tools: [],
-    middlewares: [middleware1, middleware2] as const,
+  model: "openai:gpt-4o",
+  tools: [],
+  middleware: [middleware1, middleware2] as const,
 });
 
 // Must provide all required properties
 const result = await agent.invoke({
-    messages: [new HumanMessage("Hello")],
-    prop1: "value1", // Required by middleware1
-    prop2: true, // Required by middleware2
-    sharedProp: 42, // Required by both
+  messages: [new HumanMessage("Hello")],
+  prop1: "value1", // Required by middleware1
+  prop2: true, // Required by middleware2
+  sharedProp: 42, // Required by both
 });
 ```
 :::
@@ -811,25 +837,28 @@ Agents can also define their own context requirements that combine with middlewa
 :::
 :::js
 ```typescript
+import { createAgent, HumanMessage } from "langchain";
+import { z } from "zod";
+
 const agent = createAgent({
-    model: "openai:gpt-4o",
-    tools: [],
-    contextSchema: z.object({
-        environment: z.enum(["development", "production"]),
-    }),
-    middlewares: [rateLimitMiddleware] as const,
+  model: "openai:gpt-4o",
+  tools: [],
+  contextSchema: z.object({
+    environment: z.enum(["development", "production"]),
+  }),
+  middleware: [rateLimitMiddleware] as const,
 });
 
 // Must satisfy both agent and middleware context requirements
 await agent.invoke(
-    { messages: [new HumanMessage("Deploy application")] },
-    {
-        context: {
-            environment: "production", // Required by agent
-            maxRequestsPerMinute: 60, // Required by middleware
-            apiKey: "api-key-123", // Required by middleware
-        },
-    }
+  { messages: [new HumanMessage("Deploy application")] },
+  {
+    context: {
+      environment: "production", // Required by agent
+      maxRequestsPerMinute: 60, // Required by middleware
+      apiKey: "api-key-123", // Required by middleware
+    },
+  }
 );
 ```
 :::
@@ -848,14 +877,14 @@ The type system ensures all required properties are provided, preventing runtime
 ```typescript
 // TypeScript error: Property 'userId' is missing
 await agent.invoke({
-    messages: [new HumanMessage("Hello")],
-    // userId is required but not provided
+  messages: [new HumanMessage("Hello")],
+  // userId is required but not provided
 });
 
 // TypeScript error: Type 'number' is not assignable to type 'string'
 await agent.invoke({
-    messages: [new HumanMessage("Hello")],
-    userId: 123, // Wrong type
+  messages: [new HumanMessage("Hello")],
+  userId: 123, // Wrong type
 });
 ```
 :::
@@ -917,13 +946,16 @@ class MyMiddleware(AgentMiddleware):
 import { createMiddleware } from "langchain";
 
 const middleware = createMiddleware({
-    name: "MyMiddleware",
-    afterModel: (state) => {
-        return {
-            messages: ...,
-            jumpTo: "model"
-        }
-    }
+  name: "MyMiddleware",
+  afterModel: (state) => {
+    // ...
+    return {
+      messages: [
+        /* ... */
+      ],
+      jumpTo: "model",
+    };
+  },
 });
 ```
 :::
