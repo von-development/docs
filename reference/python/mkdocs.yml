@@ -427,7 +427,7 @@ extra_javascript:
 # extra_templates:
 
 copyright: >
-  Copyright &copy; 2025 <a href="https://www.langchain.com/">LangChain, Inc</a> — <a href="https://docs.langchain.com/oss/python/contributing/documentation">Edit page</a>
+  Copyright &copy; 2025
 
 # https://www.mkdocs.org/user-guide/configuration/#extra
 extra:

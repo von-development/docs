@@ -99,8 +99,9 @@ package = false
 #
 # The paths assume you have a folder structure like:
 # /some-parent-folder
-#   /docs
-#     /reference <-- this repo
+#   /docs <-- this repo
+#     /python
+#       /reference
 #   /langchain
 #     /libs
 #       langchain

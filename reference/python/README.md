@@ -1,7 +1,18 @@
-# LangChain Reference Documentation
+# LangChain Python Reference Documentation
+
+This directory contains the source code and build process for the Python reference documentation site, hosted at [`reference.langchain.com/python`](https://reference.langchain.com/python). This site serves references for LangChain, LangGraph, LangGraph Platform, and LangChain integration packages (such as [`langchain-anthropic`](https://pypi.org/project/langchain-anthropic/), [`langchain-openai`](https://pypi.org/project/langchain-openai/), etc.).
+
+The site is built using [MkDocs](https://www.mkdocs.org/) with the [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) theme and the [mkdocstrings](https://mkdocstrings.github.io/) plugin for generating API reference documentation from docstrings. See all config options in the [`mkdocs.yml`](./mkdocs.yml) file.
+
+The `docs/` directory contains the markdown files for the site, with the main entry point being `index.md`. At build time, the stubs provided in each file are substituted with the generated API reference documentation by `mkdocstrings`. This allows us to architect content ordering, layout, etc. in markdown, while still generating the API reference documentation automatically from the source code. Consequently, to make content changes to the API references themselves, you need to make changes in the source code (e.g., docstrings, class/method names, etc.) and then rebuild the site.
 
 ## TODO
 
+This site is currently being migrated from a previous Sphinx-based implementation, so there are still some rough edges to be smoothed out. Here are some known issues and potential improvements:
+
+- [ ] Code block admonitions
+- [ ] URLs
+- [ ] Code snippet double backticks
 - [ ] See if it's possible to make our types clickable (like the Python ones)
 - [ ] Post-processing step to link out to imports from code blocks
   - [ ] Maybe there's a plugin?
@@ -16,9 +27,9 @@
 - [ ] [Versioning?](https://mrkeo.github.io/setup/setting-up-versioning)
 - [ ] [Show keyboard shortcut in search window](https://github.com/squidfunk/mkdocs-material/issues/2574#issuecomment-821979698)
 
-## Local
+## Local Development
 
-`langchain-ai/` needed to be cloned locally for local reference doc generation:
+`langchain-ai/` org repositories that needed to be cloned locally for local reference doc generation:
 
 ```txt
 langchain
