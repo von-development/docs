@@ -12,22 +12,20 @@ dependencies = [
     "mkdocstrings>=0.24.0,<1.0.0",
     "mkdocs-minify-plugin>=0.8.0,<1.0.0",
     "mkdocs-git-committers-plugin-2>=1.2.0,<2.0.0",
+    "mkdocs-git-authors-plugin>=0.10.0,<1.0.0",
     "markdown-callouts>=0.3.0,<1.0.0",
     "markdown-include>=0.8.1,<1.0.0",
     "mkdocs-exclude>=1.0.2,<2.0.0",
     "mkdocs-exclude-search>=0.6.5,<1.0.0",
     "mkdocs-include-markdown-plugin>=7.1.6,<8.0.0",
-
     # TODO: audit above dependencies
     # I copied them over because they were in LangGraph's
-    # Not sure if each were used/applys to this project
-
+    # Not sure if each were used/apply to this project
+    "griffe-warnings-deprecated>=1.1.0,<2.0.0",
     # Python
     "mkdocstrings-python>=1.7.0,<2.0.0",
-
     # Format / Lint
     "ruff>=0.13.0,<14.0.0",
-
     # Libraries
     "langchain-cli",
     "langchain-core",

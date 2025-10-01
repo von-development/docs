@@ -1,7 +1,11 @@
 site_name: "LangChain Reference"
-site_url: https://reference.langchain.com/python/
-site_description: Unified reference documentation for LangChain and LangGraph
-site_author: LangChain
+site_url: "https://reference.langchain.com/python/"
+site_description: "Unified reference documentation for LangChain and LangGraph"
+site_author: "LangChain"
+
+repo_url: "https://github.com/langchain-ai/docs"
+repo_name: "langchain-ai/docs"
+edit_uri: tree/main/reference/docs/
 
 # https://www.mkdocs.org/user-guide/configuration/#theme
 theme:
@@ -14,11 +18,13 @@ theme:
   # Also used to add files
   custom_dir: overrides
 
+  # Branding
   logo_dark_mode: static/brand/reference-dark.svg
   logo_light_mode: static/brand/reference-light.svg
   favicon: static/brand/docs-favicon.png
 
   icon:
+    # Used for annotations in code blocks
     annotation: material/chevron-right-circle
 
   features:
@@ -26,6 +32,12 @@ theme:
     - announce.dismiss
 
     # --- Content features ---
+
+    # https://squidfunk.github.io/mkdocs-material/setup/adding-a-git-repository/#code-actions
+    # Add "Edit this page" and "View source" links to the top of each page
+    # Uses linked `repo_url` and `edit_uri` above
+    - content.action.edit
+    - content.action.view
 
     # https://squidfunk.github.io/mkdocs-material/reference/code-blocks/#code-copy-button
     # Render a button to copy code blocks to the clipboard
@@ -52,31 +64,48 @@ theme:
     # --- Navigation features ---
     # https://mrkeo.github.io/setup/setting-up-navigation/
 
-
     # https://mrkeo.github.io/setup/setting-up-navigation/#section-index-pages
-    # TODO: check that this works? It's labeled as insiders-only
     - navigation.indexes
 
     # https://mrkeo.github.io/setup/setting-up-navigation/#navigation-sections
     - navigation.sections
 
     # https://mrkeo.github.io/setup/setting-up-navigation/#instant-loading
+    # Clicks on all internal links will be intercepted and dispatched without fully reloading
     - navigation.instant
 
-    # TODO: check that these exist?
+    # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#instant-prefetching
+    # Start to prefetch pages when a user hovers over a link
     - navigation.instant.prefetch
+
+    # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#progress-indicator
+    # Show a progress bar at the top of the page when navigating to a new page
     - navigation.instant.progress
 
     # https://mrkeo.github.io/setup/setting-up-navigation/#navigation-tabs
     - navigation.tabs
 
-    - navigation.footer
+    # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#navigation-path
+    # TODO: investigate, not working?
+    # Breadcrumb nav rendered above the title of each page
     - navigation.path
+
+    # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#back-to-top-button
+    # Back to top button on the bottom right of each page
     - navigation.top
+
+    # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#navigation-pruning
+    # Only the visible navigation items are included in the rendered HTML
     - navigation.prune
 
     # URL in the address bar is automatically updated with the active anchor
     - navigation.tracking
+
+    # --- Table of contents features ---
+
+    # https://squidfunk.github.io/mkdocs-material/setup/setting-up-navigation/#anchor-following
+    # Sidebar table of contents automatically highlights the current section when scrolling
+    - toc.follow
 
     # --- Search features ---
     # https://mrkeo.github.io/setup/setting-up-site-search/
@@ -92,6 +121,7 @@ theme:
     # https://mrkeo.github.io/setup/setting-up-site-search/#search-sharing
     # TODO: check that this works? It's labeled as insiders-only
     - search.share
+
   palette:
     - scheme: default
       primary: white
@@ -131,6 +161,11 @@ plugins:
   # https://squidfunk.github.io/mkdocs-material/plugins/privacy/#configuration
   - privacy
 
+  # https://squidfunk.github.io/mkdocs-material/setup/adding-a-git-repository/#document-authors
+  # TODO: revisit if we want this later on
+  # Shows document authors based on git history
+  # - git-authors
+
   # https://squidfunk.github.io/mkdocs-material/plugins/optimize/#configuration
   # TODO: need the sponsoring tier
   # - optimize
@@ -139,39 +174,71 @@ plugins:
   # Include certain sections of external markdown files
   # - include-markdown
 
+  # https://mkdocstrings.github.io/
+  # Generates API documentation from Python docstrings
   - mkdocstrings:
+      # Directory containing Jinja2 templates to override default rendering
       custom_templates: templates
       handlers:
         python:
           import:
+            # Import external inventories for cross-referencing documentation
             - https://docs.python.org/3/objects.inv
-            # TODO: this should be switched? or removed?
-            - https://python.langchain.com/api_reference/objects.inv
           options:
             preload_modules:
+              # Preload modules before collecting documentation to enable cross-references
+              # TODO: understand this better
               - langchain
               - langchain_core
+            # Generate objects.inv file for this site to enable cross-referencing from other sites
+            # (e.g. what the python langchain.com site does above)
             enable_inventory: true
+            # Order members by their appearance in source code (vs alphabetical)
             members_order: source
+            # Allow dynamic inspection of objects when static analysis fails
+            # TODO: understand the implications of this better
             allow_inspection: true
+            # Heading level (h2) for the documented object's name
             heading_level: 2
+            # Show base classes for documented classes
             show_bases: true
+            # Hide source code in documentation (only show signatures and docstrings)
             show_source: false
+            # Show one-line summaries in tables of contents
             summary: true
+            # Include members inherited from base classes
             inherited_members: true
             selection:
+              # Parse docstrings using Google style
               docstring_style: google
+            # Render docstring sections (Args, Returns, etc.) as tables
             docstring_section_style: table
+            # Hide the top-level module/package entry from the table of contents
             show_root_toc_entry: false
+            # Display function/method signatures
             show_signature: true
+            # Show type annotations in signatures
             show_signature_annotations: true
+            # Display signature on its own line separate from the heading
             separate_signature: true
+            # Maximum line length for signatures before wrapping
             line_length: 60
+            # Show type (function, class, method, etc.) in the heading
             show_symbol_type_heading: true
+            # Show type (function, class, method, etc.) in table of contents
             show_symbol_type_toc: true
+            # Make type annotations in signatures clickable cross-references
             signature_crossrefs: true
+            extensions:
+            - griffe_warnings_deprecated:
+              # https://mkdocstrings.github.io/griffe-warnings-deprecated/
+              # Uses our custom `deprecated` admonition
+              # Title and label can be customized if desired
+              kind: deprecated
             options:
+              # Additional options for filtering members
               filters:
+                # Exclude members starting with underscore (private members)
                 - "!^_"
 
 # https://www.mkdocs.org/user-guide/configuration/#nav
