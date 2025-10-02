@@ -1,4 +1,4 @@
-# LangChain Core
+# langchain_core
 
 ::: langchain_core
 ::: langchain_core.agents
