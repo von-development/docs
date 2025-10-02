@@ -332,8 +332,8 @@ For example, you can adjust the system prompt based on the user's expertise leve
 ```python
 from typing import TypedDict
 
-from langchain.agents import create_agent, AgentState
-from langchain.agents.middleware.types import modify_model_request
+from langchain.agents import create_agent
+from langchain.agents.middleware.types import modify_model_request, AgentState, ModelRequest
 from langgraph.runtime import Runtime
 
 class Context(TypedDict):
@@ -358,6 +358,7 @@ agent = create_agent(
     model="openai:gpt-4o",
     tools=[web_search],
     middleware=[dynamic_system_prompt],
+    context_schema=Context
 )
 
 # Use with context
