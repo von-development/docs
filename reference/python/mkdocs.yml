@@ -261,7 +261,7 @@ nav:
       - documents: langchain/documents.md
       - embeddings: langchain/embeddings.md
       - storage: langchain/storage.md
-    - langchain_core: langchain/core.md
+    - langchain_core: langchain_core/index.md
   - LangGraph:
     - langgraph/index.md
     - LangGraph:
