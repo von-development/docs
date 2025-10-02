@@ -55,9 +55,13 @@ Ensure you have the following tools/items ready. Some items are marked optional:
 
 ### Databases
 
-LangSmith relies on `PostgreSQL` database, `Redis` cache, and `ClickHouse` database for storing traces. By default, our installation will install these services inside your Kubernetes cluster.
-However, we strongly recommend that you use external databases. For `PostgreSQL` and `Redis`, we recommend using your cloud provider's managed services.
-For more information, see instructions for external `PostgreSQL` [here](/langsmith/self-host-external-postgres), `Redis`, [here](/langsmith/self-host-external-redis), and `ClickHouse` [here](/langsmith/self-host-external-clickhouse).
+LangSmith uses a PostgreSQL database, a Redis cache, and a ClickHouse database to store traces. By default, these services are installed inside your Kubernetes cluster. However, we highly recommend using external databases instead. For PostgreSQL and Redis, the best option is your cloud provider’s managed services.
+
+For more information, refer to the following setup guides for external services:
+
+- [PostgreSQL](/langsmith/self-host-external-postgres)
+- [Redis](/langsmith/self-host-external-redis)
+- [ClickHouse](/langsmith/self-host-external-clickhouse)
 
 
 ### Kubernetes Cluster Requirements
