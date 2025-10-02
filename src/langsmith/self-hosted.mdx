@@ -27,8 +27,8 @@ Model | Includes | Best for | Methods
 <Note>
 For a guide on deployment, refer to:
 
-* [How to deploy the Self-Hosted Full Platform](/langgraph-platform/deploy-self-hosted-full-platform)
-* [How to deploy the Self-Hosted Standalone Server](/langgraph-platform/deploy-standalone-server)
+* [How to deploy the Self-Hosted Full Platform](/langsmith/deploy-self-hosted-full-platform)
+* [How to deploy the Self-Hosted Standalone Server](/langsmith/deploy-standalone-server)
 
 Supported Compute Platforms: [Kubernetes](https://kubernetes.io/) (for Control Plane), any compute platform (for Standalone Server Only)
 </Note>
@@ -110,14 +110,14 @@ You run both the control plane and the data plane entirely within your own infra
 
 ### Architecture
 
-![Self-Hosted Full Platform Architecture](/langgraph-platform/images/self-hosted-full-platform-architecture.png)
+![Self-Hosted Full Platform Architecture](/langsmith/images/self-hosted-full-platform-architecture.png)
 
 ### Compute Platforms
 
 - **Kubernetes**: LangSmith Platform with agent deployment supports running control plane and data plane infrastructure on any Kubernetes cluster.
 
 <Tip>
-If you would like to enable this on your LangSmith instance, please follow the [Self-Hosted Full Platform deployment guide](/langgraph-platform/deploy-self-hosted-full-platform).
+If you would like to enable this on your LangSmith instance, please follow the [Self-Hosted Full Platform deployment guide](/langsmith/deploy-self-hosted-full-platform).
 </Tip>
 
 ## Standalone server
@@ -146,7 +146,7 @@ Do not run standalone servers in serverless environments. Scale-to-zero may caus
 
 ### Architecture
 
-![Standalone Container](/langgraph-platform/images/langgraph-platform-deployment-architecture.png)
+![Standalone Container](/langsmith/images/langgraph-platform-deployment-architecture.png)
 
 ---
 
@@ -157,6 +157,6 @@ Do not run standalone servers in serverless environments. Scale-to-zero may caus
 - **Docker**: Run in any Docker-supported compute platform (local dev machine, VM, ECS, etc.). This is best suited for development or small-scale workloads.
 
 <Tip>
-To set up a [LangGraph Server](/langgraph-platform/langgraph-server), see the [how-to guide](/langgraph-platform/deploy-standalone-server).
+To set up a [LangGraph Server](/langsmith/langgraph-server), see the [how-to guide](/langsmith/deploy-standalone-server).
 </Tip>
 

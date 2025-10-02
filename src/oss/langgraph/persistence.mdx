@@ -17,7 +17,7 @@ When using the LangGraph API, you don't need to implement or configure checkpoin
 
 ## Threads
 
-A thread is a unique ID or thread identifier assigned to each checkpoint saved by a checkpointer. It contains the accumulated state of a sequence of [runs](/langgraph-platform/assistants#execution). When a run is executed, the [state](/oss/langgraph/graph-api#state) of the underlying graph of the assistant will be persisted to the thread.
+A thread is a unique ID or thread identifier assigned to each checkpoint saved by a checkpointer. It contains the accumulated state of a sequence of [runs](/langsmith/assistants#execution). When a run is executed, the [state](/oss/langgraph/graph-api#state) of the underlying graph of the assistant will be persisted to the thread.
 
 When invoking a graph with a checkpointer, you **must** specify a `thread_id` as part of the `configurable` portion of the config.
 
@@ -1061,7 +1061,7 @@ When we use the LangGraph Platform, either locally (e.g., in LangGraph Studio) o
 }
 ```
 
-See the [deployment guide](/langgraph-platform/semantic-search) for more details and configuration options.
+See the [deployment guide](/langsmith/semantic-search) for more details and configuration options.
 
 ## Checkpointer libraries
 

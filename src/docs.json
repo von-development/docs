@@ -875,6 +875,15 @@
                         ]
                       },
                       {
+                        "group": "Connect external services",
+                        "pages": [
+                          "langsmith/self-host-blob-storage",
+                          "langsmith/self-host-external-clickhouse",
+                          "langsmith/self-host-external-postgres",
+                          "langsmith/self-host-external-redis"
+                        ]
+                      },
+                      {
                         "group": "Platform components",
                         "pages": [
                           "langsmith/components",
@@ -884,88 +893,79 @@
                         ]
                       },
                       {
-                        "group": "(Existing LS content to organize) Self-host",
+                        "group": "Platform observability",
                         "pages": [
-                          {
-                            "group": "Authentication & access control",
-                            "pages": [
-                              "langsmith/self-host-basic-auth",
-                              "langsmith/self-host-sso",
-                              "langsmith/self-host-user-management",
-                              "langsmith/self-host-custom-tls-certificates",
-                              "langsmith/self-host-using-an-existing-secret"
-                            ]
-                          },
-                          {
-                            "group": "Connect external services",
-                            "pages": [
-                              "langsmith/self-host-blob-storage",
-                              "langsmith/self-host-external-clickhouse",
-                              "langsmith/self-host-external-postgres",
-                              "langsmith/self-host-external-redis"
-                            ]
-                          },
-                          {
-                            "group": "Scripts",
-                            "pages": [
-                              "langsmith/script-delete-a-workspace",
-                              "langsmith/script-delete-an-organization",
-                              "langsmith/script-delete-traces",
-                              "langsmith/script-generate-clickhouse-stats",
-                              "langsmith/script-generate-query-stats",
-                              "langsmith/script-running-pg-support-queries",
-                              "langsmith/script-running-ch-support-queries"
-                            ]
-                          },
-                          {
-                            "group": "Observability",
-                            "pages": [
-                              "langsmith/export-backend",
-                              "langsmith/langsmith-collector",
-                              "langsmith/observability-stack"
-                            ]
-                          }
+                          "langsmith/export-backend",
+                          "langsmith/langsmith-collector",
+                          "langsmith/observability-stack"
+                        ]
+                      },
+                      {
+                        "group": "Platform auth & access control",
+                        "pages": [
+                          "langsmith/self-host-basic-auth",
+                          "langsmith/self-host-sso",
+                          "langsmith/self-host-user-management",
+                          "langsmith/self-host-custom-tls-certificates",
+                          "langsmith/self-host-using-an-existing-secret"
+                        ]
+                      },
+                      {
+                        "group": "Scripts for management tasks",
+                        "pages": [
+                          "langsmith/script-delete-a-workspace",
+                          "langsmith/script-delete-an-organization",
+                          "langsmith/script-delete-traces",
+                          "langsmith/script-generate-clickhouse-stats",
+                          "langsmith/script-generate-query-stats",
+                          "langsmith/script-running-pg-support-queries",
+                          "langsmith/script-running-ch-support-queries"
                         ]
                       }
                     ]
                   },
                   {
-                    "group": "Configure app for deployment",
+                    "group": "Agent deployment",
                     "pages": [
-                      "langsmith/application-structure",
                       {
-                        "group": "Setup",
+                        "group": "Configure for deployment",
                         "pages": [
-                          "langsmith/setup-app-requirements-txt",
-                          "langsmith/setup-pyproject",
-                          "langsmith/setup-javascript"
+                          "langsmith/application-structure",
+                          {
+                            "group": "Setup",
+                            "pages": [
+                              "langsmith/setup-app-requirements-txt",
+                              "langsmith/setup-pyproject",
+                              "langsmith/setup-javascript"
+                            ]
+                          },
+                          "langsmith/graph-rebuild",
+                          "langsmith/use-remote-graph",
+                          "langsmith/monorepo-support",
+                          "langsmith/semantic-search",
+                          "langsmith/configure-ttl"
                         ]
                       },
-                      "langsmith/graph-rebuild",
-                      "langsmith/use-remote-graph",
-                      "langsmith/monorepo-support",
-                      "langsmith/semantic-search",
-                      "langsmith/configure-ttl"
-                    ]
-                  },
-                  {
-                    "group": "Authentication & access control",
-                    "pages": [
-                      "langsmith/auth",
-                      "langsmith/custom-auth",
-                      "langsmith/set-up-custom-auth",
-                      "langsmith/resource-auth",
-                      "langsmith/add-auth-server",
-                      "langsmith/openapi-security",
-                      "langsmith/agent-auth"
-                    ]
-                  },
-                  {
-                    "group": "Server customization",
-                    "pages": [
-                       "langsmith/custom-lifespan",
-                       "langsmith/custom-middleware",
-                       "langsmith/custom-routes"
+                      {
+                        "group": "Auth & access control",
+                        "pages": [
+                          "langsmith/auth",
+                          "langsmith/custom-auth",
+                          "langsmith/set-up-custom-auth",
+                          "langsmith/resource-auth",
+                          "langsmith/add-auth-server",
+                          "langsmith/openapi-security",
+                          "langsmith/agent-auth"
+                        ]
+                      },
+                      {
+                        "group": "Server customization",
+                        "pages": [
+                           "langsmith/custom-lifespan",
+                           "langsmith/custom-middleware",
+                           "langsmith/custom-routes"
+                        ]
+                      }
                     ]
                   }
                 ]

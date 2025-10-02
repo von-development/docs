@@ -5,10 +5,10 @@ sidebarTitle: Overview
 
 <Info>
 **Important**
-The Hybrid option requires an [Enterprise](/langgraph-platform/plans) plan.
+The hybrid option requires an [Enterprise](/langsmith/plans) plan.
 </Info>
 
-The **Hybrid** model lets you run the _data plane_ in your own cloud while LangChain hosts and manages the _control plane_. This option combines the convenience of a managed control plane with the flexibility of self-hosting your own LangGraph Servers and backing stores. When using Hybrid, you authenticate with a [LangSmith](https://smith.langchain.com/) API key.
+The **hybrid** model lets you run the [_data plane_](/langsmith/data-plane) in your own cloud while LangChain hosts and manages the [_control plane_](/langsmith/control-plane). This option combines the convenience of a managed control plane with the flexibility of self-hosting your own LangGraph Servers and backing stores. When using hybrid, you authenticate with a [LangSmith](https://smith.langchain.com/) API key.
 
 | Component      | Responsibilities | Where it runs | Who manages it |
 |----------------|------------------|---------------|----------------|
@@ -17,30 +17,30 @@ The **Hybrid** model lets you run the _data plane_ in your own cloud while LangC
 
 ### Workflow
 
-1. Use the `langgraph-cli` or [Studio](/langgraph-platform/langgraph-studio) to test your graph locally.
+1. Use the `langgraph-cli` or [Studio](/langsmith/langgraph-studio) to test your graph locally.
 2. Build a Docker image using the `langgraph build` command.
-3. Deploy your LangGraph Server from the [control plane UI](/langgraph-platform/control-plane#control-plane-ui).
+3. Deploy your LangGraph Server from the [control plane UI](/langsmith/control-plane#control-plane-ui).
 
 <Note>
 Supported Compute Platforms: [Kubernetes](https://kubernetes.io/).<br></br>
-For setup, refer to the [Hybrid setup guide](/langgraph-platform/deploy-hybrid).
+For setup, refer to the [Hybrid setup guide](/langsmith/deploy-hybrid).
 </Note>
 
 ### Architecture
 
-![Hybrid deployment: LangChain-hosted control plane (LangSmith UI/APIs) manages deployments. Your cloud runs a listener, LangGraph Server instances, and backing stores (Postgres/Redis) on Kubernetes.](/langgraph-platform/images/hybrid-architecture.png)
+![Hybrid deployment: LangChain-hosted control plane (LangSmith UI/APIs) manages deployments. Your cloud runs a listener, LangGraph Server instances, and backing stores (Postgres/Redis) on Kubernetes.](/langsmith/images/hybrid-architecture.png)
 
 ### Compute Platforms
 
 - **Kubernetes**: Hybrid supports running the data plane on any Kubernetes cluster.
 
 <Tip>
-For setup in Kubernetes, refer to the [Hybrid setup guide](/langgraph-platform/deploy-hybrid)
+For setup in Kubernetes, refer to the [Hybrid setup guide](/langsmith/deploy-hybrid)
 </Tip>
 
 ## Listeners
 
-In the hybrid option, one or more ["listener" applications](/langgraph-platform/data-plane#listener-application) can run depending on how your LangSmith workspaces and Kubernetes clusters are organized.
+In the hybrid option, one or more ["listener" applications](/langsmith/data-plane#listener-application) can run depending on how your LangSmith workspaces and Kubernetes clusters are organized.
 
 ### Kubernetes cluster organization
 - One or more listeners can run in a Kubernetes cluster.
@@ -51,26 +51,24 @@ In the hybrid option, one or more ["listener" applications](/langgraph-platform/
 - A workspace can be associated with one or more listeners.
 - A workspace can only deploy to Kubernetes clusters where all of its listeners are deployed.
 
----
-
 ## Use Cases
 
 Here are some common listener configurations (not strict requirements):
 
-#### Each LangSmith workspace → separate Kubernetes cluster
+### Each LangSmith workspace → separate Kubernetes cluster
 - Cluster `alpha` runs workspace `A`
 - Cluster `beta` runs workspace `B`
 
-#### Separate clusters, with shared “dev” cluster
+### Separate clusters, with shared “dev” cluster
 - Cluster `alpha` runs workspace `A`
 - Cluster `beta` runs workspace `B`
 - Cluster `dev` runs workspaces `A` and `B`
 - Both workspaces have two listeners; cluster `dev` has two listener deployments
 
-#### One cluster, one namespace per workspace
+### One cluster, one namespace per workspace
 - Cluster `alpha`, namespace `1` runs workspace `A`
 - Cluster `alpha`, namespace `2` runs workspace `B`
 
-#### One cluster, single namespace for multiple workspaces
+### One cluster, single namespace for multiple workspaces
 - Cluster `alpha` runs workspace `A`
 - Cluster `alpha` runs workspace `B`
