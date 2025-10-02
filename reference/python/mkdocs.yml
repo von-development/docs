@@ -252,11 +252,16 @@ nav:
   - Get started: index.md
   - LangChain:
     - langchain/index.md
-    - LangChain:
-      - Agents: langchain/agents.md
-      - Models: langchain/models.md
-      - Embeddings: langchain/embeddings.md
-    - Core: langchain/core.md
+    - langchain:
+      - agents: langchain/agents.md
+      - middleware: langchain/middleware.md
+      - models: langchain/models.md
+      - messages: langchain/messages.md
+      - tools: langchain/tools.md
+      - documents: langchain/documents.md
+      - embeddings: langchain/embeddings.md
+      - storage: langchain/storage.md
+    - langchain_core: langchain/core.md
   - LangGraph:
     - langgraph/index.md
     - LangGraph:
