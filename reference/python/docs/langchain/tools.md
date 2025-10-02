@@ -1,7 +1,5 @@
 # Tools
 
-::: langchain.tools
-
 ::: langchain.tools.tool
     options:
         show_root_heading: true
