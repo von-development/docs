@@ -1,3 +1,3 @@
 # LangChain
 
-documentation for the `langchain` package.
+Documentation for the `langchain` package.
