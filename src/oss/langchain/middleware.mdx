@@ -363,7 +363,7 @@ agent = create_agent(
 # Use with context
 result = agent.invoke(
     {"messages": [{"role": "user", "content": "Explain async programming"}]},
-    {"context": {"user_role": "expert"}}
+    context={"user_role": "expert"}
 )
 ```
 :::
