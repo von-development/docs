@@ -5,6 +5,14 @@ sidebarTitle: Server changelog
 
 [LangGraph Server](/langgraph-platform/langgraph-server) is an API platform for creating and managing agent-based applications. It provides built-in persistence, a task queue, and supports deploying, configuring, and running assistants (agentic workflows) at scale. This changelog documents all notable updates, features, and fixes to LangGraph Server releases.
 
+<a id="2025-10-02"></a>
+## v0.4.35
+- Resolved a timezone issue in the core API, ensuring accurate time data retrieval.
+- Introduced a new `middleware_order` setting to apply authentication middleware before custom middleware, allowing finer control over protected route configurations.
+- Logged the Redis URL when errors occur during Redis client creation.
+- Improved Go engine/runtime context propagation to ensure consistent execution flow.
+- Removed the unnecessary `assistants.put` call from the executor entrypoint to streamline the process.
+
 <a id="2025-10-01"></a>
 ## v0.4.34
 - Blocked unauthorized users from updating thread TTL settings to enhance security.
