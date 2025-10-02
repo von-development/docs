@@ -473,10 +473,11 @@ Dynamic system prompt is especially useful for personalizing prompts based on us
 
 :::python
 ```python wrap
+from typing import TypedDict
+
 from langchain.agents import create_agent
 from langchain.agents.middleware.types import modify_model_request, AgentState, ModelRequest
 from langgraph.runtime import Runtime
-from typing import TypedDict
 
 class Context(TypedDict):
     user_role: str
@@ -498,7 +499,7 @@ def dynamic_system_prompt(request: ModelRequest, state: AgentState, runtime: Run
 
 agent = create_agent(
     model="openai:gpt-4o",
-    tools=tools,
+    tools=[web_search],
     middleware=[dynamic_system_prompt],
     context_schema=Context
 )
