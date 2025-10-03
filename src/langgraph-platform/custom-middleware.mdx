@@ -59,7 +59,8 @@ Add the following to your `langgraph.json` configuration file. Make sure the pat
 ```
 
 ### Customize middleware ordering
-By default, custom middleware runs before authentication and authorization logic. To run custom middleware _after_ authentication and authorization, set `middleware_order` to `auth_first` in your `http` configuration.
+
+By default, custom middleware runs before authentication and authorization logic. To run custom middleware _after_ authentication and authorization, set `middleware_order` to `auth_first` in your `http` configuration. (This customization is supported starting with API server v0.4.35 and later.)
 
 ```json
 {
