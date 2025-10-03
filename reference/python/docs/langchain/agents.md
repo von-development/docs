@@ -1,3 +1,3 @@
-# Documents
+# Agents
 
 ::: langchain.agents
