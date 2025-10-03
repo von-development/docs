@@ -1,12 +1,17 @@
 ---
-title: Guidelines for logging LLM calls
-sidebarTitle: Guidelines for logging LLM calls
+title: Logging LLM calls
+sidebarTitle: Logging LLM calls
 ---
 
-LangSmith provides special rendering and processing for LLM traces. This includes pretty rendering for the list of messages, token counting (assuming token counts are not available from the model provider) and token-based cost calculation.
+This guide will cover how to log LLM calls to LangSmith when you are using a custom model or a custom input/output format. In order to make the most of LangSmith's LLM trace processing, you should log your LLM traces in one of the specified formats so you can take full advantage of the benefits that LangSmith provides.
 
-<Tip>In order to make the most of LangSmith's LLM trace processing, **we recommend logging your LLM traces in one of the specified formats**.
-If you don't log your LLM traces in the suggested formats, you will still be able to log the data to LangSmith, but it may not be processed or rendered in expected ways. </Tip>
+LangSmith offers the following benefits for LLM traces:
+- Rich, structured rendering of message lists
+- Token and cost tracking per LLM call, per trace and across traces over time
+
+If you don't log your LLM traces in the suggested formats, you will still be able to log the data to LangSmith, but it may not be processed or rendered in expected ways.
+
+If you are using [LangChain OSS to call language models](https://python.langchain.com/docs/tutorials/llm_chain/) or LangSmith wrappers ([OpenAI](/langsmith/trace-openai), [Anthropic](/langsmith/trace-anthropic)), then you're all set! These approaches will automatically log traces in the correct format.
 
 
 
@@ -15,215 +20,277 @@ If you don't log your LLM traces in the suggested formats, you will still be abl
 The examples below use the `traceable` decorator/wrapper to log the model run (which is the recommended approach for Python and JS/TS). However, the same idea applies if you are using the [RunTree](/langsmith/annotate-code#use-the-runtree-api) or [API](https://api.smith.langchain.com/redoc) directly.
 </Note>
 
-## Using LangChain OSS or LangSmith wrappers
+## Messages Format
 
-If you are using [LangChain OSS to call language models](https://python.langchain.com/docs/tutorials/llm_chain/) or LangSmith wrappers ([OpenAI](/langsmith/trace-openai), [Anthropic](/langsmith/trace-anthropic)), then you're all set! These approaches will automatically log traces in the correct format.
-
-## Tracing a Model with a Custom Input/Output Format
-
-When tracing a custom model, follow the guidelines below to ensure your LLM traces are rendered properly and features such as token tracking and cost calculation work as expected.
-
-### Input Format
-
-A Python dictionary or TypeScript object containing a `"messages"` key with a list of messages in [LangChain](https://python.langchain.com/docs/concepts/messages), [OpenAI](https://platform.openai.com/docs/api-reference/messages) (chat completions) or [Anthropic](https://docs.anthropic.com/en/api/messages) format. The messages key must be in the top level of the input field.
-
-* Each message must contain the key `"role"` and `"content"`.
-    * `"role"`: `"system" | "user" | "assistant" | "tool"`
-    *  `"content"`: string
-* Messages with the `"assistant"` role may contain `"tool_calls"`. These `"tool_calls"` may be in [OpenAI](https://platform.openai.com/docs/guides/function-calling?api-mode=chat) format or [LangChain's format](https://python.langchain.com/api_reference/core/messages/langchain_core.messages.tool.ToolCall.html#langchain_core.messages.tool.ToolCall).
-* LangSmith may use additional parameters in this input dict that match OpenAI's [chat completion endpoint](https://platform.openai.com/docs/guides/text?api-mode=chat) for rendering in the trace view, such as a list of available `tools` for the model to call.
-
-Here are some examples:
+When tracing a custom model or a custom input/output format, it must either follow the LangChain format, OpenAI completions format or Anthropic messages format. Please refer to the [OpenAI Chat Completions](https://platform.openai.com/docs/api-reference/chat/create) or [Anthropic Messages](https://docs.claude.com/en/api/messages) documentation for more details. The LangChain format is outlined below:
 
 
-<CodeGroup>
+<ParamField path="messages" type="array" required>
+  A list of messages containing the content of the conversation.
 
-```python LangChain format: List of messages
-inputs = [
-    {"role": "system", "content": "You are a helpful assistant."},
-    {"role": "user", "content": "What's the weather like in San Francisco?"},
+    <ParamField path="role" type="string" required>
+  Identifies the message type. One of: <code>system</code> | <code>user</code> | <code>assistant</code> | <code>tool</code>
+</ParamField>
+
+    <ParamField path="content" type="string | array" required>
+      Content of the message. Either a string or an array of structured parts. May be an empty string if `tool_calls` is present.
+
+      <Expandable title="Content options">
+        <ParamField path="type" type="string" required>
+          One of: <code>text</code>, <code>image</code>, <code>file</code>, <code>audio</code>.
+        </ParamField>
+
+        <Expandable title="text">
+          <ParamField path="type" type="literal('text')" required />
+          <ParamField path="text" type="string" required>
+            Text content.
+          </ParamField>
+        </Expandable>
+
+        <Expandable title="image">
+          <ParamField path="type" type="literal('image')" required />
+          <ParamField path="source_type" type="string" required>
+            One of: <code>base64</code> or <code>url</code>.
+          </ParamField>
+          <ParamField path="data" type="string">
+            Base64-encoded image bytes. Required when <code>source_type</code> is <code>base64</code>.
+          </ParamField>
+          <ParamField path="url" type="string">
+            URL. Required when <code>source_type</code> is <code>url</code>.
+          </ParamField>
+          <ParamField path="mime_type" type="string">
+            MIME type (e.g., <code>image/jpeg</code>). Recommended for <code>base64</code>.
+          </ParamField>
+        </Expandable>
+
+        <Expandable title="file (e.g., PDFs)">
+          <ParamField path="type" type="literal('file')" required />
+          <ParamField path="source_type" type="string" required>
+            One of: <code>base64</code> or <code>url</code>.
+          </ParamField>
+          <ParamField path="data" type="string">
+            Base64-encoded file bytes. Required when <code>source_type</code> is <code>base64</code>.
+          </ParamField>
+          <ParamField path="url" type="string">
+            Public URL. Required when <code>source_type</code> is <code>url</code>.
+          </ParamField>
+          <ParamField path="mime_type" type="string" required>
+            MIME type (e.g., <code>application/pdf</code>).
+          </ParamField>
+        </Expandable>
+
+        <Expandable title="audio">
+          <ParamField path="type" type="literal('audio')" required />
+          <ParamField path="source_type" type="string" required>
+            One of: <code>base64</code> or <code>url</code>.
+          </ParamField>
+          <ParamField path="data" type="string">
+            Base64-encoded audio bytes. Required when <code>source_type</code> is <code>base64</code>.
+          </ParamField>
+          <ParamField path="url" type="string">
+            Public URL. Required when <code>source_type</code> is <code>url</code>.
+          </ParamField>
+          <ParamField path="mime_type" type="string" required>
+            MIME type (e.g., <code>audio/wav</code>).
+          </ParamField>
+        </Expandable>
+      </Expandable>
+    </ParamField>
+
+
+    <ParamField path="tool_calls" type="array">
+      Tools requested by the assistant. Only valid when <code>role</code> is <code>assistant</code>.
+      <Expandable title="tool call object">
+        <ParamField path="id" type="string" required>
+          Unique identifier to correlate with tool results.
+        </ParamField>
+        <ParamField path="type" type="literal('function')" required>
+          The tool call type (currently only <code>function</code>).
+        </ParamField>
+        <ParamField path="function" type="object" required>
+          Name of the tool/function.
+            <Expandable title="options">
+                <ParamField path="name" type="string" required />
+                <ParamField path="arguments" type="string" required>
+                JSON-encoded string of arguments (e.g., <code>{"{"}"city":"SF"{"}"}</code>).
+                </ParamField>
+
+            </Expandable>
+        </ParamField>
+
+      </Expandable>
+    </ParamField>
+
+    <ParamField path="tool_call_id" type="string">
+    Must match the <code>id</code> of a prior <code>assistant</code> message’s <code>tool_calls[i]</code> entry. Only valid when <code>role</code> is <code>tool</code>.
+    </ParamField>
+
+    <ParamField path="usage_metadata" type="object">
+    Use this field to send token counts and or costs with your model's output. See [this guide](/langsmith/log-llm-trace#provide-token-and-cost-information) for more details.
+    </ParamField>
+</ParamField>
+
+ ### Examples
+
+  <CodeGroup>
+
+```python Human and assistant messages
+ inputs = {
+  "messages": [
     {
-        "role": "assistant",
-        "content": "I need to check the weather for you.",
-        "tool_calls": [
-            {
-                "id": "call_XXX",
-                "type": "function",
-                "function": {
-                    "name": "get_weather",
-                    "arguments": '{"location": "San Francisco"}'
-                }
-            }
-        ]
-    },
-    {
-        "role": "tool",
-        "tool_call_id": "call_XXXX",
-        "content": "<weather>."
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "Hi, can you tell me the capital of France?"
+        }
+      ]
     }
-]
+  ]
+}
+
+outputs = {
+  "messages": [
+    {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "The capital of France is Paris."
+        }
+      ]
+    }
+  ]
+}
+
 ```
 
-```python OpenAI completions format: Messages dict
+```python Messages with tool calls
 inputs = {
-    "messages": [
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": "What's the weather like?"}
-    ],
-    "tools": [
+  "messages": [
+    {
+      "role": "user",
+      "content": [
         {
-            "type": "function",
-            "function": {
-                "name": "get_weather",
-                "description": "Get current weather",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "location": {"type": "string"}
-                    }
-                }
-            }
+          "type": "text",
+          "text": "What's the weather in San Francisco?"
         }
-    ]
+      ]
+    }
+  ]
+}
+
+outputs = {
+  "messages": [
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "id": "call_1",
+          "type": "function",
+          "function": {
+            "name": "get_weather",
+            "arguments": "{\"city\": \"San Francisco\"}"
+          }
+        }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_1",
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"temperature\": \"18°C\", \"condition\": \"Sunny\"}"
+        }
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "The weather in San Francisco is 18°C and sunny."
+        }
+      ]
+    }
+  ]
 }
 ```
 
-```python Anthropic format: Messages dict
+```python Multimodal messages with tool calls
 inputs = {
-        "messages": [
-      {
-        "role": "user",
-        "content": "What is the weather like in San Francisco?"
-      }
-    ],
-    "tools": [
-      {
-        "name": "get_weather",
-        "description": "Get the current weather in a given location",
-        "input_schema": {
-          "type": "object",
-          "properties": {
-            "location": {
-              "type": "string",
-              "description": "The city and state, e.g. San Francisco, CA"
-            }
-          },
-          "required": ["location"]
+  "messages": [
+    {
+      "role": "user",
+      "content": [
+        {
+          "type": "text",
+          "text": "What breed is this dog?"
+        },
+        {
+          "type": "image",
+          "source_type": "url",
+          "url": "https://fastly.picsum.photos/id/237/200/300.jpg?hmac=TmmQSbShHz9CdQm0NkEjx1Dyh_Y984R9LpNrpvH2D_U",
+          "mime_type": "image/jpeg"
         }
-      }
-    ]
-  }
-```
-
-</CodeGroup>
-
-### Output Format
-
-The output is accepted in any of the following formats:
-
-* A dictionary/object that contains the key `message` with a value that is a message object with the keys `role` and `content`.
-* A dictionary/object that contains the key `choices` with a value that is a list of dictionaries/objects. Each dictionary/object must contain the key `message`, which maps to a message object with the keys `role` and `content`.
-* A tuple/array of two elements, where the first element is the role and the second element is the content.
-* A dictionary/object that contains the key `role` and `content`.
-* Similar to the input format, outputs may contain `"tool_calls"`. These `"tool_calls"` may be in OpenAI format or LangChain’s format.
+      ]
+    }
+  ]
+}
 
 
-Here are some examples:
-
-<CodeGroup>
-
-```python Message format
-from langsmith import traceable
-
-@traceable(run_type="llm")
-def chat_model_message(messages):
-    # Your model logic here
-    return {
-        "message": {
-            "role": "assistant",
-            "content": "Sure, what time would you like to book the table for?"
+outputs = {
+  "messages": [
+    {
+      "role": "assistant",
+      "content": "",
+      "tool_calls": [
+        {
+          "id": "call_1",
+          "type": "function",
+          "function": {
+            "name": "identify_dog_breed",
+            "arguments": "{\"image_url\": \"https://fastly.picsum.photos/id/237/200/300.jpg?hmac=TmmQSbShHz9CdQm0NkEjx1Dyh_Y984R9LpNrpvH2D_U\"}"
+          }
         }
+      ]
+    },
+    {
+      "role": "tool",
+      "tool_call_id": "call_1",
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"breed\": \"Black Labrador\"}"
+        }
+      ]
+    },
+    {
+      "role": "assistant",
+      "content": [
+        {
+          "type": "text",
+          "text": "This looks like a Black Labrador."
+        }
+      ]
     }
-
-# Usage
-inputs = [
-    {"role": "system", "content": "You are a helpful assistant."},
-    {"role": "user", "content": "I'd like to book a table for two."}
-]
-chat_model_message(inputs)
+  ]
+}
 ```
-
-```python OpenAI completions format: Choices
-from langsmith import traceable
-
-@traceable(run_type="llm")
-def chat_model_choices(messages):
-    # Your model logic here
-    return {
-        "choices": [
-            {
-                "message": {
-                    "role": "assistant",
-                    "content": "Sure, what time would you like to book the table for?"
-                }
-            }
-        ]
-    }
-
-# Usage
-inputs = [
-    {"role": "system", "content": "You are a helpful assistant."},
-    {"role": "user", "content": "I'd like to book a table for two."}
-]
-chat_model_choices(inputs)
-```
-
-```python Tuple format
-from langsmith import traceable
-
-@traceable(run_type="llm")
-def chat_model_tuple(messages):
-    # Your model logic here
-    return ["assistant", "Sure, what time would you like to book the table for?"]
-
-# Usage
-inputs = [
-    {"role": "system", "content": "You are a helpful assistant."},
-    {"role": "user", "content": "I'd like to book a table for two."}
-]
-chat_model_tuple(inputs)
-```
-
-```python Direct format
-from langsmith import traceable
-
-@traceable(run_type="llm")
-def chat_model_direct(messages):
-    # Your model logic here
-    return {
-        "role": "assistant",
-        "content": "Sure, what time would you like to book the table for?"
-    }
-
-# Usage
-inputs = [
-    {"role": "system", "content": "You are a helpful assistant."},
-    {"role": "user", "content": "I'd like to book a table for two."}
-]
-chat_model_direct(inputs)
-```
-
 </CodeGroup>
 
 
-### Converting custom I/O formats into LangSmith compatible formats
+## Converting custom I/O formats into LangSmith compatible formats
 
-If you're using a custom input or output format, you can convert it to a LangSmith compatible format using `process_inputs` and `process_outputs` functions on the [`@traceable` decorator](https://docs.smith.langchain.com/reference/python/run_helpers/langsmith.run_helpers.traceable). Note that these parameters are only available in the Python SDK.
+If you're using a custom input or output format, you can convert it to a LangSmith compatible format using `process_inputs`/`processInputs` and `process_outputs`/`processOutputs` functions on the [`@traceable` decorator](https://docs.smith.langchain.com/reference/python/run_helpers/langsmith.run_helpers.traceable) (Python) or [`traceable` function](https://docs.smith.langchain.com/reference/js/functions/traceable.traceable) (TS).
 
-`process_inputs` and `process_outputs` accept functions that allow you to transform the inputs and outputs of a specific trace before they are logged to LangSmith. They have access to the trace's inputs and outputs, and can return a new dictionary with the processed data.
+`process_inputs`/`processInputs` and `process_outputs`/`processOutputs` accept functions that allow you to transform the inputs and outputs of a specific trace before they are logged to LangSmith. They have access to the trace's inputs and outputs, and can return a new dictionary with the processed data.
 
 Here's a boilerplate example of how to use `process_inputs` and `process_outputs` to convert a custom I/O format into a LangSmith compatible format:
 
+<Expandable title="the code">
 <CodeGroup>
 
 ```python Python
@@ -255,9 +322,10 @@ def chat_model(inputs: dict) -> dict:
 
 ```
 </CodeGroup>
+</Expandable>
 
 
-### Identifying a custom model in traces
+## Identifying a custom model in traces
 
 When using a custom model, it is recommended to also provide the following `metadata` fields to identify the model when viewing traces and when filtering.
 
@@ -412,7 +480,7 @@ If `ls_model_name` is not present in `extra.metadata`, other fields might be use
 To learn more about how to use the `metadata` fields, see [this guide](/langsmith/add-metadata-tags).
 
 
-### Provide token and cost information
+## Provide token and cost information
 
 By default, LangSmith uses [tiktoken](https://github.com/openai/tiktoken) to count tokens, utilizing a best guess at the model's tokenizer based on the `ls_model_name` provided. It also calculates costs automatically by using the [model pricing table](https://smith.langchain.com/settings/workspaces/models). To learn how LangSmith calculates token-based costs, see [this guide](/langsmith/calculate-token-based-costs).
 
@@ -453,7 +521,7 @@ class UsageMetadata(TypedDict, total=False):
 
 Note that the usage data can also include cost information, in case you do not want to rely on LangSmith's token-based cost formula. This is useful for models with pricing that is not linear by token type.
 
-#### Setting run metadata
+### Setting run metadata
 
 You can [modify the current run's metadata](/langsmith/add-metadata-tags) with usage information within your traced function. The advantage of this approach is that you do not need to change your traced function's runtime outputs. Here's an example:
 
@@ -552,7 +620,7 @@ await chatModel({ messages });
 
 </CodeGroup>
 
-#### Setting run outputs
+### Setting run outputs
 
 You can add a `usage_metadata` key to the function's response to set manual token counts and costs.
 
