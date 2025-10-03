@@ -34,19 +34,19 @@ dependencies = [
     "langchain-text-splitters",
     "langchain-anthropic",
     #"langchain-chroma",
-    #"langchain-deepseek",
-    #"langchain-exa",
-    #"langchain-fireworks",
-    #"langchain-groq",
+    "langchain-deepseek",
+    "langchain-exa",
+    "langchain-fireworks",
+    "langchain-groq",
     #"langchain-huggingface",
     #"langchain-mistralai",
-    #"langchain-nomic",
-    #"langchain-ollama",
+    "langchain-nomic",
+    "langchain-ollama",
     "langchain-openai",
-    #"langchain-perplexity",
-    #"langchain-prompty",
-    #"langchain-qdrant",
-    #"langchain-xai",
+    "langchain-perplexity",
+    "langchain-prompty",
+    "langchain-qdrant",
+    "langchain-xai",
     #"langchain-experimental",
     #"langchain-community",
     "langchain-mcp-adapters",
@@ -99,14 +99,14 @@ package = false
 ## LangChain monorepo packages (alphabetical)
 ### Top level
 ## TODO: re-map langchain-v1 on release, add legacy/classic
-langchain-cli = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/cli", branch = "wip-v1.0" }
-langchain-core = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/core", branch = "wip-v1.0" }
-langchain = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/langchain_v1", branch = "wip-v1.0" }
-langchain-tests = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/standard-tests", branch = "wip-v1.0" }
-langchain-text-splitters = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/text-splitters", branch = "wip-v1.0" }
+langchain-cli = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/cli" }
+langchain-core = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/core" }
+langchain = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/langchain_v1" }
+langchain-tests = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/standard-tests" }
+langchain-text-splitters = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/text-splitters" }
 
 ### Partners
-langchain-anthropic = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/partners/anthropic", branch = "wip-v1.0" }
+langchain-anthropic = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/partners/anthropic" }
 langchain-chroma = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/partners/chroma" }
 langchain-deepseek = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/partners/deepseek" }
 langchain-exa = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/partners/exa" }
@@ -116,7 +116,7 @@ langchain-huggingface = { git = "https://github.com/langchain-ai/langchain.git",
 langchain-mistralai = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/partners/mistralai" }
 langchain-nomic = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/partners/nomic" }
 langchain-ollama = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/partners/ollama" }
-langchain-openai = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/partners/openai", branch = "wip-v1.0" }
+langchain-openai = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/partners/openai" }
 langchain-perplexity = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/partners/perplexity" }
 langchain-prompty = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/partners/prompty" }
 langchain-qdrant = { git = "https://github.com/langchain-ai/langchain.git", subdirectory = "libs/partners/qdrant" }
